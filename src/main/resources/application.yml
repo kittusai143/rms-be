@@ -1,0 +1,19 @@
+server:
+  port: 8282
+
+  datasource:
+    url: jdbc:sqlserver://192.168.100.5;databaseName=test24;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: Sql@2019
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    hibernate:
+      hbm2ddl: update
+
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+        format_sql: true
+    show-sql: true
+
