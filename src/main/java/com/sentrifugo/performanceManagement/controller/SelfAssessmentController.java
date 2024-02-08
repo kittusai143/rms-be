@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/sa")
-@CrossOrigin
+@CrossOrigin("*")
 public class SelfAssessmentController {
 
     private final SelfAssessmentService selfAssessmentService;
@@ -20,6 +20,12 @@ public class SelfAssessmentController {
     @Autowired
     public SelfAssessmentController(SelfAssessmentService selfAssessmentService) {
         this.selfAssessmentService = selfAssessmentService;
+    }
+
+
+    @PostMapping("/")
+    public String changeStatus(){
+        return "Status changed to submitted";
     }
 
     @GetMapping("/get-all-rows")
