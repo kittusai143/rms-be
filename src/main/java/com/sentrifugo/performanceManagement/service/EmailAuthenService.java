@@ -14,7 +14,7 @@ public class EmailAuthenService {
     private EmailAuthenticationRepo Repo;
 
 
-  public   List<UserAndRoleDetailsDto>  verify(String email)
+  public   List<String>  verify(String email)
   {
       return Repo.findDetailsBYEmail(email);
   }

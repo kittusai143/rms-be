@@ -21,14 +21,30 @@ public class EmailAuthenController {
     @GetMapping("verify")
     public ResponseEntity<?> getdetails(@RequestParam String email) {
         System.out.println(email);
-        List<UserAndRoleDetailsDto> users = service.verify(email);
-        if(users.isEmpty()) {
+        List<String> valueList = service.verify(email);
+
+        if (valueList.isEmpty()) {
             String message = "Record not found for email: " + email;
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
-
-        } else {
-            return ResponseEntity.ok(users); // Users found
         }
+
+        String var = valueList.get(0); // Assuming you want to retrieve the first string from the list
+        String[] parts = var.split(",");
+        if (parts.length < 7) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data format");
+        }
+        UserAndRoleDetailsDto user = new UserAndRoleDetailsDto();
+        user.setId(Integer.parseInt(parts[0]));
+        user.setEmpRole(Integer.parseInt(parts[1]));
+        user.setEmpRoleName(parts[2]);
+        user.setEmpRoleType(parts[3]);
+        user.setName(parts[4]);
+        user.setEmail(parts[5]);
+        user.setEmployeeId(parts[6]);
+//        SELECT  u.id, u.empRole, r.rolename AS empRoleName, r.roletype AS empRoleType, u.name, u.email,  u.employeeId "
+
+        return ResponseEntity.ok(user);
     }
+
 
 }
