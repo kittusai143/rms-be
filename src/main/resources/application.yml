@@ -1,3 +1,4 @@
+
 server:
   port: 8282
 
@@ -11,8 +12,10 @@ spring:
   jpa:
     hibernate:
       hbm2ddl: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.SQLServer2012Dialect
-        format_sql: true
-    show-sql: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.SQLServer2012Dialect
+          format_sql: true
+          show_sql: true
