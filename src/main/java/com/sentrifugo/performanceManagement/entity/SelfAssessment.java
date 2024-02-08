@@ -16,32 +16,30 @@ public class SelfAssessment {
     @Column(name = "question_id")
     private Integer questionId;
 
-    @Column(name = "appraisal_master_id", nullable = false)
+    @Column(name = "appraisal_master_id")
     private Integer appraisalMasterId;
 
-    @Column(name = "question", nullable = false)
+    @Column(name = "question")
     private String question;
 
     private String status;
 
-    @Column(name = "manager_comments", columnDefinition = "TEXT")
+    @Column(name = "manager_comments")
     private String managerComments;
 
     @Column(name = "manager_rating")
     private Integer managerRating;
 
-    @Column(name = "employee_comments", columnDefinition = "TEXT")
+    @Column(name = "employee_comments")
     private String employeeComments;
 
     @Column(name = "employee_rating")
     private Integer employeeRating;
 
-    @Column(name = "created_by", nullable = false)
+    @Column(name = "created_by")
     private Integer createdBy;
 
-    @Column(name = "additional_comments", columnDefinition = "TEXT")
+    @Column(name = "additional_comments")
     private String additionalComments;
-
-
 }
 

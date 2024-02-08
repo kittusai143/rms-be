@@ -22,23 +22,7 @@ public class SelfAssessmentController {
         this.selfAssessmentService = selfAssessmentService;
     }
 
-    @PostMapping("/submit")
-    public ResponseEntity<List<SelfAssessment>> submitSelfAssessmentForm(@RequestBody List<SelfAssessment> assessments) {
-        List<SelfAssessment> submittedAssessments = selfAssessmentService.submitSelfAssessmentForm(assessments);
-        return new ResponseEntity<>(submittedAssessments, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/add-goal")
-    public ResponseEntity<SelfAssessment> addQuestion(@RequestBody SelfAssessment selfAssessment) {
-        try {
-            selfAssessmentService.addQuestion(selfAssessment);
-            return new ResponseEntity<>(selfAssessment, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/get-all-qns")
+    @GetMapping("/get-all-rows")
     public ResponseEntity<List<SelfAssessment>> getSelfAssessmentForm() {
         try {
             List<SelfAssessment> selfAssessmentForm = selfAssessmentService.getSelfAssessmentForm();
@@ -47,14 +31,41 @@ public class SelfAssessmentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/submit")
+    public ResponseEntity<List<SelfAssessment>> submitSelfAssessmentForm(@RequestBody List<SelfAssessment> assessments) {
+        List<SelfAssessment> submittedAssessments = selfAssessmentService.submit(assessments);
+        return new ResponseEntity<>(submittedAssessments, HttpStatus.CREATED);
+    }
 
-//    @GetMapping("/getqnbyId")
-    
+    @PostMapping("/add-goal/{question}")
+    public ResponseEntity<SelfAssessment> addQuestion(@PathVariable String question) {
+        try {
+            SelfAssessment newAssessment = new SelfAssessment();
+            newAssessment.setQuestion(question);
+            selfAssessmentService.addRow(newAssessment);
+            return new ResponseEntity<>(newAssessment, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @GetMapping("/getbyId/{id}")
+  public ResponseEntity<SelfAssessment> getSelfAssessmentById(@PathVariable Integer id) {
+      SelfAssessment selfAssessment = selfAssessmentService.getSelfAssessmentById(id);
+
+      if (selfAssessment != null) {
+          return new ResponseEntity<>(selfAssessment, HttpStatus.OK);
+      } else {
+          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+  }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<SelfAssessment> updateSelfAssessment(@PathVariable Integer id, @RequestBody SelfAssessment updatedAssessment) {
         SelfAssessment updatedAssessmentResult = selfAssessmentService.updateSelfAssessment(id, updatedAssessment);
         return new ResponseEntity<>(updatedAssessmentResult, HttpStatus.OK);
     }
+
+
+
 }
