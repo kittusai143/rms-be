@@ -12,6 +12,7 @@ public class
 PerformanceManagementApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(PerformanceManagementApplication.class,args);
 	}
 
