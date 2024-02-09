@@ -23,8 +23,8 @@ public class SelfAssessmentController {
     }
 
 
-    @PostMapping("/")
-    public String changeStatus(){
+    @PostMapping("/status/{status}")
+    public <status> String changeStatus(@PathVariable String status){
         return "Status changed to submitted";
     }
 
