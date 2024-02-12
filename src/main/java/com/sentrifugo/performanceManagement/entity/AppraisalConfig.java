@@ -1,9 +1,12 @@
 package com.sentrifugo.performanceManagement.entity;
 
+import com.sentrifugo.performanceManagement.service.EmployeeService;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -11,8 +14,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@CrossOrigin
 @Table(name = "appraisal_initiation", schema = "dbo")
 public class AppraisalConfig {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "appraisal_config_id")
@@ -21,7 +26,7 @@ public class AppraisalConfig {
     @Column(name = "workflow_config_id")
     private Long workflowConfigId;
 
-    @Column(name = "bussiness_unit")
+    @Column(name = "business_unit")
     private String businessUnit;
 
     @Column(name = "appraisal_mode" , nullable = true)
@@ -62,7 +67,5 @@ public class AppraisalConfig {
 
     @Column(name = "rating")
     private String rating;
-
-
 
 }

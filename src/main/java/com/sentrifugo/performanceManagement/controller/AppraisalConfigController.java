@@ -1,10 +1,8 @@
 package com.sentrifugo.performanceManagement.controller;
 
-
-
 import com.sentrifugo.performanceManagement.Exceptions.ResourceNotFoundException;
 import com.sentrifugo.performanceManagement.entity.AppraisalConfig;
-import com.sentrifugo.performanceManagement.repository.AppraisalConfigRepository;
+import com.sentrifugo.performanceManagement.service.AppraisalConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,63 +13,48 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/appraisalsconfig")
+@CrossOrigin
 public class AppraisalConfigController {
 
+    private final AppraisalConfigService appraisalConfigService;
+
     @Autowired
-    private AppraisalConfigRepository appraisalConfigRepository;
+    public AppraisalConfigController(AppraisalConfigService appraisalConfigService) {
+        this.appraisalConfigService = appraisalConfigService;
+    }
 
     @GetMapping("/getallAppraisals")
-    public List<AppraisalConfig> getAllAppraisalConfig() {return appraisalConfigRepository.findAll();}
+    public List<AppraisalConfig> getAllAppraisalConfig() {
+        return appraisalConfigService.getAllAppraisalConfig();
+    }
 
     @GetMapping("/getappraisal/{id}")
     public ResponseEntity<AppraisalConfig> getAppraisalConfigById(@PathVariable(value = "id") Long appraisalConfigId)
             throws ResourceNotFoundException {
-        AppraisalConfig appraisalConfig = appraisalConfigRepository.findById(appraisalConfigId)
-                .orElseThrow(() -> new ResourceNotFoundException("Appraisal Config data not found for this id " + appraisalConfigId));
+        AppraisalConfig appraisalConfig = appraisalConfigService.getAppraisalConfigById(appraisalConfigId);
         return ResponseEntity.ok().body(appraisalConfig);
     }
 
     @PostMapping("/postappraisal")
-    public AppraisalConfig createAppraisalConfig(@RequestBody AppraisalConfig appraisalConfig){
-        System.out.println(appraisalConfig);
-        return appraisalConfigRepository.save(appraisalConfig);
+    public AppraisalConfig createAppraisalConfig(@RequestBody AppraisalConfig appraisalConfig) {
+
+        return appraisalConfigService.createAppraisalConfig(appraisalConfig);
     }
 
     @PutMapping("/putappraisal/{id}")
-    public ResponseEntity<AppraisalConfig> updateAppraisalConfig(@PathVariable(value = "id")Long appraisalConfigId,
-                                                                 @RequestBody AppraisalConfig appraisalConfigdetails) throws ResourceNotFoundException {
-        AppraisalConfig appraisalConfig =appraisalConfigRepository.findById(appraisalConfigId)
-                .orElseThrow(()->new ResourceNotFoundException("Appraisal configs not found for this id :: "+ appraisalConfigId));
-        appraisalConfig.setAppraisalMode(appraisalConfigdetails.getAppraisalMode());
-        appraisalConfig.setWorkflowConfigId(appraisalConfigdetails.getWorkflowConfigId());
-        appraisalConfig.setDepartment(appraisalConfigdetails.getDepartment());
-        appraisalConfig.setEligibility(appraisalConfigdetails.getEligibility());
-        appraisalConfig.setBusinessUnit(appraisalConfigdetails.getBusinessUnit());
-        appraisalConfig.setEmployeeDueDate(appraisalConfigdetails.getEmployeeDueDate());
-        appraisalConfig.setEnableTo(appraisalConfigdetails.getEnableTo());
-        appraisalConfig.setManagerDueDate(appraisalConfigdetails.getManagerDueDate());
-        appraisalConfig.setFromYear(appraisalConfigdetails.getFromYear());
-        appraisalConfig.setParameter(appraisalConfigdetails.getParameter());
-        appraisalConfig.setRating(appraisalConfigdetails.getRating());
-        appraisalConfig.setPeriod(appraisalConfigdetails.getPeriod());
-        appraisalConfig.setProcessStatus(appraisalConfigdetails.getProcessStatus());
-        appraisalConfig.setToYear(appraisalConfigdetails.getToYear());
-        appraisalConfig.setStatus(appraisalConfigdetails.getStatus());
-        final AppraisalConfig updatedAppraisalConfig = appraisalConfigRepository.save(appraisalConfig);
+    public ResponseEntity<AppraisalConfig> updateAppraisalConfig(@PathVariable(value = "id") Long appraisalConfigId,
+                                                                 @RequestBody AppraisalConfig appraisalConfigdetails)
+            throws ResourceNotFoundException {
+        AppraisalConfig updatedAppraisalConfig = appraisalConfigService.updateAppraisalConfig(appraisalConfigId, appraisalConfigdetails);
         return ResponseEntity.ok(updatedAppraisalConfig);
     }
 
     @DeleteMapping("/deleteappraisal/{id}")
     public Map<String, Boolean> deleteAppraisalConfig(@PathVariable(value = "id") Long appraisalConfigId)
-        throws ResourceNotFoundException{
-        AppraisalConfig appraisalConfig =appraisalConfigRepository.findById((appraisalConfigId))
-                .orElseThrow(()-> new ResourceNotFoundException("Appraisal configs not found for this id :: "+ appraisalConfigId));
-
-        appraisalConfigRepository.delete(appraisalConfig);
-        Map<String,Boolean> response = new HashMap<>();
+            throws ResourceNotFoundException {
+        appraisalConfigService.deleteAppraisalConfig(appraisalConfigId);
+        Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return response;
     }
-
 }
-

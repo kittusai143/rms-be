@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/workFlowConfig")
-
+@CrossOrigin
 public class WorkFlowController {
 @Autowired
 private  WorkFlowService workFlowService;
