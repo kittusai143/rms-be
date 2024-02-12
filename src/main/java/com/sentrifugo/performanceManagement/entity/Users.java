@@ -16,11 +16,13 @@ import java.util.Date;
 @Table(name="Users")
 public class Users {
     @Id
-    private int Id;
+    @Column(name = "Id")
+    private Integer id;
     private String email;
     private String name;
     private Integer empRole;
     private Date dob;
+    @Column(name = "userfullname")
     private String userFullName;
     private String contactNumber;
     private boolean isActive;
