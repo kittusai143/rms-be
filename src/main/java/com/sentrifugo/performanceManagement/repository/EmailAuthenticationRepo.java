@@ -21,14 +21,24 @@ public interface EmailAuthenticationRepo extends JpaRepository<Users,Integer> {
             "JOIN employee e ON u.id = e.user_id " +
             "WHERE u.id = :id")
     List<String> findDetailsById(@Param("id") Integer id);
-//    @Query(value = "SELECT reporting_users.name " +
-//            "FROM Users u " +
-//            "JOIN employee e ON u.id = e.user_id " +
-//            "JOIN Users AS reporting_users ON e.reporting_manager.id = reporting_users.id " +
-//            "WHERE u.Id = :Id", nativeQuery = true)
-//    List<String> getReportingManagerNames(Integer Id);
-//    @Query(value = "SELECT " +"l2_manager.name AS l2_manager " + "FROM (" + "SELECT " +"u.id, " + "e.l2_manager " + "FROM " + "Users u " + "JOIN " + "employee e ON u.id = e.user_id " + ") AS urke " + "JOIN " + "Users AS l2_manager ON urke.l2_manager = l2_manager.id", nativeQuery = true)
-//    List<String> getL2ManagerNames(Integer Id);
+
+
+    @Query(value = "SELECT reporting_users.name " +
+            "FROM Users u " +
+            "JOIN employee e ON u.id = e.user_id " +
+            "JOIN Users AS reporting_users ON e.reporting_manager= reporting_users.id " +
+            "WHERE u.Id = :Id", nativeQuery = true)
+    List<String> getReportingManagerNames(Integer Id);
+
+
+
+
+    @Query(value = "SELECT l2manager_users.name " +
+            "FROM Users u " +
+            "JOIN employee e ON u.id = e.user_id " +
+            "JOIN Users AS l2manager_users ON e.l2_manager= l2manager_users.id " +
+            "WHERE u.Id = :Id", nativeQuery = true)
+    List<String> getL2ManagerNames(Integer Id);
 
 
 }
