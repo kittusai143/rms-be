@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.sentrifugo.performanceManagement.entity.AppraisalConfig;
 import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
-import com.sentrifugo.performanceManagement.entity.Employees;
+import com.sentrifugo.performanceManagement.entity.Employee;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;

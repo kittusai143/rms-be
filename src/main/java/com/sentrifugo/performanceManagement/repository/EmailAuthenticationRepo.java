@@ -18,7 +18,7 @@ public interface EmailAuthenticationRepo extends JpaRepository<Users,Integer> {
 
     @Query("SELECT u.id, u.name,u.employeeId, e.bussinessunit, e.department " +
             "FROM Users u " +
-            "JOIN employee e ON u.id = e.user_id " +
+            "JOIN Employee e ON u.id = e.user_id " +
             "WHERE u.id = :id")
     List<String> findDetailsById(@Param("id") Integer id);
 
