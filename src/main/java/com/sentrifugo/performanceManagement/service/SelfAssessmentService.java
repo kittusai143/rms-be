@@ -7,6 +7,7 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
@@ -26,6 +27,10 @@ public class SelfAssessmentService {
 
     public SelfAssessment getSelfAssessmentById(Integer id) {
         return selfAssessmentRepository.findById(id).orElse(null);
+    }
+
+    public List<SelfAssessment> getSelfAssessmentbymid(Integer mid){
+        return selfAssessmentRepository.findByAppraisalMasterId(mid);
     }
 
     public SelfAssessment addRow(SelfAssessment newAssessment) {
@@ -75,53 +80,53 @@ public class SelfAssessmentService {
 
 
     public List<SelfAssessment> submit(List<SelfAssessment> updatedAssessments) {
+
+        System.out.println("Received payload: " + updatedAssessments);
         List<SelfAssessment> updatedResults = new ArrayList<>();
 
         for (SelfAssessment updatedAssessment : updatedAssessments) {
-            Integer id = updatedAssessment.getQuestionId(); // Assuming questionId is used as the identifier
-            Optional<SelfAssessment> existingAssessmentOptional = selfAssessmentRepository.findById(id);
-
-            if (existingAssessmentOptional.isPresent()) {
-                SelfAssessment existingAssessment = existingAssessmentOptional.get();
-
-                // Update fields only if they are not null in the updatedAssessment
-                if (updatedAssessment.getQuestion() != null) {
-                    existingAssessment.setQuestion(updatedAssessment.getQuestion());
-                }
-                if (updatedAssessment.getStatus() != null) {
-                    existingAssessment.setStatus(updatedAssessment.getStatus());
-                }
-
-                if (updatedAssessment.getManagerComments() != null) {
-                    existingAssessment.setManagerComments(updatedAssessment.getManagerComments());
-                }
-                if (updatedAssessment.getManagerRating() != null) {
-                    existingAssessment.setManagerRating(updatedAssessment.getManagerRating());
-                }
-                if (updatedAssessment.getEmployeeRating() != null) {
-                    existingAssessment.setEmployeeRating(updatedAssessment.getEmployeeRating());
-                }
-                if (updatedAssessment.getEmployeeComments() != null) {
-                    existingAssessment.setEmployeeComments(updatedAssessment.getEmployeeComments());
-                }
-                if (updatedAssessment.getAdditionalComments() != null) {
-                    existingAssessment.setAdditionalComments(updatedAssessment.getAdditionalComments());
-                }
-                if (updatedAssessment.getCreatedBy() != null) {
-                    existingAssessment.setCreatedBy(updatedAssessment.getCreatedBy());
-                }
-                // Repeat for other fields
-
-                updatedResults.add(selfAssessmentRepository.save(existingAssessment));
-            }
+            selfAssessmentRepository.save(updatedAssessment);
+//            Integer id = updatedAssessment.getQuestionId(); // Assuming questionId is used as the identifier
+//            Optional<SelfAssessment> existingAssessmentOptional = selfAssessmentRepository.findById(id);
+//
+//            if (existingAssessmentOptional.isPresent()) {
+//                SelfAssessment existingAssessment = existingAssessmentOptional.get();
+//
+//                // Update fields only if they are not null in the updatedAssessment
+//                if (updatedAssessment.getQuestion() != null) {
+//                    existingAssessment.setQuestion(updatedAssessment.getQuestion());
+//                }
+//                if (updatedAssessment.getStatus() != null) {
+//                    existingAssessment.setStatus(updatedAssessment.getStatus());
+//                }
+//
+//                if (updatedAssessment.getManagerComments() != null) {
+//                    existingAssessment.setManagerComments(updatedAssessment.getManagerComments());
+//                }
+//                if (updatedAssessment.getManagerRating() != null) {
+//                    existingAssessment.setManagerRating(updatedAssessment.getManagerRating());
+//                }
+//                if (updatedAssessment.getEmployeeRating() != null) {
+//                    existingAssessment.setEmployeeRating(updatedAssessment.getEmployeeRating());
+//                }
+//                if (updatedAssessment.getEmployeeComments() != null) {
+//                    existingAssessment.setEmployeeComments(updatedAssessment.getEmployeeComments());
+//                }
+//                if (updatedAssessment.getAdditionalComments() != null) {
+//                    existingAssessment.setAdditionalComments(updatedAssessment.getAdditionalComments());
+//                }
+//                if (updatedAssessment.getCreatedBy() != null) {
+//                    existingAssessment.setCreatedBy(updatedAssessment.getCreatedBy());
+//                }
+//                // Repeat for other fields
+//
+//                updatedResults.add(selfAssessmentRepository.save(existingAssessment));
+//            }
             // If the existing assessment is not found, you may want to handle it based on your requirements
         }
 
         return updatedResults;
     }
-
-
-
 
 
 
