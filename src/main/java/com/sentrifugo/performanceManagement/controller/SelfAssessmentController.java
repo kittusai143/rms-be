@@ -23,15 +23,34 @@ public class SelfAssessmentController {
     }
 
 
-    @PostMapping("/status/{status}")
-    public <status> String changeStatus(@PathVariable String status){
-        return "Status changed to submitted";
+    @GetMapping("/status/{eid}")
+    public String getStatus(@PathVariable Integer eid){
+        return selfAssessmentService.getStatus(eid);
+    }
+
+    @GetMapping("/activemId/{eid}")
+    public Long getActivemid(@PathVariable Long eid) {
+        return selfAssessmentService.getActiveAppraisalMasterId(eid);
+    }
+    @PostMapping("/status/{eid}/{status}")
+    public String changeStatus(@PathVariable Integer mid,@PathVariable String status){
+        return selfAssessmentService.changeStatus(mid,status);
     }
 
     @GetMapping("/get-all-rows")
     public ResponseEntity<List<SelfAssessment>> getSelfAssessmentForm() {
         try {
             List<SelfAssessment> selfAssessmentForm = selfAssessmentService.getSelfAssessmentForm();
+            return new ResponseEntity<>(selfAssessmentForm, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/get-all-rows/{mid}")
+    public ResponseEntity<List<SelfAssessment>> getSelfAssessmentFormbyId(@PathVariable Integer mid) {
+        try {
+            List<SelfAssessment> selfAssessmentForm = selfAssessmentService.getSelfAssessmentFormByMasterId(mid);
             return new ResponseEntity<>(selfAssessmentForm, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -83,6 +102,8 @@ public class SelfAssessmentController {
         SelfAssessment updatedAssessmentResult = selfAssessmentService.updateSelfAssessment(id, updatedAssessment);
         return new ResponseEntity<>(updatedAssessmentResult, HttpStatus.OK);
     }
+
+
 
 
 

@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface SelfAssessmentRepository extends JpaRepository<SelfAssessment,Integer> {
 
-    List<SelfAssessment> findByAppraisalMasterId(Integer appraisalMasterId);
+          List<SelfAssessment> findByAppraisalMasterId(Integer appraisalMasterId);
+
 }

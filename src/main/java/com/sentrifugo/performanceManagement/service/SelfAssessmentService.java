@@ -1,27 +1,23 @@
 package com.sentrifugo.performanceManagement.service;
-import jakarta.persistence.Column;
-import org.springframework.beans.BeanUtils;
+import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
+import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.repository.SelfAssessmentRepository;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
+import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
 @Service
 public class SelfAssessmentService {
-
-    private final SelfAssessmentRepository selfAssessmentRepository;
-
     @Autowired
-    public SelfAssessmentService(SelfAssessmentRepository selfAssessmentRepository) {
-        this.selfAssessmentRepository = selfAssessmentRepository;
-    }
+    private SelfAssessmentRepository selfAssessmentRepository;
+    @Autowired
+    private AppraisalMasterRepository aprepo;
 
-    public List<SelfAssessment> getSelfAssessmentForm() {
+
+     public List<SelfAssessment> getSelfAssessmentForm() {
         return selfAssessmentRepository.findAll();
     }
 
@@ -85,7 +81,8 @@ public class SelfAssessmentService {
         List<SelfAssessment> updatedResults = new ArrayList<>();
 
         for (SelfAssessment updatedAssessment : updatedAssessments) {
-            selfAssessmentRepository.save(updatedAssessment);
+            SelfAssessment savedAssessment = selfAssessmentRepository.save(updatedAssessment);
+            updatedResults.add(savedAssessment);
 //            Integer id = updatedAssessment.getQuestionId(); // Assuming questionId is used as the identifier
 //            Optional<SelfAssessment> existingAssessmentOptional = selfAssessmentRepository.findById(id);
 //
@@ -129,5 +126,37 @@ public class SelfAssessmentService {
     }
 
 
+    public String getStatus(Integer eid) {
+         System.out.println("eid recieved"+eid+aprepo.findStatusById(Long.valueOf(eid)));
+        return aprepo.findStatusById(Long.valueOf(eid));
+    }
 
+
+    public String changeStatus(Integer mid, String newStatus) {
+        Optional<AppraisalMaster> optionalAppraisalMaster = aprepo.findById(Long.valueOf(mid));
+
+        //casting to long for temporary use
+
+        if (optionalAppraisalMaster.isPresent()) {
+            AppraisalMaster appraisalMaster = optionalAppraisalMaster.get();
+            System.out.println(appraisalMaster);
+            String oldStatus = appraisalMaster.getStatus();
+            appraisalMaster.setStatus(newStatus);
+            System.out.println(appraisalMaster);
+
+            return "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus();
+        } else {
+            return "AppraisalMaster with ID " + mid + "not found";
+        }
+    }
+
+    public Long getActiveAppraisalMasterId(Long employeeId) {
+        Optional<AppraisalMaster> optionalAppraisalMaster = aprepo.findByEmployeeIdAndIsActive(employeeId, true);
+        return optionalAppraisalMaster.map(AppraisalMaster::getId).orElse(null);
+    }
+
+    public List<SelfAssessment> getSelfAssessmentFormByMasterId(Integer masterId) {
+        return selfAssessmentRepository.findByAppraisalMasterId(masterId);
+    }
 }
+

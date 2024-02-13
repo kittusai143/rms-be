@@ -6,8 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class  PerformanceManagementApplication {
 	public static void main(String[] args) {
-		System.out.println("Application started");
+
 		SpringApplication.run(PerformanceManagementApplication.class,args);
+		System.out.println("Application started");
 	}
 
 }
