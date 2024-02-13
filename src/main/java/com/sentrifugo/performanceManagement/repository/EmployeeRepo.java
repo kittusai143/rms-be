@@ -14,18 +14,6 @@ public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
 
     List<Employee> findByProjectAndClient(String project, String client);
 
-//    List<Employee> findByProjectAndManager(String project, String manager);
-
-//    List<Employee> findByProjectAndManagerAndClient(String project, String manager, String client);
-
-//    List<Employee> findByManagerAndClient(String manager, String client);
-
-//    List<Employee> findByManager(String manager);
-//    List<Employee> findByReportingManager(String manager);
-
-//    @Query("SELECT DISTINCT e.manager FROM Employee e")
-//    List<String> findDistinctByManager();
-
     @Query("SELECT DISTINCT e.client FROM Employee e")
     List<String> findDistinctByClient();
 
@@ -36,7 +24,12 @@ public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
     List<Integer> findDistinctByManager();
 
 
-
+    List<Employee> findByClientIn(List<String> clients);
+    List<Employee> findByProjectIn(List<String> clients);
+    List<Employee> findByReportingManagerIn(List<Integer> managers);
+    List<Employee> findByReportingManagerInAndClientIn( List<Integer> managers, List<String> clients);
+    List<Employee>findByProjectInAndClientIn(List<String> projects,List<String> clients);
+    List<Employee> findByProjectInAndReportingManagerIn(List<String> projects, List<Integer> managers);
     List<Employee> findByProjectInAndReportingManagerInAndClientIn(List<String> projects, List<Integer> managers, List<String> clients);
 
 

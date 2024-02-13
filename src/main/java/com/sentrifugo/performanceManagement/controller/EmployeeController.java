@@ -36,10 +36,39 @@ public class EmployeeController {
     public List<Employee> filter(
             @RequestBody DistinctData distinctData
     ){
-        System.out.println(distinctData.getClients());
-        System.out.println(distinctData.getProjects());
-        System.out.println(distinctData.getManagers());
-        return employeeRepo.findByProjectInAndReportingManagerInAndClientIn(distinctData.getProjects(),distinctData.getManagers(),distinctData.getClients());
+       List<String> projects=distinctData.getProjects();
+       List<String> clients=distinctData.getClients();
+       List<Integer> managers=distinctData.getManagers();
+        List<Employee> users;
+
+        if(projects.isEmpty()&&clients.isEmpty()&&managers.isEmpty()){
+            //all the fields are empty
+            return users= employeeRepo.findAll();
+        }
+        else if(projects.isEmpty()&&clients.isEmpty()){
+            //projects and clients are empty
+            return users=employeeRepo.findByReportingManagerIn(managers);
+        }
+        else if(clients.isEmpty()&&managers.isEmpty()){
+            //clients and managers are empty
+            return users=employeeRepo.findByProjectIn(projects);
+        }
+        else if(projects.isEmpty()&& managers.isEmpty()){
+            //projects and managers are empty
+            return users=employeeRepo.findByClientIn(clients);
+        }
+        else if(projects.isEmpty()){
+            return users=employeeRepo.findByReportingManagerInAndClientIn(managers,clients);
+        }
+        else if(clients.isEmpty()){
+            return users=employeeRepo.findByProjectInAndReportingManagerIn(projects,managers);
+        }
+        else if(managers.isEmpty()){
+            return users=employeeRepo.findByProjectInAndClientIn(projects,clients);
+        }
+        else {
+            return users=employeeRepo.findByProjectInAndReportingManagerInAndClientIn(projects,managers,clients);
+        }
     }
 
 
