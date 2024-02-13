@@ -37,6 +37,9 @@ public class appraisal_master_ext {
     @Column(name = "employee_rating")
     private Integer employeeRating;
 
+    @Column(name ="additional_comments")
+    private String additionalComments;
+
 
 
 }
