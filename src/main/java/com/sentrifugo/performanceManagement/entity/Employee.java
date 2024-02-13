@@ -6,20 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Data
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "employee")
-public class Employee {
-
+public class Employee{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
     private Integer id;
 
     @Column(name = "user_id")
-    private Integer userId;
+    private Integer user_id;
 
     @Column(name = "reporting_manager")
     private Integer reportingManager;
@@ -28,13 +25,13 @@ public class Employee {
     private Integer l2Manager;
 
     @Column(name = "bussinessunit")
-    private String businessUnit;
+    private String bussinessunit;
 
     @Column(name = "department")
     private String department;
 
     @Column(name = "isactive")
-    private Boolean isActive;
+    private boolean isActive;
 
     @Column(name = "createdby")
     private Integer createdBy;
@@ -47,4 +44,5 @@ public class Employee {
 
     @Column(name = "project")
     private String project;
+
 }
