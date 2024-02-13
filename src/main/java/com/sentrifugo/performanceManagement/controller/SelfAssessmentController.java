@@ -39,6 +39,7 @@ public class SelfAssessmentController {
     }
     @PostMapping("/submit")
     public ResponseEntity<List<SelfAssessment>> submitSelfAssessmentForm(@RequestBody List<SelfAssessment> assessments) {
+        System.out.println(assessments);
         List<SelfAssessment> submittedAssessments = selfAssessmentService.submit(assessments);
         return new ResponseEntity<>(submittedAssessments, HttpStatus.CREATED);
     }
@@ -56,7 +57,7 @@ public class SelfAssessmentController {
     }
 
     @GetMapping("/getbyId/{id}")
-  public ResponseEntity<SelfAssessment> getSelfAssessmentById(@PathVariable Integer id) {
+      public ResponseEntity<SelfAssessment> getSelfAssessmentById(@PathVariable Integer id) {
       SelfAssessment selfAssessment = selfAssessmentService.getSelfAssessmentById(id);
 
       if (selfAssessment != null) {
@@ -65,6 +66,17 @@ public class SelfAssessmentController {
           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
   }
+
+    @GetMapping("/getbymid/{mid}")
+    public ResponseEntity<List<SelfAssessment>> getSelfAssessmentsByMid(@PathVariable Integer mid) {
+        List<SelfAssessment> selfAssessments = selfAssessmentService.getSelfAssessmentbymid(mid);
+
+        if (!selfAssessments.isEmpty()) {
+            return new ResponseEntity<>(selfAssessments, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<SelfAssessment> updateSelfAssessment(@PathVariable Integer id, @RequestBody SelfAssessment updatedAssessment) {
