@@ -13,17 +13,17 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "appraisal_master_ext")
 public class appraisal_master_ext {
+
+    private String question;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    @Column(name="question_id")
+    private Integer questionId;
+
 
     @Column(name = "appraisal_master_id")
     private Integer appraisalMasterId;
 
     private String status;
-
-    @Column(name = "parameter_response", columnDefinition = "nvarchar(max)")
-    private String parameterResponse;
 
     @Column(name = "manager_comments")
     private String managerComments;
@@ -37,9 +37,9 @@ public class appraisal_master_ext {
     @Column(name = "employee_rating")
     private Integer employeeRating;
 
-    private Integer createdby;
+    @Column(name ="additional_comments")
+    private String additionalComments;
 
-    private Integer updatedby;
 
 
 }

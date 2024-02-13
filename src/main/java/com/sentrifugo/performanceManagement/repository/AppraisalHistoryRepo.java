@@ -11,10 +11,13 @@ import java.util.Optional;
 
 public interface  AppraisalHistoryRepo extends JpaRepository<appraisal_master_ext,Integer> {
 
-    @Query("SELECT  (am.employeeComments, am.managerComments, am.employeeRating, am.managerRating, am.status) " +
-            "FROM appraisal_master_ext am " +
-            "WHERE am.appraisalMasterId = :id")
-    List<AppraisalDetailsDto> findDetailsById(@Param("id") Integer id);
+//    @Query("SELECT  (am.employeeComments, am.managerComments, am.employeeRating, am.managerRating, am.status,am.question) " +
+//            "FROM appraisal_master_ext am " +
+//            "WHERE am.appraisalMasterId = :id")
+//    List<AppraisalDetailsDto> findDetailsById(@Param("id") Integer id);
+
+    List<appraisal_master_ext> findByappraisalMasterId(Integer appraisalMasterId);
+
 
 
 
