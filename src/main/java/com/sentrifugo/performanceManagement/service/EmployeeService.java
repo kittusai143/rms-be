@@ -34,15 +34,14 @@ public class EmployeeService {
         distinctData.setManagers(employeeRepository.findDistinctByManager());
         return distinctData;
     }
-}
 
 //    public EmployeeRepository employeeRepository;
 //
 //    public List<Employees> getAllEmployees() {
 //        return employeeRepository.findAll();
 //    }
-
-
+//
+//
 //    public List<Employees> getEmployeesByBusinessUnitAndDepartment(String businessUnit, String department) {
 //        return employeeRepository.findByBusinessUnitAndDepartment(businessUnit, department);
 //    }
@@ -60,4 +59,6 @@ public class EmployeeService {
 //                .distinct()
 //                .collect(Collectors.toList());
 //    }
+}
+
 //}
