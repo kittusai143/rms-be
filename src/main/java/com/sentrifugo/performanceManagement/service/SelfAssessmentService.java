@@ -81,6 +81,7 @@ public class SelfAssessmentService {
         List<SelfAssessment> updatedResults = new ArrayList<>();
 
         for (SelfAssessment updatedAssessment : updatedAssessments) {
+//            updatedAssessment.setAppraisalMasterId(need to use the  aprepo.findByEmployeeIdAndIsActive(employeeId, true); api here);
             SelfAssessment savedAssessment = selfAssessmentRepository.save(updatedAssessment);
             updatedResults.add(savedAssessment);
 //            Integer id = updatedAssessment.getQuestionId(); // Assuming questionId is used as the identifier
