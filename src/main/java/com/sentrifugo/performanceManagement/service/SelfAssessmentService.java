@@ -81,6 +81,7 @@ public class SelfAssessmentService {
         List<SelfAssessment> updatedResults = new ArrayList<>();
 
         for (SelfAssessment updatedAssessment : updatedAssessments) {
+//            updatedAssessment.setAppraisalMasterId(need to use the  aprepo.findByEmployeeIdAndIsActive(employeeId, true); api here);
             SelfAssessment savedAssessment = selfAssessmentRepository.save(updatedAssessment);
             updatedResults.add(savedAssessment);
 //            Integer id = updatedAssessment.getQuestionId(); // Assuming questionId is used as the identifier
@@ -126,8 +127,12 @@ public class SelfAssessmentService {
     }
 
 
+    public AppraisalMaster getamStatus(Integer eid) {
+         System.out.println(aprepo.findStatusrowById(Long.valueOf(eid)));
+        return aprepo.findStatusrowById(Long.valueOf(eid));
+    }
+
     public String getStatus(Integer eid) {
-         System.out.println("eid recieved"+eid+aprepo.findStatusById(Long.valueOf(eid)));
         return aprepo.findStatusById(Long.valueOf(eid));
     }
 
@@ -143,11 +148,12 @@ public class SelfAssessmentService {
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
             System.out.println(appraisalMaster);
-
+            aprepo.save(appraisalMaster);
             return "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus();
         } else {
             return "AppraisalMaster with ID " + mid + "not found";
         }
+
     }
 
     public Long getActiveAppraisalMasterId(Long employeeId) {
@@ -158,5 +164,70 @@ public class SelfAssessmentService {
     public List<SelfAssessment> getSelfAssessmentFormByMasterId(Integer masterId) {
         return selfAssessmentRepository.findByAppraisalMasterId(masterId);
     }
+
+
+    public boolean deleteSelfAssessmentById(Integer id) {
+        Optional<SelfAssessment> selfAssessmentOptional = selfAssessmentRepository.findById(id);
+
+        if (selfAssessmentOptional.isPresent()) {
+            selfAssessmentRepository.deleteById(id);
+            return true; // Deletion successful
+        } else {
+            return false; // Question not found
+        }
+    }
+
+
+
+//    public void initializeAssessment(Integer employeeId) {
+//        Integer masterId = aprepo.findAppraisalIdByEmployeeID(employeeId);
+//
+//        if (masterId != null) {
+//            // Assuming you have a method to retrieve a list of questions
+//            List<SelfAssessment> questions = selfAssessmentRepository.findAll();
+//
+//            // If no questions are found, insert default questions
+//            if (questions.isEmpty()) {
+//                // Add your provided questions
+//                SelfAssessment question1 = new SelfAssessment("How well did the employee contribute to project tasks and deadlines?");
+//                SelfAssessment question2 = new SelfAssessment("Rate the employee's technical skills and expertise.");
+//                SelfAssessment question3 = new SelfAssessment("In what ways did the employee collaborate with team members?");
+//                SelfAssessment question4 = new SelfAssessment("Describe the employee's problem-solving abilities in challenging situations.");
+//                SelfAssessment question5 = new SelfAssessment("Rate the overall communication and interpersonal skills of the employee.");
+//
+//                // Set the master ID for each default question
+//                question1.setAppraisalMasterId(masterId);
+//                question2.setAppraisalMasterId(masterId);
+//                question3.setAppraisalMasterId(masterId);
+//                question4.setAppraisalMasterId(masterId);
+//                question5.setAppraisalMasterId(masterId);
+//
+//                // Set other properties for questions as needed
+//
+//                // Save the provided questions to the database
+//                selfAssessmentRepository.save(question1);
+//                selfAssessmentRepository.save(question2);
+//                selfAssessmentRepository.save(question3);
+//                selfAssessmentRepository.save(question4);
+//                selfAssessmentRepository.save(question5);
+//                // Save more questions as needed
+//            }
+//
+//            for (SelfAssessment question : questions) {
+//                // Set the master ID for each question
+//                question.setAppraisalMasterId(masterId);
+//                question.setStatus(null); // You might want to set the default status or leave it as null
+//
+//                // Set other properties for questions as needed
+//
+//                // Save the question to the database
+//                selfAssessmentRepository.save(question);
+//            }
+//        } else {
+//            // Handle the case where the master ID is not found based on your requirements
+//            // You may throw an exception, log an error, or handle it as needed
+//        }
+//    }
+
 }
 

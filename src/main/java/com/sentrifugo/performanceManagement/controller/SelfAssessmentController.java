@@ -1,7 +1,9 @@
 package com.sentrifugo.performanceManagement.controller;
 
 
+import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
+import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.service.SelfAssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,12 @@ public class SelfAssessmentController {
     }
 
 
+
+    @GetMapping("/am-status/{eid}")
+    public AppraisalMaster getamStatus(@PathVariable Integer eid){
+        return selfAssessmentService.getamStatus(eid);
+    }
+
     @GetMapping("/status/{eid}")
     public String getStatus(@PathVariable Integer eid){
         return selfAssessmentService.getStatus(eid);
@@ -32,10 +40,12 @@ public class SelfAssessmentController {
     public Long getActivemid(@PathVariable Long eid) {
         return selfAssessmentService.getActiveAppraisalMasterId(eid);
     }
-    @PostMapping("/status/{eid}/{status}")
-    public String changeStatus(@PathVariable Integer mid,@PathVariable String status){
-        return selfAssessmentService.changeStatus(mid,status);
+
+    @PutMapping("/status/{mid}/{status}")
+    public String changeStatus(@PathVariable Integer mid, @PathVariable String status) {
+        return selfAssessmentService.changeStatus(mid, status);
     }
+
 
     @GetMapping("/get-all-rows")
     public ResponseEntity<List<SelfAssessment>> getSelfAssessmentForm() {
@@ -56,7 +66,10 @@ public class SelfAssessmentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/submit")
+
+
+
+        @PostMapping("/submit")
     public ResponseEntity<List<SelfAssessment>> submitSelfAssessmentForm(@RequestBody List<SelfAssessment> assessments) {
         System.out.println(assessments);
         List<SelfAssessment> submittedAssessments = selfAssessmentService.submit(assessments);
@@ -75,6 +88,8 @@ public class SelfAssessmentController {
         }
     }
 
+
+
     @GetMapping("/getbyId/{id}")
       public ResponseEntity<SelfAssessment> getSelfAssessmentById(@PathVariable Integer id) {
       SelfAssessment selfAssessment = selfAssessmentService.getSelfAssessmentById(id);
@@ -85,6 +100,19 @@ public class SelfAssessmentController {
           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
   }
+
+
+    @DeleteMapping("/deleteById/{id}")
+    public ResponseEntity<String> deleteSelfAssessmentById(@PathVariable Integer id) {
+        boolean deleted = selfAssessmentService.deleteSelfAssessmentById(id);
+
+        if (deleted) {
+            return new ResponseEntity<>("Question with ID " + id + " deleted successfully.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Question with ID " + id + " not found.", HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping("/getbymid/{mid}")
     public ResponseEntity<List<SelfAssessment>> getSelfAssessmentsByMid(@PathVariable Integer mid) {
@@ -103,7 +131,15 @@ public class SelfAssessmentController {
         return new ResponseEntity<>(updatedAssessmentResult, HttpStatus.OK);
     }
 
-
+//    @GetMapping("/initialize/{employeeId}")
+//    public ResponseEntity<String> initializeAssessment(@PathVariable Integer employeeId) {
+//        try {
+//            selfAssessmentService.initializeAssessment(employeeId);
+//            return new ResponseEntity<>("Assessment initialized successfully.", HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Failed to initialize assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 
 
