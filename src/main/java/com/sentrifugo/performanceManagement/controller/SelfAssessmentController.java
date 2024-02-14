@@ -26,8 +26,13 @@ public class SelfAssessmentController {
 
 
 
+    @GetMapping("/am-status/{eid}")
+    public AppraisalMaster getamStatus(@PathVariable Integer eid){
+        return selfAssessmentService.getamStatus(eid);
+    }
+
     @GetMapping("/status/{eid}")
-    public AppraisalMaster getStatus(@PathVariable Integer eid){
+    public String getStatus(@PathVariable Integer eid){
         return selfAssessmentService.getStatus(eid);
     }
 
@@ -36,7 +41,7 @@ public class SelfAssessmentController {
         return selfAssessmentService.getActiveAppraisalMasterId(eid);
     }
 
-    @PostMapping("/status/{mid}/{status}")
+    @PutMapping("/status/{mid}/{status}")
     public String changeStatus(@PathVariable Integer mid, @PathVariable String status) {
         return selfAssessmentService.changeStatus(mid, status);
     }

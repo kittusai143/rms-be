@@ -127,9 +127,13 @@ public class SelfAssessmentService {
     }
 
 
-    public AppraisalMaster getStatus(Integer eid) {
+    public AppraisalMaster getamStatus(Integer eid) {
          System.out.println(aprepo.findStatusrowById(Long.valueOf(eid)));
         return aprepo.findStatusrowById(Long.valueOf(eid));
+    }
+
+    public String getStatus(Integer eid) {
+        return aprepo.findStatusById(Long.valueOf(eid));
     }
 
 
@@ -144,11 +148,12 @@ public class SelfAssessmentService {
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
             System.out.println(appraisalMaster);
-
+            aprepo.save(appraisalMaster);
             return "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus();
         } else {
             return "AppraisalMaster with ID " + mid + "not found";
         }
+
     }
 
     public Long getActiveAppraisalMasterId(Long employeeId) {
@@ -171,6 +176,8 @@ public class SelfAssessmentService {
             return false; // Question not found
         }
     }
+
+
 
 //    public void initializeAssessment(Integer employeeId) {
 //        Integer masterId = aprepo.findAppraisalIdByEmployeeID(employeeId);
