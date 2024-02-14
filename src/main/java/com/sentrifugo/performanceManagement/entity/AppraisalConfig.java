@@ -36,7 +36,7 @@ public class AppraisalConfig {
     private String status;
 
     @Column(name = "enable_to")
-    private String enableTo;
+    private Integer enableTo;
 
     @Column(name = "from_year")
     private Date fromYear;

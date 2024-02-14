@@ -13,19 +13,34 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="Users")
+@Table(name="Users", schema = "dbo")
 public class Users {
     @Id
     @Column(name = "Id")
-    private Integer id;
+    private int Id;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "empRole")
     private Integer empRole;
+
+    @Column(name = "dob")
     private Date dob;
-    @Column(name = "userfullname")
+
+    @Column(name = "userFullname")
     private String userFullName;
+
+    @Column(name = "contactNumber")
     private String contactNumber;
+
+    @Column(name = "isactive")
     private boolean isActive;
+
+    @Column(name = "employeeId")
     private String employeeId;
 
 }

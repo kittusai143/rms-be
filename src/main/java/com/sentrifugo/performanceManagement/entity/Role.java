@@ -4,31 +4,38 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-    @Entity
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class Role {
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private  Integer roleID;
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@CrossOrigin
+@Table(name = "Role", schema = "dbo")
+public class Role {
 
-        private String rolename;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "roleID")
+    private  Integer roleID;
 
-        private String roletype;
+    @Column(name = "rolename")
+    private String rolename;
 
-        @Column(name = "roleDescription")
-        private String roleDescription;
+    @Column(name = "roletype")
+    private String roletype;
 
-        @Column(name = "createdby")
-        private String createdBy;
+    @Column(name = "roleDescription")
+    private String roleDescription;
 
-        @Column(name = "updatedby")
-        private String updatedBy;
+    @Column(name = "createdby")
+    private String createdBy;
 
-        @Column(name = "isactive")
-        private boolean isActive;
-    }
+    @Column(name = "updatedby")
+    private String updatedBy;
+
+    @Column(name = "isactive")
+    private boolean isActive;
+}
 
 
