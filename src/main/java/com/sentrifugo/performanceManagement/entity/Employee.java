@@ -24,8 +24,8 @@ public class Employee{
     @Column(name = "l2_manager")
     private Integer l2Manager;
 
-    @Column(name = "bussinessunit")
-    private String bussinessunit;
+    @Column(name = "businessunit")
+    private String businessunit;
 
     @Column(name = "department")
     private String department;
