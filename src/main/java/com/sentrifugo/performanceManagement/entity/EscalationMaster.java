@@ -18,19 +18,24 @@ public class EscalationMaster {
 
     private Integer id;
 
-    private Integer appraisal_master_id ;
+    @Column(name="appraisal_master_id")
+    private Integer appraisalMasterId ;
 
     private String reason;
 
     private String   comments;
 
-    private String  initiated_by;
+    @Column(name="initiated_by")
+    private String  initiatedBy;
 
-    private Integer  created_by;
+    @Column(name="created_by")
+    private Integer  createdBy;
 
-    private Integer  updated_by;
+    @Column(name="updated_by")
+    private Integer  updatedBy;
 
     private String   status;
 
-    private String  l2_manager_comments;
+    @Column(name="l2_manager_comments")
+    private String  l2ManagerComments;
 }

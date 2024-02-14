@@ -1,7 +1,9 @@
 package com.sentrifugo.performanceManagement.controller;
 
 
+import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
+import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.service.SelfAssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,9 @@ public class SelfAssessmentController {
     }
 
 
+
     @GetMapping("/status/{eid}")
-    public String getStatus(@PathVariable Integer eid){
+    public AppraisalMaster getStatus(@PathVariable Integer eid){
         return selfAssessmentService.getStatus(eid);
     }
 
@@ -59,7 +62,9 @@ public class SelfAssessmentController {
         }
     }
 
-    @PostMapping("/submit")
+
+
+        @PostMapping("/submit")
     public ResponseEntity<List<SelfAssessment>> submitSelfAssessmentForm(@RequestBody List<SelfAssessment> assessments) {
         System.out.println(assessments);
         List<SelfAssessment> submittedAssessments = selfAssessmentService.submit(assessments);
@@ -77,6 +82,8 @@ public class SelfAssessmentController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @GetMapping("/getbyId/{id}")
       public ResponseEntity<SelfAssessment> getSelfAssessmentById(@PathVariable Integer id) {
@@ -119,6 +126,15 @@ public class SelfAssessmentController {
         return new ResponseEntity<>(updatedAssessmentResult, HttpStatus.OK);
     }
 
+//    @GetMapping("/initialize/{employeeId}")
+//    public ResponseEntity<String> initializeAssessment(@PathVariable Integer employeeId) {
+//        try {
+//            selfAssessmentService.initializeAssessment(employeeId);
+//            return new ResponseEntity<>("Assessment initialized successfully.", HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Failed to initialize assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 
 

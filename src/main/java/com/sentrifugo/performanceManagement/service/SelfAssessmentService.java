@@ -127,9 +127,9 @@ public class SelfAssessmentService {
     }
 
 
-    public String getStatus(Integer eid) {
-         System.out.println("eid recieved"+eid+aprepo.findStatusById(Long.valueOf(eid)));
-        return aprepo.findStatusById(Long.valueOf(eid));
+    public AppraisalMaster getStatus(Integer eid) {
+         System.out.println(aprepo.findStatusrowById(Long.valueOf(eid)));
+        return aprepo.findStatusrowById(Long.valueOf(eid));
     }
 
 
@@ -171,5 +171,56 @@ public class SelfAssessmentService {
             return false; // Question not found
         }
     }
+
+//    public void initializeAssessment(Integer employeeId) {
+//        Integer masterId = aprepo.findAppraisalIdByEmployeeID(employeeId);
+//
+//        if (masterId != null) {
+//            // Assuming you have a method to retrieve a list of questions
+//            List<SelfAssessment> questions = selfAssessmentRepository.findAll();
+//
+//            // If no questions are found, insert default questions
+//            if (questions.isEmpty()) {
+//                // Add your provided questions
+//                SelfAssessment question1 = new SelfAssessment("How well did the employee contribute to project tasks and deadlines?");
+//                SelfAssessment question2 = new SelfAssessment("Rate the employee's technical skills and expertise.");
+//                SelfAssessment question3 = new SelfAssessment("In what ways did the employee collaborate with team members?");
+//                SelfAssessment question4 = new SelfAssessment("Describe the employee's problem-solving abilities in challenging situations.");
+//                SelfAssessment question5 = new SelfAssessment("Rate the overall communication and interpersonal skills of the employee.");
+//
+//                // Set the master ID for each default question
+//                question1.setAppraisalMasterId(masterId);
+//                question2.setAppraisalMasterId(masterId);
+//                question3.setAppraisalMasterId(masterId);
+//                question4.setAppraisalMasterId(masterId);
+//                question5.setAppraisalMasterId(masterId);
+//
+//                // Set other properties for questions as needed
+//
+//                // Save the provided questions to the database
+//                selfAssessmentRepository.save(question1);
+//                selfAssessmentRepository.save(question2);
+//                selfAssessmentRepository.save(question3);
+//                selfAssessmentRepository.save(question4);
+//                selfAssessmentRepository.save(question5);
+//                // Save more questions as needed
+//            }
+//
+//            for (SelfAssessment question : questions) {
+//                // Set the master ID for each question
+//                question.setAppraisalMasterId(masterId);
+//                question.setStatus(null); // You might want to set the default status or leave it as null
+//
+//                // Set other properties for questions as needed
+//
+//                // Save the question to the database
+//                selfAssessmentRepository.save(question);
+//            }
+//        } else {
+//            // Handle the case where the master ID is not found based on your requirements
+//            // You may throw an exception, log an error, or handle it as needed
+//        }
+//    }
+
 }
 
