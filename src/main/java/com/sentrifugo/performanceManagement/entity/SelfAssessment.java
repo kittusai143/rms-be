@@ -41,6 +41,9 @@ public class SelfAssessment {
 
     @Column(name = "additional_comments")
     private String additionalComments;
+
+    @Column(name = "weightage")
+    private Integer weightage;
     //end of entity
 }
 

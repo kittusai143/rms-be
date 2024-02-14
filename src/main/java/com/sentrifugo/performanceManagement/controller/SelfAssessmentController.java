@@ -32,10 +32,12 @@ public class SelfAssessmentController {
     public Long getActivemid(@PathVariable Long eid) {
         return selfAssessmentService.getActiveAppraisalMasterId(eid);
     }
-    @PostMapping("/status/{eid}/{status}")
-    public String changeStatus(@PathVariable Integer mid,@PathVariable String status){
-        return selfAssessmentService.changeStatus(mid,status);
+
+    @PostMapping("/status/{mid}/{status}")
+    public String changeStatus(@PathVariable Integer mid, @PathVariable String status) {
+        return selfAssessmentService.changeStatus(mid, status);
     }
+
 
     @GetMapping("/get-all-rows")
     public ResponseEntity<List<SelfAssessment>> getSelfAssessmentForm() {
@@ -86,6 +88,19 @@ public class SelfAssessmentController {
       }
   }
 
+
+    @DeleteMapping("/deleteById/{id}")
+    public ResponseEntity<String> deleteSelfAssessmentById(@PathVariable Integer id) {
+        boolean deleted = selfAssessmentService.deleteSelfAssessmentById(id);
+
+        if (deleted) {
+            return new ResponseEntity<>("Question with ID " + id + " deleted successfully.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Question with ID " + id + " not found.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
     @GetMapping("/getbymid/{mid}")
     public ResponseEntity<List<SelfAssessment>> getSelfAssessmentsByMid(@PathVariable Integer mid) {
         List<SelfAssessment> selfAssessments = selfAssessmentService.getSelfAssessmentbymid(mid);
@@ -102,7 +117,6 @@ public class SelfAssessmentController {
         SelfAssessment updatedAssessmentResult = selfAssessmentService.updateSelfAssessment(id, updatedAssessment);
         return new ResponseEntity<>(updatedAssessmentResult, HttpStatus.OK);
     }
-
 
 
 

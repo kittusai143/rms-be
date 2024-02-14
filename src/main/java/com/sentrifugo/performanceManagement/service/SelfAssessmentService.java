@@ -158,5 +158,17 @@ public class SelfAssessmentService {
     public List<SelfAssessment> getSelfAssessmentFormByMasterId(Integer masterId) {
         return selfAssessmentRepository.findByAppraisalMasterId(masterId);
     }
+
+
+    public boolean deleteSelfAssessmentById(Integer id) {
+        Optional<SelfAssessment> selfAssessmentOptional = selfAssessmentRepository.findById(id);
+
+        if (selfAssessmentOptional.isPresent()) {
+            selfAssessmentRepository.deleteById(id);
+            return true; // Deletion successful
+        } else {
+            return false; // Question not found
+        }
+    }
 }
 
