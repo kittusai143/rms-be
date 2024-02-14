@@ -35,30 +35,7 @@ public class EmployeeService {
         return distinctData;
     }
 
-//    public EmployeeRepository employeeRepository;
-//
-//    public List<Employees> getAllEmployees() {
-//        return employeeRepository.findAll();
-//    }
-//
-//
-//    public List<Employees> getEmployeesByBusinessUnitAndDepartment(String businessUnit, String department) {
-//        return employeeRepository.findByBusinessUnitAndDepartment(businessUnit, department);
-//    }
-//
-//    public List<String> getDistinctDepartments() {
-//        return employeeRepository.findAll().stream()
-//                .map(Employees::getDepartment)
-//                .distinct()
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<String> getDistinctBusinessUnits() {
-//        return employeeRepository.findAll().stream()
-//                .map(Employees::getBusinessUnit)
-//                .distinct()
-//                .collect(Collectors.toList());
-//    }
+
 }
 
 //}
