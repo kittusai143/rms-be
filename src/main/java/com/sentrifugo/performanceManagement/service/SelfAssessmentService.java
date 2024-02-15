@@ -4,6 +4,7 @@ import com.sentrifugo.performanceManagement.entity.SelfAssessment;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.repository.SelfAssessmentRepository;
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,9 +80,7 @@ public class SelfAssessmentService {
 
         System.out.println("Received payload: " + updatedAssessments);
         List<SelfAssessment> updatedResults = new ArrayList<>();
-
         for (SelfAssessment updatedAssessment : updatedAssessments) {
-//            updatedAssessment.setAppraisalMasterId(need to use the  aprepo.findByEmployeeIdAndIsActive(employeeId, true); api here);
             SelfAssessment savedAssessment = selfAssessmentRepository.save(updatedAssessment);
             updatedResults.add(savedAssessment);
 //            Integer id = updatedAssessment.getQuestionId(); // Assuming questionId is used as the identifier
@@ -140,7 +139,6 @@ public class SelfAssessmentService {
     public String changeStatus(Integer mid, String newStatus) {
         Optional<AppraisalMaster> optionalAppraisalMaster = aprepo.findById(Long.valueOf(mid));
 
-        //casting to long for temporary use
 
         if (optionalAppraisalMaster.isPresent()) {
             AppraisalMaster appraisalMaster = optionalAppraisalMaster.get();
@@ -153,7 +151,6 @@ public class SelfAssessmentService {
         } else {
             return "AppraisalMaster with ID " + mid + "not found";
         }
-
     }
 
     public Long getActiveAppraisalMasterId(Long employeeId) {
@@ -177,6 +174,9 @@ public class SelfAssessmentService {
         }
     }
 
+    public void initializeAssessment(Long masterId) {
+
+    }
 
 
 //    public void initializeAssessment(Integer employeeId) {
@@ -228,6 +228,42 @@ public class SelfAssessmentService {
 //            // You may throw an exception, log an error, or handle it as needed
 //        }
 //    }
+
+    public List<SelfAssessment> submitWithDefaultQuestions(Long masterId) {
+        List<SelfAssessment> defaultAssessments = getDefaultAssessments(masterId);
+        List<SelfAssessment> updatedResults = new ArrayList<>();
+
+        for (SelfAssessment defaultAssessment : defaultAssessments) {
+            SelfAssessment savedAssessment = selfAssessmentRepository.save(defaultAssessment);
+            updatedResults.add(savedAssessment);
+        }
+
+        return updatedResults;
+    }
+
+    private List<SelfAssessment> getDefaultAssessments(Long masterId) {
+        List<SelfAssessment> defaultAssessments = new ArrayList<>();
+
+        // Default weightage
+        int weightage = 20;
+
+        // Row 1
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "How well did the employee contribute to project tasks and deadlines?", "Pending", "", 0, "", 0, 0, "", weightage));
+
+        // Row 2
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Rate the employee's technical skills and expertise.", "Pending", "", 0, "", 0, 0, "", weightage));
+
+        // Row 3
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "In what ways did the employee collaborate with team members?", "Pending", "", 0, "", 0, 0, "", weightage));
+
+        // Row 4
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Describe the employee's problem-solving abilities in challenging situations.", "Pending", "", 0, "", 0, 0, "", weightage));
+
+        // Row 5
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Rate the overall communication and interpersonal skills of the employee.", "Pending", "", 0, "", 0, 0, "", weightage));
+
+        return defaultAssessments;
+    }
 
 }
 

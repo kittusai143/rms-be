@@ -131,16 +131,14 @@ public class SelfAssessmentController {
         return new ResponseEntity<>(updatedAssessmentResult, HttpStatus.OK);
     }
 
-//    @GetMapping("/initialize/{employeeId}")
-//    public ResponseEntity<String> initializeAssessment(@PathVariable Integer employeeId) {
-//        try {
-//            selfAssessmentService.initializeAssessment(employeeId);
-//            return new ResponseEntity<>("Assessment initialized successfully.", HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>("Failed to initialize assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-
-
+    @PostMapping("/initialize/{masterId}")
+    public ResponseEntity<String> initializeAssessment(@PathVariable Long masterId) {
+        try {
+            selfAssessmentService.submitWithDefaultQuestions(masterId);
+            return new ResponseEntity<>("Assessment initialized successfully.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to initialize assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

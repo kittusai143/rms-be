@@ -49,6 +49,20 @@ public class SelfAssessment {
             this.question = question;
         }
 
-        // Other methods and properties...
+    public SelfAssessment(Integer appraisalMasterId, String question, String status, String managerComments, Integer managerRating, String employeeComments, Integer employeeRating, Integer createdBy, String additionalComments, Integer weightage) {
+        this.appraisalMasterId = appraisalMasterId;
+        this.question = question;
+        this.status = status;
+        this.managerComments = managerComments;
+        this.managerRating = managerRating;
+        this.employeeComments = employeeComments;
+        this.employeeRating = employeeRating;
+        this.createdBy = createdBy;
+        this.additionalComments = additionalComments;
+        this.weightage = weightage;
+    }
+
+
+    // Other methods and properties...
 }
 

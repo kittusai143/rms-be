@@ -9,4 +9,4 @@ public interface SelfAssessmentRepository extends JpaRepository<SelfAssessment,I
 
           List<SelfAssessment> findByAppraisalMasterId(Integer appraisalMasterId);
 
-}
+    }
