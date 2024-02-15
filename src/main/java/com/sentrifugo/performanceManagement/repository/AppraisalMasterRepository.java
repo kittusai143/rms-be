@@ -28,6 +28,8 @@ public interface AppraisalMasterRepository extends JpaRepository<AppraisalMaster
     Optional<AppraisalMaster> findByEmployeeIdAndIsActive(Long employeeId, boolean b);
 
 
+    @Query("select Id from AppraisalMaster where employeeId=:id and isActive=true")
+    Integer findAppraisalMasterId(Integer id);
 }
 
 //    @Query("SELECT am.Id FROM AppraisalMaster am WHERE am.employeeId = :id AND am.isActive = true")

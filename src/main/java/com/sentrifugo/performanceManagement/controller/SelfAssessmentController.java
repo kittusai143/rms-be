@@ -5,6 +5,7 @@ import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.service.SelfAssessmentService;
+import org.aspectj.bridge.IMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +28,24 @@ public class SelfAssessmentController {
 
 
     @GetMapping("/am-status/{eid}")
-    public AppraisalMaster getamStatus(@PathVariable Integer eid){
-        return selfAssessmentService.getamStatus(eid);
+    public ResponseEntity<?> getamStatus(@PathVariable Integer eid){
+    String message="no active record found for the given id "+eid;
+        AppraisalMaster appraisalMaster= selfAssessmentService.getamStatus(eid);
+        if(appraisalMaster!=null)
+            return ResponseEntity.ok(appraisalMaster);
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
+//    @GetMapping("/am-status/{eid}")
+//    public ResponseEntity<AppraisalMaster> getamStatus(@PathVariable Integer eid) {
+//        AppraisalMaster appraisalMaster = selfAssessmentService.getamStatus(eid);
+//
+//        if (appraisalMaster != null) {
+//            return new ResponseEntity<>(appraisalMaster, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or choose another appropriate status code
+//        }
+//    }
 
     @GetMapping("/status/{eid}")
     public String getStatus(@PathVariable Integer eid){

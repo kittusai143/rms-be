@@ -29,4 +29,15 @@ public class AppraisalHistoryController {
             return ResponseEntity.ok(appraisalDetailsList);
         }
     }
+    @GetMapping("/getAppraisalMasterId/{id}")
+    public ResponseEntity<?> getAppraisalMasterId(@PathVariable Integer id)
+    {
+        Integer appraialId=appraisalService.getAppraisalId(id);
+        String message = "No record found for ID: " + id;
+        if(appraialId==null)
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        else
+            return  ResponseEntity.ok(appraialId);
+    }
+
 }
