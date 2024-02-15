@@ -1,6 +1,5 @@
 package com.sentrifugo.performanceManagement.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
@@ -23,6 +22,7 @@ public class AppraisalConfig {
 
     @Column(name = "workflow_config_id")
     private Long workflowConfigId;
+
     @Column(name = "business_unit")
     private String businessUnit;
 
@@ -65,7 +65,8 @@ public class AppraisalConfig {
     @Column(name = "rating")
     private String rating;
 
-
+    @Column(name = "created_by")
+    private Long createdBy;
 
 
 }

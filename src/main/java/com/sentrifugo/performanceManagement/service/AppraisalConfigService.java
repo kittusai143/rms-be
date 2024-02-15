@@ -49,7 +49,7 @@ public class AppraisalConfigService {
             appraisalMaster.setEmployeeId(empid);
             appraisalMaster.setAppraisalIntitationId(appraisalConfig.getAppraisalConfigId());
             appraisalMaster.setPeriod(appraisalConfig.getPeriod());
-            appraisalMaster.setCreatedBy(empid);
+            appraisalMaster.setCreatedBy(appraisalConfig.getCreatedBy());
             appraisalMaster.setCreatedDate(new Date());
             appraisalMaster.setActive(true);
             appraisalMaster.setStatus(appraisalConfig.getStatus());
@@ -65,6 +65,7 @@ public class AppraisalConfigService {
             }
         }
     }
+
 
 
     public AppraisalConfig updateAppraisalConfig(Long appraisalConfigId, AppraisalConfig appraisalConfigdetails) throws ResourceNotFoundException {
@@ -86,6 +87,7 @@ public class AppraisalConfigService {
         appraisalConfig.setProcessStatus(appraisalConfigdetails.getProcessStatus());
         appraisalConfig.setToYear(appraisalConfigdetails.getToYear());
         appraisalConfig.setStatus(appraisalConfigdetails.getStatus());
+        appraisalConfig.setCreatedBy(appraisalConfigdetails.getCreatedBy());
 
         return appraisalConfigRepository.save(appraisalConfig);
     }
