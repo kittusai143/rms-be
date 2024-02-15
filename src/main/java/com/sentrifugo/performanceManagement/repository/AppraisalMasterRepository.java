@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,10 +16,14 @@ public interface AppraisalMasterRepository extends JpaRepository<AppraisalMaster
 
     @Query("SELECT am.status FROM AppraisalMaster am WHERE am.employeeId = :id AND am.isActive = true")
     String findStatusById(Long id);
-    //finds the status of the active appraisal of the employee
 
     @Query("SELECT am FROM AppraisalMaster am WHERE am.employeeId = :id AND am.isActive = true")
     AppraisalMaster findStatusrowById(Long id);
+
+    //finds the status of the active appraisal of the employee
+    @Query("SELECT am FROM AppraisalMaster am WHERE am.employeeId = :employeeId AND am.isActive = :isActive")
+    List<AppraisalMaster> findByEmployeeIdAndActive(Long employeeId, boolean isActive);
+
 
     Optional<AppraisalMaster> findByEmployeeIdAndIsActive(Long employeeId, boolean b);
 

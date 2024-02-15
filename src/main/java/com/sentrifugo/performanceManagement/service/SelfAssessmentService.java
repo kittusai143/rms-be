@@ -139,19 +139,19 @@ public class SelfAssessmentService {
     public String changeStatus(Integer mid, String newStatus) {
         Optional<AppraisalMaster> optionalAppraisalMaster = aprepo.findById(Long.valueOf(mid));
 
-
         if (optionalAppraisalMaster.isPresent()) {
             AppraisalMaster appraisalMaster = optionalAppraisalMaster.get();
             System.out.println(appraisalMaster);
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
             System.out.println(appraisalMaster);
-            aprepo.save(appraisalMaster);
+            // No need to explicitly call save here, changes will be persisted
             return "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus();
         } else {
-            return "AppraisalMaster with ID " + mid + "not found";
+            return "AppraisalMaster with ID " + mid + " not found";
         }
     }
+
 
     public Long getActiveAppraisalMasterId(Long employeeId) {
         Optional<AppraisalMaster> optionalAppraisalMaster = aprepo.findByEmployeeIdAndIsActive(employeeId, true);

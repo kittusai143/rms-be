@@ -26,7 +26,7 @@ public class AppraisalMaster {
     private Long appraisalIntitationId;
 
     @Column(name = "period")
-    private Date period;
+    private Integer period;
 
     @Column(name = "created_by")
     private Long createdBy;

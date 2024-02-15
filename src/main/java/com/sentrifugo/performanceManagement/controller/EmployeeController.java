@@ -18,7 +18,7 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 @RestController
-@RequestMapping("abhiram")
+@RequestMapping("employee")
 @CrossOrigin("*")
 public class EmployeeController {
     @Autowired
@@ -107,11 +107,24 @@ public class EmployeeController {
 //        return userPage.getContent();
     }
     @Autowired
-    private EmployeeService distinctDataService;
+    private EmployeeService employeeService;
 
     @GetMapping("distinct")
     public ResponseEntity<DistinctData> getDistinctData() {
-        DistinctData distinctData = distinctDataService.getDistinctData();
+        DistinctData distinctData = employeeService.getDistinctData();
         return ResponseEntity.ok(distinctData);
+    }
+    ;
+
+    @GetMapping("distinct/businessunits")
+    public ResponseEntity<List<String>> getDistinctBusinessUnits() {
+        List<String> businessUnits = employeeService.getDistinctBusinessUnit();
+        return ResponseEntity.ok(businessUnits);
+    }
+
+    @GetMapping("distinct/departments")
+    public ResponseEntity<List<String>> getDistinctDepartments() {
+        List<String> departments = employeeService.getDistinctDepartment();
+        return ResponseEntity.ok(departments);
     }
 }
