@@ -4,9 +4,12 @@ package com.sentrifugo.performanceManagement.controller;
 import com.sentrifugo.performanceManagement.entity.EscalationMaster;
 import com.sentrifugo.performanceManagement.service.EscalationMasterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/escalateMaster")
@@ -25,6 +28,17 @@ public class EscalationMasterController {
     @GetMapping("/getEscalationDetails")
     public List<EscalationMaster> getEscalateMasterDetails(){
         return escalationMasterService.getEscalateMasterDetails();
+    }
+
+    /* api created by Varsha Devgankar */
+    @GetMapping("/getEsclationInDetailView/{id}")
+    public ResponseEntity<?> findEscalationInDetailViewbyId(@PathVariable("id") Integer id){
+        Map<String,Object> escalationDetail = escalationMasterService.findEscalationInDetailViewbyId(id);
+        if(!escalationDetail.isEmpty()){
+          return   ResponseEntity.ok()
+                    .body(escalationDetail);
+        }
+        return ResponseEntity.badRequest().body("No record");
     }
 
 }
