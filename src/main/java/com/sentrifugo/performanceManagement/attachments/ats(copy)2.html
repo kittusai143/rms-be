@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   
+    <title>Display and Edit Data with Details</title>
+    <style>
+        .user {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        table {
+            width: 600px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .total {
+            width: 150px;
+            height: auto;
+            border-style: solid;
+            background-color: bisque;
+        }
+
+        .pagination {
+            display: none;
+        }
+
+        .details {
+            text-align: center;
+            width: 500px;
+            display: none;
+            float: right;
+            border-style: groove;
+            background-color: antiquewhite;
+        }
+
+        .side {
+            display: flex;
+            gap:4em;
+        }
+
+        .edit-input {
+            display: none;
+        }
+        #si{
+            background-color:green;
+        }
+        #ci{
+            background-color: green;
+        }
+        .Schedule{
+            display:none;
+            border-style:solid;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="total">
+        <h4>Total Candidates:<span id="totalCandidates">0</span></h4>
+    </div>
+
+    <h1>Candidates</h1>
+    <div class="side">
+        <div id="userList">
+        </div>
+        <div class="details">
+            <h2>Application Details</h2>
+            <img src="download.jpg" width="150" height="100">
+            <p><strong>Name:</strong> <span id="detailName"></span></p>
+            <p><strong>Job:</strong> <span id="detailJob"></span></p>
+            <p><strong>Bio:</strong> <span id="detailRole"></span></p>
+            <p><strong>Interest:</strong> <span id="detailInterest"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <br>
+            <button id="si" onclick="open">Schedule Interview</button>
+            <button id="ci">Review</button>
+            <br>
+        </div>
+        <div class="Schedule">
+            <h1>Schedule Interview</h1>
+            <div class="round">
+                <label for="select">Round</label>
+                <select id="selectround">
+                <option value="">Select  option</option>
+                <option value="hamster">Round1</option>
+                <option value="parrot">Round2</option>
+                <option value="spider">Round3</option>
+                <option value="goldfish">Round4</option>
+            </select>
+            </div>
+            <div class="interviewer">
+                <label for="select">Interviewer</label>
+                <select id="inter">
+                <option value="">Select  option</option>
+                <option value="hamster">Swarna</option>
+                <option value="parrot">Suren</option>
+                <option value="spider">Saravanan</option>
+                <option value="goldfish">Vishal</option>
+                <label for="daytime">Interview Schedule</label>
+                <input type="datetime-local" id="birthdaytime" >
+                <input type="submit">
+            </div>
+            
+        </div>
+    </div>
+    <ul id="pagination" class="pagination"></ul>
+    <button id="prevButton">Previous</button>
+    <button id="nextButton">Next</button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAEfZWh_ErEWDdTHBSkEcSJ2jsEP-sKoe4",
+            authDomain: "todo-list-b2222.firebaseapp.com",
+            projectId: "todo-list-b2222",
+            storageBucket: "todo-list-b2222.appspot.com",
+            messagingSenderId: "572622708434",
+             appId: "1:572622708434:web:e801d8d60691dce8fc970b",
+            measurementId: "G-PKXPT6HZCR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase();
+        const usersRef = ref(database, 'users');
+        const userList = document.getElementById('userList');
+        const userTable = document.createElement('table');
+        const totalCandidates = document.getElementById('totalCandidates');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const details = document.querySelector('.details');
+        const detailName = document.getElementById('detailName');
+        const detailJob = document.getElementById('detailJob');
+        const detailemail = document.getElementById('email');
+        const detailRole = document.getElementById('detailRole');
+        const detailInterest = document.getElementById('detailInterest');
+        const itemsPerPage = 5;
+        let currentPage = 1;
+        let data = {};
+
+        function loadData() {
+            get(usersRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    data = snapshot.val();
+                    totalCandidates.textContent = Object.keys(data).length;
+                    renderPage(currentPage);
+                } else {
+                    userList.textContent = 'No users found.';
+                }
+            }).catch((error) => {
+                console.error('Error retrieving data: ', error);
+            });
+        }
+        function open()
+        {
+            console.log("hi")
+            document.getElementsByClassName("Schedule").style.display="block";
+        }
+
+        function renderPage(page) {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const slicedData = Object.keys(data).slice(startIndex, endIndex);
+
+            userTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Candidate Name</th>
+                        <th>Email</th>
+                        <th>Applied Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            `;
+
+            userList.innerHTML = '';
+            userList.appendChild(userTable);
+
+            const tbody = userTable.querySelector('tbody');
+
+            for (const key of slicedData) {
+                const user = data[key];
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="name" data-key="${key}">${user.name}</span></td>
+                    <td><span class="email">${user.email}</span></td>
+                    <td><span class="job">${user.job}</span></td>
+                    <td><button class="edit-button" data-key="${key}">Edit</button></td>
+                `;
+
+                tbody.appendChild(row);
+
+                const dis = row.querySelector('.name');
+                dis.addEventListener('click', () => {
+                    const name = user.name;
+                    const job = user.job;
+                    const role = user.bio;
+                    const interest = user.Interest;
+                    const email = user.email;
+
+                    detailName.textContent = name;
+                    detailJob.textContent = job;
+                    detailRole.textContent = role;
+                    detailInterest.textContent = interest;
+                    detailemail.textContent = email;
+
+                    // Show the details section
+                    details.style.display = 'block';
+                });
+
+                // ...
+
+const editButton = row.querySelector('.edit-button');
+editButton.addEventListener('click', () => {
+    if (editButton.textContent === 'Edit') {
+        const name = user.name;
+        const job = user.job;
+        const email = user.email;
+
+        const nameInput = document.createElement('input');
+        nameInput.value = name;
+        const jobInput = document.createElement('input');
+        jobInput.value = job;
+        const emailInput = document.createElement('input');
+        emailInput.value = email;
+
+        const nameSpan = row.querySelector('.name');
+        nameSpan.innerHTML = '';
+        nameSpan.appendChild(nameInput);
+
+        const jobSpan = row.querySelector('.job');
+        jobSpan.innerHTML = '';
+        jobSpan.appendChild(jobInput);
+
+        const emailSpan = row.querySelector('.email');
+        emailSpan.innerHTML = '';
+        emailSpan.appendChild(emailInput);
+
+        editButton.textContent = 'Save';
+
+        editButton.addEventListener('click', () => {
+            const newName = nameInput.value;
+            const newJob = jobInput.value;
+            const newEmail = emailInput.value;
+
+            const updatedData = {
+                name: newName,
+                job: newJob,
+                email: newEmail
+            };
+
+            set(ref(usersRef, key), updatedData).then(() => {
+                nameSpan.innerHTML = newName;
+                jobSpan.innerHTML = newJob;
+                emailSpan.innerHTML = newEmail;
+                editButton.textContent = 'Edit';
+
+                // Update the data object with the edited data
+                data[key] = updatedData;
+            });
+        });
+    }
+});
+
+// ...
+
+            }
+
+            // renderPagination();
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            const totalPages = Math.ceil(Object.keys(data).length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+
+        // Initial data load
+        loadData();
+
+    </script>
+</body>
+</html>

@@ -7,10 +7,14 @@ import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository
 import com.sentrifugo.performanceManagement.service.SelfAssessmentService;
 import org.aspectj.bridge.IMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -154,6 +158,33 @@ public class SelfAssessmentController {
             return new ResponseEntity<>("Assessment initialized successfully.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to initialize assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/{selfAssessmentId}/upload-file")
+    public ResponseEntity<String> uploadFile(@PathVariable Long selfAssessmentId, @RequestParam("file") MultipartFile file) {
+        try {
+            selfAssessmentService.uploadFile(selfAssessmentId, file);
+            return ResponseEntity.ok("File uploaded successfully");
+        } catch (IOException e) {
+            System.out.println(e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> downloadFile(@RequestParam("filePath") String filePath) {
+        try {
+            byte[] fileContent = selfAssessmentService.downloadFile(filePath);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "file");
+
+            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace(); // Log the error
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

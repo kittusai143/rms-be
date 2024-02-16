@@ -45,11 +45,24 @@ public class SelfAssessment {
     @Column(name = "weightage")
     private Integer weightage;
 
+
+    @Column(name = "file_path")
+    private String filePath;
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+
     public SelfAssessment(String question) {
             this.question = question;
         }
 
-    public SelfAssessment(Integer appraisalMasterId, String question, String status, String managerComments, Integer managerRating, String employeeComments, Integer employeeRating, Integer createdBy, String additionalComments, Integer weightage) {
+    public SelfAssessment(Integer appraisalMasterId, String question, String status, String managerComments, Integer managerRating, String employeeComments, Integer employeeRating, Integer createdBy, String additionalComments, Integer weightage,String filePath) {
         this.appraisalMasterId = appraisalMasterId;
         this.question = question;
         this.status = status;
@@ -60,6 +73,7 @@ public class SelfAssessment {
         this.createdBy = createdBy;
         this.additionalComments = additionalComments;
         this.weightage = weightage;
+        this.filePath=filePath;
     }
 
 
