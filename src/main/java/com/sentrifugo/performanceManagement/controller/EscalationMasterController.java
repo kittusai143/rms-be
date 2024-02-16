@@ -3,6 +3,7 @@ package com.sentrifugo.performanceManagement.controller;
 
 import com.sentrifugo.performanceManagement.entity.EscalationMaster;
 import com.sentrifugo.performanceManagement.service.EscalationMasterService;
+import com.sentrifugo.performanceManagement.vo.EscalateListView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,11 @@ public class EscalationMasterController {
     @GetMapping("/getEscalationDetails")
     public List<EscalationMaster> getEscalateMasterDetails(){
         return escalationMasterService.getEscalateMasterDetails();
+    }
+
+    @GetMapping("/getAllEscalationDetails")
+    public List<EscalateListView> escalateListView(){
+        return escalationMasterService.getAllEscalationDetails();
     }
 
     /* api created by Varsha Devgankar */
