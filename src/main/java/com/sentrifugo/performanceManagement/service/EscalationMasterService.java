@@ -3,10 +3,12 @@ package com.sentrifugo.performanceManagement.service;
 import com.sentrifugo.performanceManagement.entity.EscalationMaster;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.repository.EscalationMasterRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EscalationMasterService {
@@ -38,4 +40,21 @@ public class EscalationMasterService {
     public List<EscalationMaster> getEscalateMasterDetails() {
         return escalationMasterRepository.findAll();
     }
+
+
+    public Map<String,Object> findEscalationInDetailViewbyId(Integer id){
+        return escalationMasterRepository.findEscalationInDetailViewbyId(id);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }
