@@ -23,10 +23,19 @@ import java.util.List;
 public class EmployeeController {
     @Autowired
     private EmployeeRepo employeeRepo;
-    @GetMapping("get")
-    public List<Employee> get(){
-        return employeeRepo.findAll();
+
+    @Autowired
+    EmployeeService employeeService;
+    @GetMapping("/get")
+    public List<EmpDetails> get(){
+        return employeeService.getDetails();
     }
+    @GetMapping("getByManager")
+    public List<EmpDetails> getbymanager(@RequestParam(name="manager")int manager){
+        return employeeService.getDetailsByManager(manager);
+    }
+
+
 
     @PostMapping("add")
     public Employee add(@RequestBody Employee emp){
@@ -40,11 +49,11 @@ public class EmployeeController {
     ){
 
         System.out.println("managers"+distinctData.getManagers());
-       List<String> projects=distinctData.getProjects();
-       List<String> clients=distinctData.getClients();
-       List<String> managers=distinctData.getManagers();
-       List<Integer> manager=employeeRepo.findIdsByManagerIn(managers);
-       System.out.println(manager);
+        List<String> projects=distinctData.getProjects();
+        List<String> clients=distinctData.getClients();
+        List<String> managers=distinctData.getManagers();
+        List<Integer> manager=employeeRepo.findIdsByManagerIn(managers);
+        System.out.println(manager);
         List<Employee> users;
 
         if(projects.isEmpty()&&clients.isEmpty()&&managers.isEmpty()){
@@ -77,44 +86,15 @@ public class EmployeeController {
         }
     }
 
-
-
-//    @PostMapping("/filter")
-//    public Page<Employee> filter(@RequestBody DistinctData distinctData, @RequestParam(defaultValue = "0") int page,
-//                                 @RequestParam(defaultValue = "10") int size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        return employeeRepo.findByProjectInAndReportingManagerInAndClientIn(
-//                distinctData.getProjects(), distinctData.getManagers(), distinctData.getClients());
-//    }
-    @GetMapping("page")
-    public ResponseEntity<List<Employee>> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction) {
-
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortBy));
-        Page<Employee> userPage = employeeRepo.findAll(pageable);
-        boolean isLastPage = !userPage.hasNext();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Total-Pages", String.valueOf(userPage.getTotalPages()));
-        headers.add("X-Is-Last-Page", String.valueOf(isLastPage));
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(userPage.getContent());
-//        return userPage.getContent();
-    }
     @Autowired
-    private EmployeeService employeeService;
+    private EmployeeService distinctDataService;
 
     @GetMapping("distinct")
     public ResponseEntity<DistinctData> getDistinctData() {
-        DistinctData distinctData = employeeService.getDistinctData();
+        DistinctData distinctData = distinctDataService.getDistinctData();
         return ResponseEntity.ok(distinctData);
     }
-    ;
+
 
     @GetMapping("distinct/businessunits")
     public ResponseEntity<List<String>> getDistinctBusinessUnits() {

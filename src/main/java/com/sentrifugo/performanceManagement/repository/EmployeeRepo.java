@@ -1,3 +1,4 @@
+
 package com.sentrifugo.performanceManagement.repository;
 
 
@@ -18,6 +19,7 @@ import java.util.List;
 //businessunit,department,isActive,createdBy,updatedBy,client,project
 
 
+
 //FIELDS IN USERS
 //private Integer id;
 //private String email;
@@ -33,19 +35,17 @@ public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
 
     List<Employee> findByProject(String project);
 
-//    @Query("SELECT " +
-//            "T.id, T.name, T.email, T.client, T.project, T.ReportingManager, u2.name " +
-//            "FROM ( " +
-//            "   SELECT E.id, E.name, E.email, E.client, E.project, E.ReportingManager, u.name AS ReportingManager " +
-//            "   FROM ( " +
-//            "       SELECT u.id, u.name, e.reportingManager, e.l2Manager, u.email, e.client, e.project " +
-//            "       FROM Users u " +
-//            "       JOIN Employee e ON u.id = e.id " +
-//            "   ) AS E " +
-//            "   JOIN Users u ON E.reportingManager = u.id " +
-//            ") AS T " +
-//            "JOIN Users u2 ON T.l2Manager = u2.id")
-//    List<EmpDetails> findEmpDetails();
+
+    //@Query("SELECT new com.sentrifugo.performanceManagement.vo.EmpDetails(" +
+//        "u.id, u.name, u.email, e.client, e.project) " +
+//        "FROM Users u " +
+//        "JOIN Employee e ON u.id = e.id")
+//List<EmpDetails> findEmpDetails();
+    @Query(value="select T.id,T.name,T.email,T.client,T.project,T.ReportingManager,Users.name as L2_Manager from(select E.*,Users.name as ReportingManager  from (select Users.id,Users.name,employee.reporting_manager,employee.l2_manager,Users.email,employee.client,employee.project   from Users join employee on Users.id=employee.Id where employee.reporting_manager=:manager ) as E join Users on Users.id=E.reporting_manager)as T join Users on T.l2_manager=Users.Id ",nativeQuery = true)
+    List<Object[]> findEmpDetailsByManager(int manager);
+
+    @Query(value="select T.id,T.name,T.email,T.client,T.project,T.ReportingManager,Users.name as L2_Manager from(select E.*,Users.name as ReportingManager  from (select Users.id,Users.name,employee.reporting_manager,employee.l2_manager,Users.email,employee.client,employee.project   from Users join employee on Users.id=employee.Id ) as E join Users on Users.id=E.reporting_manager)as T join Users on T.l2_manager=Users.Id",nativeQuery = true)
+    List<Object[]> findEmpDetails();
 
 
     List<Employee> findByProjectAndClient(String project, String client);
@@ -69,6 +69,8 @@ public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
     List<Employee>findByProjectInAndClientIn(List<String> projects,List<String> clients);
     List<Employee> findByProjectInAndReportingManagerIn(List<String> projects, List<Integer> managers);
     List<Employee> findByProjectInAndReportingManagerInAndClientIn(List<String> projects, List<Integer> managers, List<String> clients);
+
+
     @Query("SELECT DISTINCT e.businessunit FROM Employee e")
     List<String> findDistinctBusinessunit();
     @Query("SELECT DISTINCT e.department FROM Employee e")
