@@ -7,8 +7,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class SelfAssessmentService {
@@ -145,6 +155,8 @@ public class SelfAssessmentService {
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
             System.out.println(appraisalMaster);
+            aprepo.save(appraisalMaster);
+            aprepo.flush();
             // No need to explicitly call save here, changes will be persisted
             return "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus();
         } else {
@@ -248,22 +260,96 @@ public class SelfAssessmentService {
         int weightage = 20;
 
         // Row 1
-        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "How well did the employee contribute to project tasks and deadlines?", "Pending", "", 0, "", 0, 0, "", weightage));
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "How well did the employee contribute to project tasks and deadlines?", "Pending", "", 0, "", 0, 0, "", weightage,null));
 
         // Row 2
-        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Rate the employee's technical skills and expertise.", "Pending", "", 0, "", 0, 0, "", weightage));
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Rate the employee's technical skills and expertise.", "Pending", "", 0, "", 0, 0, "", weightage,null));
 
         // Row 3
-        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "In what ways did the employee collaborate with team members?", "Pending", "", 0, "", 0, 0, "", weightage));
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "In what ways did the employee collaborate with team members?", "Pending", "", 0, "", 0, 0, "", weightage,null));
 
         // Row 4
-        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Describe the employee's problem-solving abilities in challenging situations.", "Pending", "", 0, "", 0, 0, "", weightage));
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Describe the employee's problem-solving abilities in challenging situations.", "Pending", "", 0, "", 0, 0, "", weightage,null));
 
         // Row 5
-        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Rate the overall communication and interpersonal skills of the employee.", "Pending", "", 0, "", 0, 0, "", weightage));
+        defaultAssessments.add(new SelfAssessment(Math.toIntExact(masterId), "Rate the overall communication and interpersonal skills of the employee.", "Pending", "", 0, "", 0, 0, "", weightage,null));
 
         return defaultAssessments;
     }
+
+//    public void uploadFile(Long selfAssessmentId, MultipartFile file) throws IOException {
+//        // Validate selfAssessmentId and file
+//        if (file.isEmpty()) {
+//            throw new IllegalArgumentException("File is empty");
+//        }
+//
+//        SelfAssessment selfAssessment = selfAssessmentRepository.findById(Math.toIntExact(selfAssessmentId))
+//                .orElseThrow(() -> new IllegalArgumentException("SelfAssessment not found with id: " + selfAssessmentId));
+//
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments" + fileName);
+//        Files.copy(file.getInputStream(), filePath);
+//
+//        selfAssessment.setFilePath(filePath.toString());
+//        selfAssessmentRepository.save(selfAssessment);
+//    }
+public void uploadFile(Long selfAssessmentId, MultipartFile file) throws IOException {
+    // Validate selfAssessmentId and file
+    if (file.isEmpty()) {
+        throw new IllegalArgumentException("File is empty");
+    }
+
+    SelfAssessment selfAssessment = selfAssessmentRepository.findById(Math.toIntExact(selfAssessmentId))
+            .orElseThrow(() -> new IllegalArgumentException("SelfAssessment not found with id: " + selfAssessmentId));
+
+    String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+    String fileName = originalFileName;
+    Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments" + fileName);
+
+    // Check if the file already exists, if so, append "(copy)" to the file name
+    int count = 0;
+    while (Files.exists(filePath)) {
+        count++;
+        String extension = "";
+        int extensionIndex = originalFileName.lastIndexOf('.');
+        if (extensionIndex != -1) {
+            extension = originalFileName.substring(extensionIndex);
+            fileName = originalFileName.substring(0, extensionIndex) + "(copy)" + count + extension;
+        } else {
+            fileName = originalFileName + "(copy)" + count;
+        }
+        filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+    }
+
+    Files.copy(file.getInputStream(), filePath);
+
+    selfAssessment.setFilePath(filePath.toString());
+    selfAssessmentRepository.save(selfAssessment);
+}
+
+    public byte[] downloadFile(String filePath) throws IOException {
+        // Validate file path
+        if (filePath == null || filePath.isEmpty()) {
+            throw new IllegalArgumentException("File path is null or empty");
+        }
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new FileNotFoundException("File not found: " + filePath);
+        }
+
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            return FileCopyUtils.copyToByteArray(inputStream);
+        } catch (IOException e) {
+            // Handle file reading exceptions
+            throw new IOException("Error reading file: " + filePath, e);
+        }
+    }
+
+
+
+
+
 
 }
 
