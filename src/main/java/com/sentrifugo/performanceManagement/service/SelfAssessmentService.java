@@ -145,6 +145,8 @@ public class SelfAssessmentService {
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
             System.out.println(appraisalMaster);
+            aprepo.save(appraisalMaster);
+            aprepo.flush();
             // No need to explicitly call save here, changes will be persisted
             return "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus();
         } else {

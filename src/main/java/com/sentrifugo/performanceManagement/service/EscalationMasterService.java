@@ -3,10 +3,12 @@ package com.sentrifugo.performanceManagement.service;
 import com.sentrifugo.performanceManagement.entity.EscalationMaster;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.repository.EscalationMasterRepository;
+import com.sentrifugo.performanceManagement.vo.EscalateListView;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,14 +49,22 @@ public class EscalationMasterService {
     }
 
 
+    public List<EscalateListView> getAllEscalationDetails() {
+        List<Object[]> results = escalationMasterRepository.findAllDetails();
+        List<EscalateListView> escalateListViews = new ArrayList<>();
 
+        for (Object[] result : results) {
+            EscalateListView escalateListView = new EscalateListView();
+            escalateListView.setEmployeeId(String.valueOf((Long) result[1]));
+            escalateListView.setDesignation((String) result[2]);
+            escalateListView.setDepartment((String) result[3]);
+            escalateListView.setEmployeeName((String) result[4]);
+            escalateListView.setEscalationInitiatedBy((String) result[5]);
+            escalateListView.setStatus((String) result[6]);
+            escalateListViews.add(escalateListView);
+        }
 
-
-
-
-
-
-
-
+        return escalateListViews;
+    }
 
 }
