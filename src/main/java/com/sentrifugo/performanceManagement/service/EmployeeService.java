@@ -5,7 +5,6 @@ package com.sentrifugo.performanceManagement.service;
 import com.sentrifugo.performanceManagement.entity.Employee;
 import com.sentrifugo.performanceManagement.entity.Users;
 import com.sentrifugo.performanceManagement.repository.EmployeeRepo;
-import com.sentrifugo.performanceManagement.repository.EmployeeRepository;
 import com.sentrifugo.performanceManagement.vo.DistinctData;
 import com.sentrifugo.performanceManagement.vo.EmpDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +32,13 @@ public class EmployeeService {
     }
 
 
-
     public List<EmpDetails> getDetails() {
         List<Object[]> results = employeeRepository.findEmpDetails();
         List<EmpDetails> details = new ArrayList<>();
 
         for (Object[] result : results) {
             EmpDetails empDetails = new EmpDetails();
+
             empDetails.setId((Integer) result[0]);
             empDetails.setName((String) result[1]);
             empDetails.setEmail((String) result[2]);
@@ -60,6 +59,8 @@ public class EmployeeService {
 
         for (Object[] result : results) {
             EmpDetails empDetails = new EmpDetails();
+            System.out.println("Id"+result[0]);
+            empDetails.setId((Integer) result[0]);
             empDetails.setName((String) result[1]);
             empDetails.setEmail((String) result[2]);
             empDetails.setClient((String) result[3]);
