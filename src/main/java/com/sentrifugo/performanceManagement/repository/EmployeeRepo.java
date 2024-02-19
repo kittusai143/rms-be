@@ -33,6 +33,16 @@ import java.util.List;
 //private String employeeId;
 public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
 
+    @Query("SELECT COUNT(emp.id) FROM Employee emp")
+    Integer getTotalRecords();
+    @Query("SELECT COUNT(DISTINCT e.department) FROM Employee e")
+    Integer getTotalDept();
+
+    @Query("SELECT COUNT(DISTINCT e.reportingManager) FROM Employee e")
+    Integer getTotalReportingManagers();
+
+    @Query("SELECT COUNT(DISTINCT e.l2Manager) FROM Employee e")
+    Integer getTotalL2Managers();
     List<Employee> findByProject(String project);
 
     @Query(value="select T.id,T.name,T.email,T.client,T.project,T.ReportingManager,Users.name as L2_Manager from(select E.*,Users.name as ReportingManager  from (select Users.id,Users.name,employee.reporting_manager,employee.l2_manager,Users.email,employee.client,employee.project   from Users join employee on Users.id=employee.Id ) as E join Users on Users.id=E.reporting_manager)as T join Users on T.l2_manager=Users.Id",nativeQuery = true)

@@ -1,6 +1,7 @@
 package com.sentrifugo.performanceManagement.controller;
 
 
+import com.sentrifugo.performanceManagement.repository.UsersRepository;
 import com.sentrifugo.performanceManagement.service.EmployeeService;
 import  com.sentrifugo.performanceManagement.vo.DistinctData;
 import com.sentrifugo.performanceManagement.entity.Employee;
@@ -8,6 +9,7 @@ import com.sentrifugo.performanceManagement.repository.EmployeeRepo;
 import com.sentrifugo.performanceManagement.vo.EmpDetails;
 import com.sentrifugo.performanceManagement.vo.ManagerFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("employee")
@@ -27,7 +31,12 @@ public class EmployeeController {
     private EmployeeRepo employeeRepo;
 
     @Autowired
+    private UsersRepository userRepo;
+
+    @Autowired
     private EmployeeService employeeService;
+
+
     @GetMapping("/get")
     public ResponseEntity<?> get() {
         List<EmpDetails> details = employeeService.getDetails();
@@ -168,5 +177,24 @@ public ResponseEntity<?> getDistinctData() {
     public ResponseEntity<List<String>> getDistinctDepartments() {
         List<String> departments = employeeService.getDistinctDepartment();
         return ResponseEntity.ok(departments);
+    }
+
+    @GetMapping("/getcounts")
+    public Map<String, Integer> getAllCounts() {
+        Map<String, Integer> countsMap = new HashMap<>();
+
+        Integer empCount = employeeRepo.getTotalRecords();
+        Integer deptCount = employeeRepo.getTotalDept();
+        Integer reportingManagersCount = employeeRepo.getTotalReportingManagers();
+        Integer l2ManagersCount = employeeRepo.getTotalL2Managers();
+
+        // Add other count queries based on your requirements
+
+        countsMap.put("employeeCount", empCount);
+        countsMap.put("deptCount", deptCount);
+        countsMap.put("l1ManagersCount", reportingManagersCount);
+        countsMap.put("l2ManagersCount", l2ManagersCount);
+
+        return countsMap;
     }
 }
