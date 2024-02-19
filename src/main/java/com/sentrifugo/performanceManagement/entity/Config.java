@@ -19,13 +19,10 @@ public class Config {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @Column(name = "config_name")
     private String configName;
     private int createdBy;
     private Date createdDate;
     private int updatedBy;
-    private int created_by;
-    private Date created_date;
-    private int updated_by;
+
 }
