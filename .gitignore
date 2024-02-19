@@ -19,7 +19,7 @@ target/
 *.iml
 *.ipr
 
-/src/main/java/com/sentrifugo/performanceManagement
+#/src/main/java/com/sentrifugo/performanceManagement
 
 ### NetBeans ###
 /nbproject/private/

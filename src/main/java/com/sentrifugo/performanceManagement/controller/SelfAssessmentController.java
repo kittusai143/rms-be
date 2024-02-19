@@ -186,5 +186,4 @@ public class SelfAssessmentController {
                 .contentLength(fileResource.getFile().length())
                 .body(fileResource);
     }
-
 }
