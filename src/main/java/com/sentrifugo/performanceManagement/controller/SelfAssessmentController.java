@@ -7,6 +7,7 @@ import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository
 import com.sentrifugo.performanceManagement.service.SelfAssessmentService;
 import org.aspectj.bridge.IMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -172,20 +173,18 @@ public class SelfAssessmentController {
         }
     }
 
-    @GetMapping("/download")
-    public ResponseEntity<byte[]> downloadFile(@RequestParam("filePath") String filePath) {
-        try {
-            byte[] fileContent = selfAssessmentService.downloadFile(filePath);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDispositionFormData("attachment", "file");
+    @GetMapping("/download/{fileName:.+}")
+    public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String fileName) {
+        FileSystemResource fileResource = selfAssessmentService.getFile(fileName);
 
-            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
-        } catch (IOException e) {
-            e.printStackTrace(); // Log the error
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(fileResource.getFile().length())
+                .body(fileResource);
     }
 
 }

@@ -45,7 +45,7 @@ public class SelfAssessment {
     @Column(name = "weightage")
     private Integer weightage;
 
-
+//    @Value("${file.storage.path}")
     @Column(name = "file_path")
     private String filePath;
 

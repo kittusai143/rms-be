@@ -6,6 +6,8 @@ import com.sentrifugo.performanceManagement.repository.SelfAssessmentRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -293,19 +295,23 @@ public class SelfAssessmentService {
 //        selfAssessment.setFilePath(filePath.toString());
 //        selfAssessmentRepository.save(selfAssessment);
 //    }
-public void uploadFile(Long selfAssessmentId, MultipartFile file) throws IOException {
-    // Validate selfAssessmentId and file
-    if (file.isEmpty()) {
-        throw new IllegalArgumentException("File is empty");
-    }
+
+//    @Value("${file.storage.path}")
+//    private String fileStoragePath;
+
+    public void uploadFile(Long selfAssessmentId, MultipartFile file) throws IOException {
+     // Validate selfAssessmentId and file
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("File is empty");
+         }
 
     SelfAssessment selfAssessment = selfAssessmentRepository.findById(Math.toIntExact(selfAssessmentId))
             .orElseThrow(() -> new IllegalArgumentException("SelfAssessment not found with id: " + selfAssessmentId));
 
     String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
     String fileName = originalFileName;
-    Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments" + fileName);
-
+    Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+//        Path filePath = Paths.get(fileStoragePath, fileName);
     // Check if the file already exists, if so, append "(copy)" to the file name
     int count = 0;
     while (Files.exists(filePath)) {
@@ -323,28 +329,25 @@ public void uploadFile(Long selfAssessmentId, MultipartFile file) throws IOExcep
 
     Files.copy(file.getInputStream(), filePath);
 
-    selfAssessment.setFilePath(filePath.toString());
+    selfAssessment.setFilePath(fileName);
     selfAssessmentRepository.save(selfAssessment);
 }
 
-    public byte[] downloadFile(String filePath) throws IOException {
-        // Validate file path
-        if (filePath == null || filePath.isEmpty()) {
-            throw new IllegalArgumentException("File path is null or empty");
-        }
 
+    public FileSystemResource getFile(String fileName) {
+    String filePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName;
+    // Adjust the path based on your folder structureString absolutePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\" + fileName;
         File file = new File(filePath);
-        if (!file.exists()) {
-            throw new FileNotFoundException("File not found: " + filePath);
-        }
-
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            return FileCopyUtils.copyToByteArray(inputStream);
-        } catch (IOException e) {
-            // Handle file reading exceptions
-            throw new IOException("Error reading file: " + filePath, e);
+        System.out.println(filePath);
+        if (file.exists()) {
+            return new FileSystemResource(file);
+        } else {
+            // Handle the case where the file is not found
+            throw new RuntimeException("File not found: " + fileName);
         }
     }
+
+
 
 
 
