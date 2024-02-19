@@ -35,6 +35,7 @@ public class AppraisalConfigService {
         AppraisalConfig savedAppraisalConfig = appraisalConfigRepository.save(appraisalConfig);
         createAppraisalMastersForEmployees(savedAppraisalConfig);
         return savedAppraisalConfig;
+
     }
     private void createAppraisalMastersForEmployees(AppraisalConfig appraisalConfig) {
 
@@ -64,7 +65,11 @@ public class AppraisalConfigService {
                 appraisalMasterRepository.save(existingRecord);
             }
         }
+
+
     }
+
+
 
 
 

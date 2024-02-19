@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/sa")
@@ -152,25 +153,10 @@ public class SelfAssessmentController {
         return new ResponseEntity<>(updatedAssessmentResult, HttpStatus.OK);
     }
 
-    @PostMapping("/initialize/{masterId}")
-    public ResponseEntity<String> initializeAssessment(@PathVariable Long masterId) {
-        try {
-            selfAssessmentService.submitWithDefaultQuestions(masterId);
-            return new ResponseEntity<>("Assessment initialized successfully.", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed to initialize assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
-    @PostMapping("/{selfAssessmentId}/upload-file")
-    public ResponseEntity<String> uploadFile(@PathVariable Long selfAssessmentId, @RequestParam("file") MultipartFile file) {
-        try {
-            selfAssessmentService.uploadFile(selfAssessmentId, file);
-            return ResponseEntity.ok("File uploaded successfully");
-        } catch (IOException e) {
-            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + e.getMessage());
-        }
+    @PostMapping("/upload")
+    public Map<String, String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        return selfAssessmentService.uploadFile(file);
     }
 
 

@@ -188,60 +188,8 @@ public class SelfAssessmentService {
         }
     }
 
-    public void initializeAssessment(Long masterId) {
-
-    }
 
 
-//    public void initializeAssessment(Integer employeeId) {
-//        Integer masterId = aprepo.findAppraisalIdByEmployeeID(employeeId);
-//
-//        if (masterId != null) {
-//            // Assuming you have a method to retrieve a list of questions
-//            List<SelfAssessment> questions = selfAssessmentRepository.findAll();
-//
-//            // If no questions are found, insert default questions
-//            if (questions.isEmpty()) {
-//                // Add your provided questions
-//                SelfAssessment question1 = new SelfAssessment("How well did the employee contribute to project tasks and deadlines?");
-//                SelfAssessment question2 = new SelfAssessment("Rate the employee's technical skills and expertise.");
-//                SelfAssessment question3 = new SelfAssessment("In what ways did the employee collaborate with team members?");
-//                SelfAssessment question4 = new SelfAssessment("Describe the employee's problem-solving abilities in challenging situations.");
-//                SelfAssessment question5 = new SelfAssessment("Rate the overall communication and interpersonal skills of the employee.");
-//
-//                // Set the master ID for each default question
-//                question1.setAppraisalMasterId(masterId);
-//                question2.setAppraisalMasterId(masterId);
-//                question3.setAppraisalMasterId(masterId);
-//                question4.setAppraisalMasterId(masterId);
-//                question5.setAppraisalMasterId(masterId);
-//
-//                // Set other properties for questions as needed
-//
-//                // Save the provided questions to the database
-//                selfAssessmentRepository.save(question1);
-//                selfAssessmentRepository.save(question2);
-//                selfAssessmentRepository.save(question3);
-//                selfAssessmentRepository.save(question4);
-//                selfAssessmentRepository.save(question5);
-//                // Save more questions as needed
-//            }
-//
-//            for (SelfAssessment question : questions) {
-//                // Set the master ID for each question
-//                question.setAppraisalMasterId(masterId);
-//                question.setStatus(null); // You might want to set the default status or leave it as null
-//
-//                // Set other properties for questions as needed
-//
-//                // Save the question to the database
-//                selfAssessmentRepository.save(question);
-//            }
-//        } else {
-//            // Handle the case where the master ID is not found based on your requirements
-//            // You may throw an exception, log an error, or handle it as needed
-//        }
-//    }
 
     public List<SelfAssessment> submitWithDefaultQuestions(Long masterId) {
         List<SelfAssessment> defaultAssessments = getDefaultAssessments(masterId);
@@ -251,7 +199,6 @@ public class SelfAssessmentService {
             SelfAssessment savedAssessment = selfAssessmentRepository.save(defaultAssessment);
             updatedResults.add(savedAssessment);
         }
-
         return updatedResults;
     }
 
@@ -279,59 +226,52 @@ public class SelfAssessmentService {
         return defaultAssessments;
     }
 
-//    public void uploadFile(Long selfAssessmentId, MultipartFile file) throws IOException {
-//        // Validate selfAssessmentId and file
-//        if (file.isEmpty()) {
-//            throw new IllegalArgumentException("File is empty");
-//        }
-//
-//        SelfAssessment selfAssessment = selfAssessmentRepository.findById(Math.toIntExact(selfAssessmentId))
-//                .orElseThrow(() -> new IllegalArgumentException("SelfAssessment not found with id: " + selfAssessmentId));
-//
-//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-//        Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments" + fileName);
-//        Files.copy(file.getInputStream(), filePath);
-//
-//        selfAssessment.setFilePath(filePath.toString());
-//        selfAssessmentRepository.save(selfAssessment);
-//    }
 
-//    @Value("${file.storage.path}")
-//    private String fileStoragePath;
+    public Map<String, String> uploadFile(MultipartFile file) throws IOException {
+        Map<String, String> response = new HashMap<>();
 
-    public void uploadFile(Long selfAssessmentId, MultipartFile file) throws IOException {
-     // Validate selfAssessmentId and file
+        // Validate file
         if (file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty");
-         }
-
-    SelfAssessment selfAssessment = selfAssessmentRepository.findById(Math.toIntExact(selfAssessmentId))
-            .orElseThrow(() -> new IllegalArgumentException("SelfAssessment not found with id: " + selfAssessmentId));
-
-    String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-    String fileName = originalFileName;
-    Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
-//        Path filePath = Paths.get(fileStoragePath, fileName);
-    // Check if the file already exists, if so, append "(copy)" to the file name
-    int count = 0;
-    while (Files.exists(filePath)) {
-        count++;
-        String extension = "";
-        int extensionIndex = originalFileName.lastIndexOf('.');
-        if (extensionIndex != -1) {
-            extension = originalFileName.substring(extensionIndex);
-            fileName = originalFileName.substring(0, extensionIndex) + "(copy)" + count + extension;
-        } else {
-            fileName = originalFileName + "(copy)" + count;
+            response.put("filepath", "");
+            response.put("msg", "File is empty");
+            return response;
         }
-        filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+
+        // Assuming you have a method to retrieve or create a SelfAssessment entity
+//        SelfAssessment selfAssessment = getOrCreateSelfAssessmentEntity();  // Replace with your logic
+
+        String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String fileName = originalFileName;
+        Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+
+        // Check if the file already exists, if so, append "(copy)" to the file name
+        int count = 0;
+        while (Files.exists(filePath)) {
+            count++;
+            String extension = "";
+            int extensionIndex = originalFileName.lastIndexOf('.');
+            if (extensionIndex != -1) {
+                extension = originalFileName.substring(extensionIndex);
+                fileName = originalFileName.substring(0, extensionIndex) + "(copy)" + count + extension;
+            } else {
+                fileName = originalFileName + "(copy)" + count;
+            }
+            filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+        }
+
+        Files.copy(file.getInputStream(), filePath);
+
+//        selfAssessment.setFilePath(fileName);
+//        selfAssessmentRepository.save(selfAssessment);
+
+        response.put("filepath", fileName);
+        response.put("msg", "File uploaded successfully");
+
+        return response;
     }
 
-    Files.copy(file.getInputStream(), filePath);
 
-    selfAssessment.setFilePath(fileName);
-    selfAssessmentRepository.save(selfAssessment);
-}
+
 
 
     public FileSystemResource getFile(String fileName) {
