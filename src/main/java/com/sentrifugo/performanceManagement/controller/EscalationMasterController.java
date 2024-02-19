@@ -46,5 +46,4 @@ public class EscalationMasterController {
         }
         return ResponseEntity.badRequest().body("No record");
     }
-
 }
