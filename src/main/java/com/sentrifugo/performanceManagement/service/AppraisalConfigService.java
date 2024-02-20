@@ -44,6 +44,15 @@ public class AppraisalConfigService {
         System.out.println(employees);
 
         for (Employee employee : employees) {
+
+            // Update existing AppraisalMaster records for the same employee to set isActive to false
+            List<AppraisalMaster> existingRecords = appraisalMasterRepository.findByEmployeeIdAndActive(Long.valueOf(employee.getId()), true);
+            System.out.println(existingRecords);
+            for (AppraisalMaster existingRecord : existingRecords) {
+                existingRecord.setActive(false);
+                appraisalMasterRepository.save(existingRecord);
+            }
+
             Long empid = Long.valueOf(employee.getId());
             // Create a new AppraisalMaster object for each employee
             AppraisalMaster appraisalMaster = new AppraisalMaster();
@@ -53,17 +62,12 @@ public class AppraisalConfigService {
             appraisalMaster.setCreatedBy(appraisalConfig.getCreatedBy());
             appraisalMaster.setCreatedDate(new Date());
             appraisalMaster.setActive(true);
-            appraisalMaster.setStatus(appraisalConfig.getStatus());
+            appraisalMaster.setActive(true);
+            appraisalMaster.setStatus("Initialized");
 
             appraisalMasterRepository.save(appraisalMaster);
 
-            // Update existing AppraisalMaster records for the same employee to set isActive to false
-            List<AppraisalMaster> existingRecords = appraisalMasterRepository.findByEmployeeIdAndActive(Long.valueOf(employee.getId()), true);
-            System.out.println(existingRecords);
-            for (AppraisalMaster existingRecord : existingRecords) {
-                existingRecord.setActive(false);
-                appraisalMasterRepository.save(existingRecord);
-            }
+
         }
 
 
