@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,8 +90,9 @@ public class QuestionsController {
             List<Questions> questions=questionsRepository.getQuestionsByConfigId(id);
             if(questions.isEmpty())
             {
-                String message="NO Record found";
-                return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+                Map<String,Object> map=new HashMap<>();
+                map.put("message","no record found for these id : "+init_id);
+                return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
             }
             else
                 return ResponseEntity.ok(questions);
