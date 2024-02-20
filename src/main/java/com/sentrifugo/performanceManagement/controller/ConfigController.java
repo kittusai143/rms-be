@@ -19,8 +19,6 @@ public class ConfigController {
     @Autowired
     private ConfigRepo repo;
 
-//  @Autowired
-//  private Config confi;
     @GetMapping("GetConfig")
    public ResponseEntity<?> getall()
     {
