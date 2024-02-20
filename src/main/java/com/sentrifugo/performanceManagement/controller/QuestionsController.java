@@ -3,6 +3,7 @@ package com.sentrifugo.performanceManagement.controller;
 
 import com.sentrifugo.performanceManagement.entity.Config;
 import com.sentrifugo.performanceManagement.entity.Questions;
+import com.sentrifugo.performanceManagement.repository.AppraisalConfigRepository;
 import com.sentrifugo.performanceManagement.repository.ConfigRepo;
 import com.sentrifugo.performanceManagement.repository.QuestionsRepository;
 import com.sentrifugo.performanceManagement.service.QuestionsService;
@@ -20,6 +21,8 @@ import java.util.Map;
 
 public class QuestionsController {
 
+    @Autowired
+    private AppraisalConfigRepository apconfigRepo;
     @Autowired
     private QuestionsService questionsService;
     @Autowired
@@ -78,5 +81,18 @@ public class QuestionsController {
     @DeleteMapping("/delete/{id}")
     public String deleteQuestions(@PathVariable("id") Integer id) {
         return questionsService.deleteQuestions(id);
+    }
+
+    @GetMapping("/getlistofQns/{init_id}")
+    public ResponseEntity<?> getQns(@PathVariable Integer init_id){
+            Integer id=apconfigRepo.getpid(init_id);
+            List<Questions> questions=questionsRepository.getQuestionsByConfigId(id);
+            if(questions.isEmpty())
+            {
+                String message="NO Record found";
+                return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+            }
+            else
+                return ResponseEntity.ok(questions);
     }
 }
