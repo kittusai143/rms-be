@@ -37,6 +37,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
 
+
     @GetMapping("/get")
     public ResponseEntity<?> get() {
         List<EmpDetails> details = employeeService.getDetails();
@@ -86,7 +87,7 @@ public ResponseEntity<?> getByManager(@RequestBody ManagerFilter managerFilter) 
 
     @PostMapping("add")
     public ResponseEntity<?> add(@RequestBody Employee emp) {
-        System.out.println(emp);
+
         Employee savedEmployee = employeeRepo.save(emp);
 
         if (savedEmployee != null) {
@@ -144,7 +145,6 @@ public ResponseEntity<?> filter(@RequestBody DistinctData distinctData) {
         boolean isLastPage = !userPage.hasNext();
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Pages", String.valueOf(userPage.getTotalPages()));
-        System.out.println(userPage.getTotalPages());
         headers.add("X-Is-Last-Page", String.valueOf(isLastPage));
 
         return ResponseEntity.ok()

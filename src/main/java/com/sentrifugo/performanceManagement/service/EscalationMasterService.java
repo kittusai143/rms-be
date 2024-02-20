@@ -2,8 +2,10 @@ package com.sentrifugo.performanceManagement.service;
 
 import com.sentrifugo.performanceManagement.entity.EscalationMaster;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
+import com.sentrifugo.performanceManagement.repository.EmployeeRepo;
 import com.sentrifugo.performanceManagement.repository.EscalationMasterRepository;
 import com.sentrifugo.performanceManagement.vo.EscalateListView;
+import com.sentrifugo.performanceManagement.vo.EscalationFilter;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class EscalationMasterService {
 
     @Autowired
     EscalationMasterRepository escalationMasterRepository;
+
+    @Autowired
+    EmployeeRepo employeeRepo;
 
     @Autowired
     AppraisalMasterRepository appraisalMasterRepository;
@@ -66,5 +71,80 @@ public class EscalationMasterService {
 
         return escalateListViews;
     }
+    public List<EscalateListView> getAllEscalationDetailsByDesignation(String designation) {
+        List<Object[]> results = escalationMasterRepository.findAllDetailsByDesignation(designation);
+        List<EscalateListView> escalateListViews = new ArrayList<>();
 
+        for (Object[] result : results) {
+            EscalateListView escalateListView = new EscalateListView();
+            escalateListView.setEmployeeId(String.valueOf((Long) result[1]));
+            escalateListView.setDesignation((String) result[2]);
+            escalateListView.setDepartment((String) result[3]);
+            escalateListView.setEmployeeName((String) result[4]);
+            escalateListView.setEscalationInitiatedBy((String) result[5]);
+            escalateListView.setStatus((String) result[6]);
+            escalateListViews.add(escalateListView);
+        }
+
+        return escalateListViews;
+    }
+    public List<EscalateListView> getAllEscalationDetailsByDepartment(String department) {
+        List<Object[]> results = escalationMasterRepository.findAllDetailsByDepartment(department);
+        List<EscalateListView> escalateListViews = new ArrayList<>();
+
+        for (Object[] result : results) {
+            EscalateListView escalateListView = new EscalateListView();
+            escalateListView.setEmployeeId(String.valueOf((Long) result[1]));
+            escalateListView.setDesignation((String) result[2]);
+            escalateListView.setDepartment((String) result[3]);
+            escalateListView.setEmployeeName((String) result[4]);
+            escalateListView.setEscalationInitiatedBy((String) result[5]);
+            escalateListView.setStatus((String) result[6]);
+            escalateListViews.add(escalateListView);
+        }
+
+        return escalateListViews;
+    }
+    public List<EscalateListView> getAllEscalationDetailsByStatus(String status) {
+        List<Object[]> results = escalationMasterRepository.findAllDetailsByStatus(status);
+        List<EscalateListView> escalateListViews = new ArrayList<>();
+
+        for (Object[] result : results) {
+            EscalateListView escalateListView = new EscalateListView();
+            escalateListView.setEmployeeId(String.valueOf((Long) result[1]));
+            escalateListView.setDesignation((String) result[2]);
+            escalateListView.setDepartment((String) result[3]);
+            escalateListView.setEmployeeName((String) result[4]);
+            escalateListView.setEscalationInitiatedBy((String) result[5]);
+            escalateListView.setStatus((String) result[6]);
+            escalateListViews.add(escalateListView);
+        }
+
+        return escalateListViews;
+    }
+
+
+
+    public void addHrComments (Integer id, String string) {
+        escalationMasterRepository.hrCommentsSaving(id,string);
+    }
+
+    public void statusUpdate(Integer id, String str) {
+        escalationMasterRepository.hrStatusChange(id,str);
+    }
+
+    public EscalationMaster getHrviews(Integer id) {
+       return escalationMasterRepository.findByAppraisalMasterId(id);
+    }
+
+    public EscalationFilter getEscalationFilters()
+    {
+        List<String> departments = employeeRepo.findDistinctByDepartment();
+        List<String> designation = employeeRepo.findDistinctByDesignation();
+        EscalationFilter escalationFilter=new EscalationFilter();
+        escalationFilter.setDepartments(departments);
+        escalationFilter.setDesignations(designation);
+        return  escalationFilter;
+
+    }
 }

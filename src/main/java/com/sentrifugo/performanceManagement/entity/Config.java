@@ -25,4 +25,8 @@ public class Config {
     private Date createdDate;
     private int updatedBy;
 
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

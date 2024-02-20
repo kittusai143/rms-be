@@ -3,7 +3,10 @@ package com.sentrifugo.performanceManagement.controller;
 
 import com.sentrifugo.performanceManagement.entity.Config;
 import com.sentrifugo.performanceManagement.entity.Questions;
+<<<<<<< Updated upstream
 import com.sentrifugo.performanceManagement.repository.AppraisalConfigRepository;
+=======
+>>>>>>> Stashed changes
 import com.sentrifugo.performanceManagement.repository.ConfigRepo;
 import com.sentrifugo.performanceManagement.repository.QuestionsRepository;
 import com.sentrifugo.performanceManagement.service.QuestionsService;
@@ -13,7 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+<<<<<<< Updated upstream
 import java.util.HashMap;
+=======
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +88,7 @@ public class QuestionsController {
     @DeleteMapping("/delete/{id}")
     public String deleteQuestions(@PathVariable("id") Integer id) {
         return questionsService.deleteQuestions(id);
+<<<<<<< Updated upstream
     }
 
     @GetMapping("/getlistofQns/{init_id}")
@@ -96,5 +103,7 @@ public class QuestionsController {
             }
             else
                 return ResponseEntity.ok(questions);
+=======
+>>>>>>> Stashed changes
     }
 }

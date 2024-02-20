@@ -89,6 +89,12 @@ public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
     @Query(value="select T.id,T.name,T.email,T.client,T.project,T.ReportingManager,Users.name as L2_Manager from(select E.*,Users.name as ReportingManager  from (select Users.id,Users.name,employee.reporting_manager,employee.l2_manager,Users.email,employee.client,employee.project   from Users join employee on Users.id=employee.Id where employee.reporting_manager=:manager and  employee.client in :clients ) as E join Users on Users.id=E.reporting_manager)as T join Users on T.l2_manager=Users.Id ",nativeQuery = true)
     List<Object[]> filterByClient(int manager,List<String> clients);
 
+    @Query("SELECT DISTINCT e.department FROM Employee e")
+    List<String> findDistinctByDepartment();
+
+    @Query("SELECT DISTINCT e.businessunit FROM Employee e")
+    List<String> findDistinctByDesignation();
+
 
 
 
