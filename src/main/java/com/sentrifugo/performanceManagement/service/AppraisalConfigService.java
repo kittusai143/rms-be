@@ -62,12 +62,8 @@ public class AppraisalConfigService {
             appraisalMaster.setCreatedBy(appraisalConfig.getCreatedBy());
             appraisalMaster.setCreatedDate(new Date());
             appraisalMaster.setActive(true);
-            appraisalMaster.setActive(true);
             appraisalMaster.setStatus("Initialized");
-
             appraisalMasterRepository.save(appraisalMaster);
-
-
         }
 
 

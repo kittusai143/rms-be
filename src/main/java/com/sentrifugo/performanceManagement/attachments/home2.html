@@ -1,0 +1,141 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="fstyle.css">
+        <script src="menu.js"></script>
+       
+    </head>
+    <body>
+        <header>
+           <h1>Welcome to Brookfields restaurant</h1>
+           <a style="border-style: groove;">
+            Search 
+           </a>
+           <a>
+            Cart
+           </a>
+           <a>
+            Categories
+           </a>
+           <a>
+            Home
+           </a>
+        </header>
+        <nav>
+            <a style="position: relative; top:100px">
+                Bakery
+
+            </a>
+            <br>
+            <a style="position: relative; top:125px">
+                Produce
+
+            </a>
+            <br>
+            <a style="position: relative; top:150px">
+                Meat
+
+            </a>
+            <br>
+            <a style="position: relative; top:175px">
+                Dairy
+
+            </a>
+            <br>
+            <a style="position: relative; top:200px">
+                snacks
+            </a>
+        </nav>
+        <div class="one">
+            <h2>Recipes</h2>
+            <br>
+            <small>Discover new recipes</small>
+
+
+
+
+
+
+            <div class="dropdown">
+                <button onclick="myFunction()" id="showPopup" class="dropbtn">View More</button>
+                <div id="myDropdown" class="dropdown-content">
+                    
+                  <a href=""><img src="C:\Users\user\Downloads\creamypasta.jpg">Creamy pasta</a>
+                  <a href=""><img src="C:\Users\user\Downloads\spicy tacos.jpg">spicy tacos</a>
+                  <a href=""><img src="C:\Users\user\Downloads\gourmet pizza.jpg">Gourmet pizza</a>
+                </div>
+              </div>
+
+            
+            
+            <ul>
+                <li>
+                    <a>
+                        <img src="C:\Users\user\Downloads\pasta.jpg"/>
+                       <pre>
+                        Quick and easy pasta
+                        <small>You are just a click away from having the best pasta of your life</small>
+                       </pre>
+                    </a>
+
+                </li>
+                <li>
+                    <a>
+                        <img src="C:\Users\user\Downloads\chicken.jpg"/>
+                        <pre>spicy chicken curry</pre>
+                    </a>
+                </li>
+            </ul>
+            
+
+        </div>
+
+
+
+        <div  class="two" > 
+            <h3><b>Your Profile</b></h3>
+            <img src="C:\Users\user\Downloads\user.jpg"/>
+            <div style="text-align: center;">
+            <p id="firstname">firstname: </p>
+            <p id="lastname">lastname: </p>
+            <p id="email">Email:</p>
+            
+        </div>
+
+        </div>
+
+        <footer>
+            <h2><b>Subscribe to our newsletter</b></h2>
+
+
+
+            <div>
+                <input type="text" placeholder="Enter your firstname" style="padding:5px;margin-bottom: 10px;margin-top: 10px;">
+                <br>
+                <input type="text" placeholder="Enter your lastname" style="padding:5px;margin-bottom: 10px;margin-top: 10px;">
+                <br>
+                <input type="text" placeholder="Enter your email" style="padding:5px;margin-bottom: 10px;margin-top: 10px;">
+               
+            </div>
+            <button>Subscribe</button>
+          
+        </footer>
+
+        <script>
+            const firstName = sessionStorage.getItem('firstName');
+            const lastName = sessionStorage.getItem('lastName');
+            const email = sessionStorage.getItem('email');
+            const password = sessionStorage.getItem('password');
+
+            console.log(firstName)
+            document.getElementById('firstname').innerHTML += firstName;
+            document.getElementById('lastname').innerHTML += lastName;
+            document.getElementById('email').innerHTML += email;
+            
+
+
+
+
+        </script>
+
+    </body>
+</html>

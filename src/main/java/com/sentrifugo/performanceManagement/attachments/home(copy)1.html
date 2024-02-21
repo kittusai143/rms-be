@@ -1,0 +1,96 @@
+
+<html>
+    <head>
+        <link rel="stylesheet" href="hstyle.css">
+    </head>
+    <body>
+        
+        <div>
+            <p id="p1">
+                Welcome to our workspace
+            </p>
+            <p id="p2">
+                <br>
+                If you don't have an account,register
+                <br>
+            </p>
+            <p >
+                <button onclick="reg()">
+                    Register
+                </button>
+                <button onclick="log()">
+                    Log in
+                </button>
+            </p>   
+        </div>
+        <div id="register">
+            <h2>
+                Register
+            </h2>
+            
+                <label for="firstname" style="width: 50%;float: left;" >
+                    First name  
+                </label>
+                <input  style="width: 50%;float: right;" id="firstname" type="text">
+                
+
+                <label for="lastname" style="width: 50%;float: left;">
+                    Lastname  
+                </label>
+                <input style="width: 50%;float: right;" id="lastname" type="text">
+
+                <label style="width: 50%;float: left;" for="mail">
+                    Email
+                </label>
+                <input style="width: 50%;float: right; " id="mail" type="email">
+
+                <label style="width: 50%;float: left; " for="pass">
+                    Password
+                </label>
+                <input style="width: 50%;float: right; " id="pass" type="password">
+
+                <label style="width: 50%;float: left; " for="cpass">
+                    Confirm Password
+                </label>
+                <input style="width: 50%;float: right; " id="cpass" type="password">
+                <button onclick="register()" style="margin: auto;width: 100px;" >
+                    Register
+                </button>
+            </div>
+
+    
+
+
+        <div id="signin">
+            <h2>
+                Login
+            </h2>
+            <br>
+            <small>
+                Login with your email and password
+            </small>
+            
+                <label  style="width: 50%;float: left;" for="username">
+                    Username
+                </label>
+                <input  style="width: 50%;float: right;" type="email" id="email">
+                <br>
+                <br>
+
+                <label  style="width: 50%;float: l;" for="pass">
+                    Password
+                </label>
+                <input  style="width: 50%;float: right;" type="password" id="password">
+                <button onclick="signin()" >
+                    Sign in
+                </button>
+            
+
+        </div>
+        
+        <script src="toggle.js" >
+            
+        </script>
+    </body>
+   
+</html>

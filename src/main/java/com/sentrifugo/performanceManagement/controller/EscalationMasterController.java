@@ -53,8 +53,8 @@ public class EscalationMasterController {
 
     @PostMapping("/addHrComment/{id}")
     public ResponseEntity<?> addingHrComments(@PathVariable("id") Integer id, @RequestBody String string) {
-        String ans = string.trim();
-        if (!ans.isEmpty()) {
+
+        if (!string.isEmpty()) {
             escalationMasterService.addHrComments(id, string);
             return ResponseEntity.ok().body("Hr Comments added successfully");
         } else {
@@ -64,60 +64,58 @@ public class EscalationMasterController {
     }
 
 
-@PutMapping("/statusUpdate/{id}/{str}")
-public ResponseEntity<?> updateStatus(@PathVariable Integer id,@PathVariable String str)
-{
-    String ans = str.trim();
-    if(!ans.isEmpty() && id!=null)
+    @PutMapping("/statusUpdate/{id}/{str}")
+    public ResponseEntity<?> updateStatus(@PathVariable Integer id,@PathVariable String str)
     {
-        escalationMasterService.statusUpdate(id,str);
-        return ResponseEntity.ok().body("Status changed to Closed Successfully");
+        String ans = str.trim();
+        if(!ans.isEmpty() && id!=null)
+        {
+            escalationMasterService.statusUpdate(id,str);
+            return ResponseEntity.ok().body("Status changed to Closed Successfully");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Error in changing Status");
     }
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body("Error in changing Status");
-}
-@GetMapping("/showHrComments/{id}")
-public ResponseEntity<?> getHrComments (@PathVariable Integer id)
-{
-    if(id!=null) {
-        EscalationMaster lst=escalationMasterService.getHrviews(id);
-        return ResponseEntity.ok().body(lst);
+    @GetMapping("/showHrComments/{id}")
+    public ResponseEntity<?> getHrComments (@PathVariable Integer id)
+    {
+        if(id!=null) {
+            EscalationMaster lst=escalationMasterService.getHrviews(id);
+            return ResponseEntity.ok().body(lst);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Error in obtaining Hr comments");
     }
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body("Error in obtaining Hr comments");
-}
 
-@GetMapping("/getEscalationFilters")
-public ResponseEntity<?> escalationFilters ()
-{
-   return ResponseEntity.ok().body(escalationMasterService.getEscalationFilters());
-}
+    @GetMapping("/getEscalationFilters")
+    public ResponseEntity<?> escalationFilters ()
+    {
+        return ResponseEntity.ok().body(escalationMasterService.getEscalationFilters());
+    }
 
-@GetMapping("/filter")
+    @GetMapping("/filter")
     public ResponseEntity<?>   filter(
             @RequestParam(name="designation",required = false) String designation,
             @RequestParam(name="department",required = false) String department,
             @RequestParam(name="status",required = false)String status){
-    List<EscalateListView> list=null;
-  if(designation!=null){
-       list=escalationMasterService.getAllEscalationDetailsByDesignation(designation);
+        List<EscalateListView> list=null;
+        if(designation!=null){
+            list=escalationMasterService.getAllEscalationDetailsByDesignation(designation);
 
-  }
-  else if(department!=null){
-      System.out.println("HERE");
-      list=escalationMasterService.getAllEscalationDetailsByDepartment(department);
+        }
+        else if(department!=null){
+            System.out.println("HERE");
+            list=escalationMasterService.getAllEscalationDetailsByDepartment(department);
 
 
-  }
-  else if(status!=null){
-      list=escalationMasterService.getAllEscalationDetailsByStatus(status);
-  }
-    return ResponseEntity.ok().body(list);
+        }
+        else if(status!=null){
+            list=escalationMasterService.getAllEscalationDetailsByStatus(status);
+        }
+        return ResponseEntity.ok().body(list);
+
+    }
+
+
 
 }
-
-
-
-}
-
-

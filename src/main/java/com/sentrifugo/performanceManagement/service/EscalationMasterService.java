@@ -126,7 +126,9 @@ public class EscalationMasterService {
 
 
     public void addHrComments (Integer id, String string) {
+
         escalationMasterRepository.hrCommentsSaving(id,string);
+        System.out.println(string);
     }
 
     public void statusUpdate(Integer id, String str) {
