@@ -1,21 +1,32 @@
 package com.sentrifugo.performanceManagement.controller;
-
 import com.sentrifugo.performanceManagement.entity.Config;
 import com.sentrifugo.performanceManagement.entity.Questions;
+
+import com.sentrifugo.performanceManagement.repository.AppraisalConfigRepository;
 import com.sentrifugo.performanceManagement.repository.ConfigRepo;
 import com.sentrifugo.performanceManagement.repository.QuestionsRepository;
+import com.sentrifugo.performanceManagement.service.QuestionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/questions")
 @CrossOrigin
 public class QuestionsController {
 
+    @Autowired
+    private AppraisalConfigRepository apconfigRepo;
+    @Autowired
+    private QuestionsService questionsService;
     @Autowired
     private ConfigRepo configRepository;
 
@@ -28,15 +39,15 @@ public class QuestionsController {
     }
 
     @GetMapping("/getConfig/{configId}")
-public ResponseEntity<?> getQuestionsByConfigId(@PathVariable("configId") Integer configId) {
-    try {
-        List<Questions> questions = questionsRepository.findByConfigId(configId);
-        return ResponseEntity.ok(questions);
-    } catch (Exception e) {
-        String errorMessage = "An error occurred while fetching questions by config ID.";
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+    public ResponseEntity<?> getQuestionsByConfigId(@PathVariable("configId") Integer configId) {
+        try {
+            List<Questions> questions = questionsRepository.findByConfigId(configId);
+            return ResponseEntity.ok(questions);
+        } catch (Exception e) {
+            String errorMessage = "An error occurred while fetching questions by config ID.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+        }
     }
-}
 
     @PostMapping("add")
     @CrossOrigin(origins = "http://localhost:3000")
@@ -125,7 +136,7 @@ public ResponseEntity<?> getQuestionsByConfigId(@PathVariable("configId") Intege
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteQuestions(@PathVariable("id") Integer id) {
         try {
@@ -134,5 +145,18 @@ public ResponseEntity<?> getQuestionsByConfigId(@PathVariable("configId") Intege
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/getlistofQns/{init_id}")
+    public ResponseEntity<?> getQns(@PathVariable Integer init_id) {
+        Integer id = apconfigRepo.getpid(init_id);
+        List<Questions> questions = questionsRepository.getQuestionsByConfigId(id);
+        if (questions.isEmpty()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("message", "no record found for these id : " + init_id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
+        } else
+            return ResponseEntity.ok(questions);
+
     }
 }

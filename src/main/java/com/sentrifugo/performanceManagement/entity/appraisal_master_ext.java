@@ -40,6 +40,10 @@ public class appraisal_master_ext {
     @Column(name ="additional_comments")
     private String additionalComments;
 
+   private int weightage;
 
+
+    @Column(name = "file_path")
+    private String filePath;
 
 }

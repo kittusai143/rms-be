@@ -172,4 +172,15 @@ public class SelfAssessmentController {
                 .contentLength(fileResource.getFile().length())
                 .body(fileResource);
     }
+
+    @PostMapping("/initialize/{masterId}")
+    public ResponseEntity<String> initializeAssessment(@PathVariable Long masterId) {
+        try {
+            selfAssessmentService.submitWithDefaultQuestions(masterId);
+            return new ResponseEntity<>("Assessment initialized successfully.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to initialize assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
