@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmailAuthenService {
@@ -15,13 +16,13 @@ public class EmailAuthenService {
     private EmailAuthenticationRepo Repo;
 
 
-  public   List<String>  verify(String email)
+  public Map<String,Object> verify(String email)
   {
 
       return Repo.findDetailsBYEmail(email);
   }
 
-  public List <String> getdetails(Integer id)
+  public Map<String,Object> getdetails(Integer id)
   {
       return  Repo.findDetailsById(id);
   }

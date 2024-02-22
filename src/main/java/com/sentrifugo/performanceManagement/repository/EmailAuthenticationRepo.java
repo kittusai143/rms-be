@@ -8,19 +8,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EmailAuthenticationRepo extends JpaRepository<Users,Integer> {
-    @Query("SELECT  u.id, u.empRole, r.rolename AS empRoleName, r.roletype AS empRoleType, u.name, u.email,  u.employeeId " +
+    @Query(value="SELECT  u.id, u.empRole, r.rolename AS empRoleName, r.roletype AS empRoleType, u.name, u.email,  u.employeeId " +
             "FROM Users u " +
             "JOIN Role r ON u.empRole = r.roleID " +
-            "WHERE u.email = :email")
-    List<String> findDetailsBYEmail(String email);
+            "WHERE u.email = :email",nativeQuery = true)
+    Map<String,Object> findDetailsBYEmail(String email);
 
-    @Query("SELECT u.id, u.name,u.employeeId, e.businessunit, e.department " +
+    @Query(value="SELECT u.id, u.name,u.employeeId, e.businessunit, e.department " +
             "FROM Users u " +
             "JOIN Employee e ON u.id = e.user_id " +
-            "WHERE u.id = :id")
-    List<String> findDetailsById(@Param("id") Integer id);
+            "WHERE u.id = :id", nativeQuery = true)
+    Map<String,Object> findDetailsById(@Param("id") Integer id);
 
 
     @Query(value = "SELECT reporting_users.name " +
