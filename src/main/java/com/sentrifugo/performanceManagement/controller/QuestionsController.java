@@ -147,7 +147,6 @@ public class QuestionsController {
         }
     }
 
-    //Api Written BY Bramha Teja Kodavandlapalli
     @GetMapping("/getlistofQns/{init_id}")
     public ResponseEntity<?> getQns(@PathVariable Integer init_id) {
         try {
