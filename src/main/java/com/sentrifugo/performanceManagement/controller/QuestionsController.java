@@ -147,16 +147,24 @@ public class QuestionsController {
         }
     }
 
+    //Api Written BY Bramha Teja Kodavandlapalli
     @GetMapping("/getlistofQns/{init_id}")
     public ResponseEntity<?> getQns(@PathVariable Integer init_id) {
-        Integer id = apconfigRepo.getpid(init_id);
-        List<Questions> questions = questionsRepository.getQuestionsByConfigId(id);
-        if (questions.isEmpty()) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("message", "no record found for these id : " + init_id);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(map);
-        } else
-            return ResponseEntity.ok(questions);
-
+        try {
+            Integer id = apconfigRepo.getpid(init_id);
+            List<Questions> questions = questionsRepository.getQuestionsByConfigId(id);
+            if (questions.isEmpty()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("message", "no record found for these id ");
+                List<Map<String,Object>> lis=new ArrayList<>();
+                lis.add(map);
+                return ResponseEntity.ok(lis);
+            } else
+                return ResponseEntity.ok(questions);
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
     }
 }

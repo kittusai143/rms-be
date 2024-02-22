@@ -1,6 +1,7 @@
 package com.sentrifugo.performanceManagement.controller;
 
 
+import com.sentrifugo.performanceManagement.Exceptions.ResourceNotFoundException;
 import com.sentrifugo.performanceManagement.service.EmailAuthenService;
 import com.sentrifugo.performanceManagement.vo.UserAndRoleDetailsDto;
 import com.sentrifugo.performanceManagement.vo.UserDetailsDto;
@@ -18,22 +19,27 @@ import java.util.Map;
 @CrossOrigin("*")
 @RequestMapping("login")
 public class EmailAuthenController {
-
     @Autowired
     private EmailAuthenService service;
-
     @GetMapping("verify")
     public ResponseEntity<?> getdetails(@RequestParam String email) {
-        System.out.println(email);
-        Map<String,Object> valueList = service.verify(email);
 
-        if (valueList.isEmpty()) {
-            Map<String,String> map=new HashMap<>();
-            map.put("status","Record not found for email: " + email);
-            return ResponseEntity.ok(map);
+        try {
+            Map<String, Object> valueList = service.verify(email);
+
+            if (valueList.isEmpty()) {
+                Map<String, String> map = new HashMap<>();
+                map.put("status", "Record not found for email: " + email);
+                return ResponseEntity.ok(map);
+            }
+            return ResponseEntity.ok(valueList);
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
 
-        return ResponseEntity.ok(valueList);
+
     }
 
 
@@ -41,19 +47,14 @@ public class EmailAuthenController {
     public ResponseEntity<?> getfrom(@RequestParam Integer id) {
          try {
             Map<String, Object> valuesList = service.getdetails(id);
-
             if (valuesList.isEmpty()) {
                 Map<String, String> map = new HashMap<>();
-                map.put("status", "No Record found with given id: " + id);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
+                map.put("status", "No Record found with given id");
+                return ResponseEntity.ok(map);
             }
-
             return ResponseEntity.ok(valuesList);
         } catch (Exception e) {
-            // Handle exceptions here
-            Map<String, String> errorMap = new HashMap<>();
-            errorMap.put("status", "Error occurred: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMap);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
     }
 

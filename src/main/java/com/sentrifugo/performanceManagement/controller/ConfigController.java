@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin("*")
@@ -20,14 +23,23 @@ public class ConfigController {
     private ConfigRepo repo;
 
     @GetMapping("GetConfig")
-   public ResponseEntity<?> getall()
-    {
-        String message="No details found";
-      List<Config> config=repo.findAll();
-        if(config.isEmpty())
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
-        else
-            return  ResponseEntity.ok(config);
+   public ResponseEntity<?> getall() {
+        try {
+            List<Config> config = repo.findAll();
+            if (config.isEmpty())
+            {
+                Map<String,String> map=new HashMap<>();
+                map.put("status","No details found");
+                List<Map<String,String>> lis=new ArrayList<>();
+                return ResponseEntity.ok(lis);
+            }
+            else
+                return ResponseEntity.ok(config);
+        }
+        catch (Exception e)
+        {
+            return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
     }
 
 
