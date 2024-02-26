@@ -25,8 +25,4 @@ public class Config {
     private Date createdDate;
     private int updatedBy;
 
-
 }
-
-
-
