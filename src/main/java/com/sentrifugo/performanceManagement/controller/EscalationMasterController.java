@@ -53,9 +53,9 @@ public class EscalationMasterController {
 
     @PostMapping("/addHrComment/{id}")
     public ResponseEntity<?> addingHrComments(@PathVariable("id") Integer id, @RequestBody String string) {
-
-        if (!string.isEmpty()) {
-            escalationMasterService.addHrComments(id, string);
+       String  ans = java.net.URLDecoder.decode(string, java.nio.charset.StandardCharsets.UTF_8);
+        if (!ans.isEmpty()) {
+            escalationMasterService.addHrComments(id, ans);
             return ResponseEntity.ok().body("Hr Comments added successfully");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

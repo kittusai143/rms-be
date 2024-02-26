@@ -44,7 +44,7 @@ public class EmployeeController {
                     return ResponseEntity.ok(details);
                 } else {
                     Map<String,String> map=new HashMap<>();
-                    map.put("message","no employees found for the specified manager");
+                    map.put("message","No employees are currently reporting to you");
                     List<Map<String,String>> list=new ArrayList<>();
                     list.add(map);
                     return ResponseEntity.ok(list);
@@ -55,7 +55,7 @@ public class EmployeeController {
                     return ResponseEntity.ok(details);
                 } else {
                     Map<String,String> map=new HashMap<>();
-                    map.put("message","no employees found for the specified manager and clients");
+                    map.put("message","No employees found for the specified clients");
                     List<Map<String,String>> list=new ArrayList<>();
                     list.add(map);
                     return ResponseEntity.ok(list);
@@ -66,7 +66,7 @@ public class EmployeeController {
                     return ResponseEntity.ok(details);
                 } else {
                     Map<String,String> map=new HashMap<>();
-                    map.put("message","no employees found for the specified manager and projects");
+                    map.put("message","No employees found for the specified projects");
                     List<Map<String,String>> list=new ArrayList<>();
                     list.add(map);
                     return ResponseEntity.ok(list);
@@ -77,7 +77,7 @@ public class EmployeeController {
                     return ResponseEntity.ok(details);
                 } else {
                     Map<String,String> map=new HashMap<>();
-                    map.put("message","no employees found for the specified manager, clients, and projects");
+                    map.put("message","No employees found for the specified clients and projects");
                     List<Map<String,String>> list=new ArrayList<>();
                     list.add(map);
                     return ResponseEntity.ok(list);
@@ -123,7 +123,7 @@ public class EmployeeController {
             } else {
                 Map<String,String> map=new HashMap<>();
                 List<Map<String,String>> list=new ArrayList<>();
-                map.put("message","no employees found for the specified filters");
+                map.put("message","No employees found for the specified filters");
                 list.add(map);
                 return ResponseEntity.ok().body(list);
             }
