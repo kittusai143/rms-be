@@ -12,19 +12,19 @@ import java.util.List;
 public class EscalationListService {
     @Autowired
     private EscalationListRepository repo;
-    public ResponseEntity<List<EscalationList>> getEmployeeBYStatus(String status) {
-        return new ResponseEntity<>(repo.findBystatus(status), HttpStatus.OK);
+    public List<EscalationList> getEmployeeBYStatus(String status) {
+        return repo.findBystatus(status);
     }
 
-    public ResponseEntity<List<EscalationList>> getEmployeeBYDepart(String department) {
-        return new ResponseEntity<>(repo.findBydepartment(department), HttpStatus.OK);
+    public List<EscalationList> getEmployeeBYDepart(String department) {
+        return repo.findBydepartment(department);
     }
 
-    public ResponseEntity<List<EscalationList>> getEmployeeBYDesig(String designation) {
-        return new ResponseEntity<>(repo.findBydesignation(designation), HttpStatus.OK);
+    public List<EscalationList> getEmployeeBYDesig(String designation) {
+        return repo.findBydesignation(designation);
     }
 
-    public ResponseEntity<List<EscalationList>> getAll() {
-        return new ResponseEntity<>(repo.findAll(),HttpStatus.OK);
+    public List<EscalationList> getAll() {
+        return repo.findAll();
     }
 }
