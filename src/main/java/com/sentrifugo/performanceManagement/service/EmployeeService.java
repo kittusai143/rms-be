@@ -85,19 +85,12 @@ public class EmployeeService {
         return details;
     }
 
-
-
-
-
-
-
-    public List<Employee> getEmployeesByBusinessUnitAndDepartmentAndRoleId(
-            String businessunit, String department, Integer roleId) {
+    public List<Employee> getEmployeesByBusinessUnitAndDepartmentsAndRoleId(
+            String businessUnit, List<String> departments, Integer roleId) {
         List<Users> users = usersService.getUsersByRoleId(roleId);
         List<Integer> userIds = users.stream().map(Users::getId).collect(Collectors.toList());
-        return employeeRepository.findByUserIdInAndBusinessunitAndDepartment(userIds, businessunit, department);
+        return employeeRepository.findByUserIdInAndBusinessunitAndDepartmentIn(userIds, businessUnit, departments);
     }
-
 
     public List<String> getDistinctBusinessUnit() {
         return employeeRepository.findDistinctBusinessunit();
