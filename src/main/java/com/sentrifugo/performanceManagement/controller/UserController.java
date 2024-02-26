@@ -62,6 +62,7 @@ public class UserController {
     private UsersRepository repo;
 
 
+
     public List<Map<String, Object>> getdetailsstatus(@RequestParam  Integer id)
     {
         List<Map<String, Object>> values = repo.findDetailsWithStatusByManagerId(id);
@@ -73,7 +74,6 @@ public class UserController {
             return lis;
         }
         return values;
-
 
     }
 

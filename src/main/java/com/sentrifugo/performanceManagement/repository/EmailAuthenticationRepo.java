@@ -11,10 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface EmailAuthenticationRepo extends JpaRepository<Users,Integer> {
-    @Query(value="SELECT  u.id, u.empRole, r.rolename AS empRoleName, r.roletype AS empRoleType, u.name, u.email,  u.employeeId " +
+    @Query(value="SELECT u.id, e.id AS EmpId, u.empRole, r.rolename AS empRoleName, r.roletype AS empRoleType, u.name, u.email, u.employeeId " +
             "FROM Users u " +
-            "JOIN Role r ON u.empRole = r.roleID " +
-            "WHERE u.email = :email",nativeQuery = true)
+            "JOIN Role r ON u.empRole = r.roleID " +  // Added space here
+            "JOIN Employee e ON u.id = e.user_id " +   // Added space here
+            "WHERE u.email = :email", nativeQuery = true)
     Map<String,Object> findDetailsBYEmail(String email);
 
     @Query(value="SELECT u.id, u.name,u.employeeId, e.businessunit, e.department " +

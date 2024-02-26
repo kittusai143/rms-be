@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "employee")
 public class Employee{
     @Id
+    @Column(name="Id")
     private Integer id;
 
     @Column(name = "user_id")
