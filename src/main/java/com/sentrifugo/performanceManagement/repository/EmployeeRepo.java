@@ -96,36 +96,12 @@ public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
     @Query("SELECT DISTINCT e.businessunit FROM Employee e")
     List<String> findDistinctByDesignation();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Query("SELECT DISTINCT e.businessunit FROM Employee e")
     List<String> findDistinctBusinessunit();
     @Query("SELECT DISTINCT e.department FROM Employee e")
     List<String> findDistinctDepartment();
-    @Query("SELECT e FROM Employee e WHERE e.user_id IN :userIds AND e.businessunit = :businessunit AND e.department = :department")
-    List<Employee> findByUserIdInAndBusinessunitAndDepartment(List<Integer> userIds, String businessunit, String department);
+    @Query("SELECT e FROM Employee e WHERE e.user_id IN :userIds AND e.businessunit = :businessunit AND e.department IN :departments")
+    List<Employee> findByUserIdInAndBusinessunitAndDepartmentIn(List<Integer> userIds, String businessunit, List<String> departments);
 
 
 }

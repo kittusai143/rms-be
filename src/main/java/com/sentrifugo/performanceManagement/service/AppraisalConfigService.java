@@ -8,10 +8,11 @@ import com.sentrifugo.performanceManagement.repository.AppraisalConfigRepository
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AppraisalConfigService {
@@ -37,22 +38,29 @@ public class AppraisalConfigService {
         return savedAppraisalConfig;
 
     }
-    private void createAppraisalMastersForEmployees(AppraisalConfig appraisalConfig) {
 
-        List<Employee> employees = employeeService.getEmployeesByBusinessUnitAndDepartmentAndRoleId(
-                appraisalConfig.getBusinessUnit(), appraisalConfig.getDepartment(), appraisalConfig.getEnableTo());
+
+
+    private void createAppraisalMastersForEmployees(AppraisalConfig appraisalConfig) {
+        System.out.println("Creating master......."+appraisalConfig);
+
+        // Split the comma-separated departments into a list
+        List<String> departments = Arrays.asList(appraisalConfig.getDepartment().split(", "));
+
+        // Get the employees with the given role ID in the specified departments and business unit
+        List<Employee> employees = employeeService.getEmployeesByBusinessUnitAndDepartmentsAndRoleId(
+                appraisalConfig.getBusinessUnit(), departments, appraisalConfig.getEnableTo());
+
         System.out.println(employees);
 
+        // Iterate over the employees
         for (Employee employee : employees) {
-
             // Update existing AppraisalMaster records for the same employee to set isActive to false
             List<AppraisalMaster> existingRecords = appraisalMasterRepository.findByEmployeeIdAndActive(Long.valueOf(employee.getId()), true);
-            System.out.println(existingRecords);
             for (AppraisalMaster existingRecord : existingRecords) {
                 existingRecord.setActive(false);
                 appraisalMasterRepository.save(existingRecord);
             }
-
             Long empid = Long.valueOf(employee.getId());
             // Create a new AppraisalMaster object for each employee
             AppraisalMaster appraisalMaster = new AppraisalMaster();
@@ -65,12 +73,7 @@ public class AppraisalConfigService {
             appraisalMaster.setStatus("Initialized");
             appraisalMasterRepository.save(appraisalMaster);
         }
-
-
     }
-
-
-
 
 
     public AppraisalConfig updateAppraisalConfig(Long appraisalConfigId, AppraisalConfig appraisalConfigdetails) throws ResourceNotFoundException {

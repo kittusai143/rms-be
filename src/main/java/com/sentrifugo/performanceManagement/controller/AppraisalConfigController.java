@@ -1,5 +1,6 @@
 package com.sentrifugo.performanceManagement.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sentrifugo.performanceManagement.entity.AppraisalConfig;
 import com.sentrifugo.performanceManagement.Exceptions.ResourceNotFoundException;
 import com.sentrifugo.performanceManagement.service.AppraisalConfigService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/appraisalsconfig")
@@ -36,7 +38,19 @@ public class AppraisalConfigController {
     }
 
     @PostMapping("/postappraisal")
-    public AppraisalConfig createAppraisalConfig(@RequestBody AppraisalConfig appraisalConfig) {
+    public AppraisalConfig createAppraisalConfig(@RequestBody Map<String, Object> requestBody) {
+        // Convert department array of objects to comma-separated string
+        List<Map<String, String>> departments = (List<Map<String, String>>) requestBody.get("department");
+        String departmentString = departments.stream()
+                .map(dept -> dept.get("value"))
+                .collect(Collectors.joining(", "));
+
+        // Replace the department field in the request body with the string value
+        requestBody.put("department", departmentString);
+
+        // Convert the modified request body to AppraisalConfig object
+        ObjectMapper objectMapper = new ObjectMapper();
+        AppraisalConfig appraisalConfig = objectMapper.convertValue(requestBody, AppraisalConfig.class);
 
         return appraisalConfigService.createAppraisalConfig(appraisalConfig);
     }
