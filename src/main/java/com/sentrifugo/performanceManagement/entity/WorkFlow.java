@@ -25,10 +25,10 @@ public class WorkFlow {
     private String stages;
 
     @Column(name = "createdby")
-    private Integer createdBy;
+    private String createdBy;
 
     @Column(name = "updatedby")
-    private Integer updatedBy;
+    private String updatedBy;
 
     @Column(name = "workflow_name")
     private String workflowName;

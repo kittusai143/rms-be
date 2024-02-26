@@ -26,69 +26,95 @@ public class UserController {
 
     @GetMapping("/managers")
     public ResponseEntity<?> getManagers(@RequestParam Integer Id) {
-        // Retrieve reporting manager name
-        List<String> reportingManagerNames = customRepository.getReportingManagerNames(Id);
+         try {
+             // Retrieve reporting manager name
+             List<String> reportingManagerNames = customRepository.getReportingManagerNames(Id);
 
-        if (reportingManagerNames.isEmpty())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data format");
-        else
-            return ResponseEntity.ok(reportingManagerNames);
+             if (reportingManagerNames.isEmpty())
+                 return ResponseEntity.ok("No Manager Found");
+             else
+                 return ResponseEntity.ok(reportingManagerNames);
+         }
+         catch (Exception e)
+         {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+         }
 
     }
     @GetMapping("/l2managers")
     public ResponseEntity<?> getL2Managers(@RequestParam Integer Id) {
-        // Retrieve reporting manager name
-        List<String> reportingManagerNames = customRepository.getL2ManagerNames(Id);
+        try {
+            // Retrieve reporting manager name
+            List<String> reportingManagerNames = customRepository.getL2ManagerNames(Id);
 
-        if (reportingManagerNames.isEmpty())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data format");
-        else
-            return ResponseEntity.ok(reportingManagerNames);
+            if (reportingManagerNames.isEmpty())
+                return ResponseEntity.ok("No Manager Found");
+            else
+                return ResponseEntity.ok(reportingManagerNames);
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
     }
 
     @Autowired
     private UsersRepository repo;
 
-    @GetMapping("emp")
+
     public List<Map<String, Object>> getdetailsstatus(@RequestParam  Integer id)
     {
-            List<Map<String, Object>> values = repo.findDetailsWithStatusByManagerId(id);
-            if (values.isEmpty()) {
-                Map<String,Object> map = new HashMap<>();
-                map.put("Status", "No EMployee found for these managers");
-                List<Map<String,Object>> lis = new ArrayList<>();
-                lis.add(map);
-                return lis;
-            }
-            return  values;
+        List<Map<String, Object>> values = repo.findDetailsWithStatusByManagerId(id);
+        if (values.isEmpty()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("Status", "No EMployee found for these managers");
+            List<Map<String, Object>> lis = new ArrayList<>();
+            lis.add(map);
+            return lis;
+        }
+        return values;
+
+
     }
 
     @GetMapping("getManagers")
+    //Managers With status
     public ResponseEntity<?> getallmanagers()
     {
-        List<Map<String,Object>> values=repo.findManagers();
-        if(values.isEmpty())
-        {
-            Map<String,String> map=new HashMap<>();
-            map.put("Status","No  managers");
-            List<Map<String,String>> lis=new ArrayList<>();
-            lis.add(map);
-            return  ResponseEntity.ok(lis);
+        try {
+            List<Map<String, Object>> values = repo.findManagers();
+            if (values.isEmpty()) {
+                Map<String, String> map = new HashMap<>();
+                map.put("Status", "No  managers");
+                List<Map<String, String>> lis = new ArrayList<>();
+                lis.add(map);
+                return ResponseEntity.ok(lis);
+            }
+            Map<String, String> map = new HashMap<>();
+            for (Map<String, Object> obj : values) {
+                Object id = obj.get("Id");
+
+
+                String s = getstatus((Integer) id);
+
+                map.put((String) obj.get("name"), s);
+            }
+            int total = 0;
+            for (String status : map.values()) {
+                if (status == "ReviewedAll") {
+                    total++;
+                }
+            }
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("map", map);
+            responseMap.put("total", total);
+
+            return ResponseEntity.ok(responseMap);
         }
-        Map<String,String> map=new HashMap<>();
-        for(Map<String,Object> obj : values)
+        catch (Exception e)
         {
-            Object id=obj.get("Id");
-
-
-
-           String s=getstatus((Integer)id);
-
-           map.put((String)obj.get("name"),s);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
-
-
-        return ResponseEntity.ok(map);
 
     }
 
@@ -121,10 +147,8 @@ public class UserController {
             return "In Progress";
         }
     }
-
-
-
     @GetMapping("emplis")
+    //to get total Employee Submitted count
     public ResponseEntity<?> find()
     {
         List<Map<String,Object>> vales=repo.find();
@@ -136,8 +160,7 @@ public class UserController {
             if(s.equals("EmployeeSubmitted") || s.equals("ManagerSubmitted")||s.equals("HRSubmitted") || s.equals("EmployeeEscalated") || s.equals("closed"))
                 submittedcount++;
         }
-        return ResponseEntity.ok(submittedcount);
-
+        return ResponseEntity.ok(vales);
 
     }
 

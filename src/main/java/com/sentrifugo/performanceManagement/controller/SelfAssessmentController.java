@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,24 +35,30 @@ public class SelfAssessmentController {
 
 
     @GetMapping("/am-status/{eid}")
-    public ResponseEntity<?> getamStatus(@PathVariable Integer eid){
-    String message="no active record found for the given id "+eid;
-        AppraisalMaster appraisalMaster= selfAssessmentService.getamStatus(eid);
-        if(appraisalMaster!=null)
-            return ResponseEntity.ok(appraisalMaster);
-        else
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+    public ResponseEntity<?> getamStatus(@PathVariable Integer eid) {
+        try {
+            AppraisalMaster appraisalMaster = selfAssessmentService.getamStatus(eid);
+
+            if (appraisalMaster != null) {
+                Map<String, Object> successResponse = new HashMap<>();
+                successResponse.put("message", "success");
+                successResponse.put("appraisalMaster", appraisalMaster);
+                return ResponseEntity.ok(successResponse);
+            } else {
+                Map<String, Object> notFoundResponse = new HashMap<>();
+                notFoundResponse.put("message", "no active record found");
+                return ResponseEntity.ok(notFoundResponse);
+            }
+        } catch (Exception e) {
+            // Handle the exception and return an appropriate response
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "error");
+            errorResponse.put("error_message", "error retrieving data for id: " + eid);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
-//    @GetMapping("/am-status/{eid}")
-//    public ResponseEntity<AppraisalMaster> getamStatus(@PathVariable Integer eid) {
-//        AppraisalMaster appraisalMaster = selfAssessmentService.getamStatus(eid);
-//
-//        if (appraisalMaster != null) {
-//            return new ResponseEntity<>(appraisalMaster, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or choose another appropriate status code
-//        }
-//    }
+
+
 
     @GetMapping("/status/{eid}")
     public String getStatus(@PathVariable Integer eid){
