@@ -3,19 +3,16 @@ import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.repository.SelfAssessmentRepository;
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
+
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.nio.file.Files;
@@ -30,8 +27,8 @@ public class SelfAssessmentService {
     private AppraisalMasterRepository aprepo;
 
 
-     public List<SelfAssessment> getSelfAssessmentForm() {
-         return selfAssessmentRepository.findAll();
+    public List<SelfAssessment> getSelfAssessmentForm() {
+        return selfAssessmentRepository.findAll();
     }
 
     public SelfAssessment getSelfAssessmentById(Integer id) {
@@ -43,7 +40,7 @@ public class SelfAssessmentService {
     }
 
     public SelfAssessment addRow(SelfAssessment newAssessment) {
-       newAssessment.setAppraisalMasterId(2);
+        newAssessment.setAppraisalMasterId(2);
         return selfAssessmentRepository.save(newAssessment);
     }
 
@@ -54,61 +51,36 @@ public class SelfAssessmentService {
         List<SelfAssessment> updatedResults = new ArrayList<>();
         for (SelfAssessment updatedAssessment : updatedAssessments) {
             SelfAssessment savedAssessment = selfAssessmentRepository.save(updatedAssessment);
-            updatedResults.add(savedAssessment);
-//            Integer id = updatedAssessment.getQuestionId(); // Assuming questionId is used as the identifier
-//            Optional<SelfAssessment> existingAssessmentOptional = selfAssessmentRepository.findById(id);
-//
-//            if (existingAssessmentOptional.isPresent()) {
-//                SelfAssessment existingAssessment = existingAssessmentOptional.get();
-//
-//                // Update fields only if they are not null in the updatedAssessment
-//                if (updatedAssessment.getQuestion() != null) {
-//                    existingAssessment.setQuestion(updatedAssessment.getQuestion());
-//                }
-//                if (updatedAssessment.getStatus() != null) {
-//                    existingAssessment.setStatus(updatedAssessment.getStatus());
-//                }
-//
-//                if (updatedAssessment.getManagerComments() != null) {
-//                    existingAssessment.setManagerComments(updatedAssessment.getManagerComments());
-//                }
-//                if (updatedAssessment.getManagerRating() != null) {
-//                    existingAssessment.setManagerRating(updatedAssessment.getManagerRating());
-//                }
-//                if (updatedAssessment.getEmployeeRating() != null) {
-//                    existingAssessment.setEmployeeRating(updatedAssessment.getEmployeeRating());
-//                }
-//                if (updatedAssessment.getEmployeeComments() != null) {
-//                    existingAssessment.setEmployeeComments(updatedAssessment.getEmployeeComments());
-//                }
-//                if (updatedAssessment.getAdditionalComments() != null) {
-//                    existingAssessment.setAdditionalComments(updatedAssessment.getAdditionalComments());
-//                }
-//                if (updatedAssessment.getCreatedBy() != null) {
-//                    existingAssessment.setCreatedBy(updatedAssessment.getCreatedBy());
-//                }
-//                // Repeat for other fields
-//
-//                updatedResults.add(selfAssessmentRepository.save(existingAssessment));
-//            }
-            // If the existing assessment is not found, you may want to handle it based on your requirements
-        }
-
+            updatedResults.add(savedAssessment); }
         return updatedResults;
     }
 
 
     public AppraisalMaster getamStatus(Integer eid) {
-         System.out.println(aprepo.findStatusrowById(Long.valueOf(eid)));
         return aprepo.findStatusrowById(Long.valueOf(eid));
     }
 
     public String getStatus(Integer eid) {
-         return aprepo.findStatusById(Long.valueOf(eid));
+        return aprepo.findStatusById(Long.valueOf(eid));
     }
 
 
-    public String changeStatus(Integer mid, String newStatus) {
+
+    public Long getActiveAppraisalMasterId(Long employeeId) {
+        try {
+            Optional<AppraisalMaster> optionalAppraisalMaster = aprepo.findByEmployeeIdAndIsActive(employeeId, true);
+            return optionalAppraisalMaster.map(AppraisalMaster::getId).orElse(null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<SelfAssessment> getSelfAssessmentFormByMasterId(Integer masterId) {
+        return selfAssessmentRepository.findByAppraisalMasterId(masterId);
+    }
+
+    public Map<String, String> changeStatus(Integer mid, String newStatus) {
+        Map<String, String> response = new HashMap<>();
         Optional<AppraisalMaster> optionalAppraisalMaster = aprepo.findById(Long.valueOf(mid));
 
         if (optionalAppraisalMaster.isPresent()) {
@@ -116,21 +88,15 @@ public class SelfAssessmentService {
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
             aprepo.save(appraisalMaster);
-            aprepo.flush();
-            return "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus();
+
+            response.put("message", "success");
+            response.put("result", "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus());
         } else {
-            return "AppraisalMaster with ID " + mid + " not found";
+            response.put("message", "error");
+            response.put("result", "AppraisalMaster with ID " + mid + " not found");
         }
-    }
 
-
-    public Long getActiveAppraisalMasterId(Long employeeId) {
-        Optional<AppraisalMaster> optionalAppraisalMaster = aprepo.findByEmployeeIdAndIsActive(employeeId, true);
-        return optionalAppraisalMaster.map(AppraisalMaster::getId).orElse(null);
-    }
-
-    public List<SelfAssessment> getSelfAssessmentFormByMasterId(Integer masterId) {
-        return selfAssessmentRepository.findByAppraisalMasterId(masterId);
+        return response;
     }
 
     public boolean deleteSelfAssessmentById(Integer id) {
@@ -146,18 +112,16 @@ public class SelfAssessmentService {
 
     //---------------------------------------------File Upload and Download Services---------------------------------------------------
 
-      public Map<String, String> uploadFile(MultipartFile file) throws IOException {
-        Map<String, String> response = new HashMap<>();
+    public  String uploadFile(MultipartFile file) throws IOException {
+
 
         // Validate file
         if (file.isEmpty()) {
-            response.put("filepath", "");
-            response.put("msg", "File is empty");
-            return response;
+            return "empty";
         }
 
         String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileName = originalFileName;
+        String fileName = originalFileName.replaceAll(" ", "_");  // Replace spaces with underscores
         Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
 
         // Check if the file already exists, if so, append "(copy)" to the file name
@@ -176,21 +140,13 @@ public class SelfAssessmentService {
         }
 
         Files.copy(file.getInputStream(), filePath);
-//        selfAssessment.setFilePath(fileName);
-//        selfAssessmentRepository.save(selfAssessment);
-        response.put("filepath", fileName);
-        response.put("msg", "File uploaded successfully");
-
-        return response;
+        return fileName;
     }
 
 
-
-
-
     public FileSystemResource getFile(String fileName) {
-    String filePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName;
-    // Adjust the path based on your folder structureString absolutePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\" + fileName;
+        String filePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName;
+        // Adjust the path based on your folder structureString absolutePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\" + fileName;
         File file = new File(filePath);
         System.out.println(filePath);
         if (file.exists()) {
