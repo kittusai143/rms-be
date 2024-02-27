@@ -1,38 +1,27 @@
 package com.sentrifugo.performanceManagement.controller;
 
-
 import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
-import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.service.SelfAssessmentService;
-import org.aspectj.bridge.IMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/sa")
 @CrossOrigin("*")
 public class SelfAssessmentController {
-
-    private final SelfAssessmentService selfAssessmentService;
-
     @Autowired
-    public SelfAssessmentController(SelfAssessmentService selfAssessmentService) {
-        this.selfAssessmentService = selfAssessmentService;
-    }
-
-
+    SelfAssessmentService selfAssessmentService;
 
     @GetMapping("/am-status/{eid}")
     public ResponseEntity<?> getamStatus(@PathVariable Integer eid) {
@@ -59,46 +48,69 @@ public class SelfAssessmentController {
     }
 
 
-
-    @GetMapping("/status/{eid}")
-    public String getStatus(@PathVariable Integer eid){
-        return selfAssessmentService.getStatus(eid);
-    }
-
     @GetMapping("/activemId/{eid}")
-    public Long getActivemid(@PathVariable Long eid) {
-        return selfAssessmentService.getActiveAppraisalMasterId(eid);
+    public ResponseEntity<?> getActivemid(@PathVariable Long eid) {
+        try {
+            Long activeMid = selfAssessmentService.getActiveAppraisalMasterId(eid);
+
+            if (activeMid != null) {
+                Map<String, Object> successResponse = new HashMap<>();
+                successResponse.put("message", "success");
+                successResponse.put("activeMid", activeMid);
+                return ResponseEntity.ok(successResponse);
+            } else {
+                Map<String, Object> notFoundResponse = new HashMap<>();
+                notFoundResponse.put("message", "notFound");
+                return ResponseEntity.ok(notFoundResponse);
+            }
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "error");
+            errorResponse.put("error_message", "An unexpected error occurred while processing the request");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
+
+
 
     @PutMapping("/status/{mid}/{status}")
-    public String changeStatus(@PathVariable Integer mid, @PathVariable String status) {
-        return selfAssessmentService.changeStatus(mid, status);
-    }
-
-
-    @GetMapping("/get-all-rows")
-    public ResponseEntity<List<SelfAssessment>> getSelfAssessmentForm() {
+    public ResponseEntity<?> changeStatus(@PathVariable Integer mid, @PathVariable String status) {
         try {
-            List<SelfAssessment> selfAssessmentForm = selfAssessmentService.getSelfAssessmentForm();
-            return new ResponseEntity<>(selfAssessmentForm, HttpStatus.OK);
+            Map<String, String> op = selfAssessmentService.changeStatus(mid, status);
+            return ResponseEntity.ok(op);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", "An unexpected error occurred while processing the request");
+
+            return ResponseEntity.status(500).body(errorResponse);
         }
     }
 
     @GetMapping("/get-all-rows/{mid}")
-    public ResponseEntity<List<SelfAssessment>> getSelfAssessmentFormbyId(@PathVariable Integer mid) {
+    public ResponseEntity<?> getSelfAssessmentFormById(@PathVariable Integer mid) {
         try {
             List<SelfAssessment> selfAssessmentForm = selfAssessmentService.getSelfAssessmentFormByMasterId(mid);
-            return new ResponseEntity<>(selfAssessmentForm, HttpStatus.OK);
+
+            if (!selfAssessmentForm.isEmpty()) {
+                Map<String, Object> successResponse = new HashMap<>();
+                successResponse.put("message", "success");
+                successResponse.put("form", selfAssessmentForm);
+                return ResponseEntity.ok(successResponse);
+            } else {
+                Map<String, Object> notFoundResponse = new HashMap<>();
+                notFoundResponse.put("message", "no records found");
+                return ResponseEntity.ok(notFoundResponse);
+            }
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "error");
+            errorResponse.put("error_message", "An unexpected error occurred while processing the request");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
-
-
-        @PostMapping("/submit")
+    @PostMapping("/submit")
     public ResponseEntity<List<SelfAssessment>> submitSelfAssessmentForm(@RequestBody List<SelfAssessment> assessments) {
         System.out.println(assessments);
         List<SelfAssessment> submittedAssessments = selfAssessmentService.submit(assessments);
@@ -120,15 +132,15 @@ public class SelfAssessmentController {
 
 
     @GetMapping("/getbyId/{id}")
-      public ResponseEntity<SelfAssessment> getSelfAssessmentById(@PathVariable Integer id) {
-      SelfAssessment selfAssessment = selfAssessmentService.getSelfAssessmentById(id);
+    public ResponseEntity<SelfAssessment> getSelfAssessmentById(@PathVariable Integer id) {
+        SelfAssessment selfAssessment = selfAssessmentService.getSelfAssessmentById(id);
 
-      if (selfAssessment != null) {
-          return new ResponseEntity<>(selfAssessment, HttpStatus.OK);
-      } else {
-          return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-      }
-  }
+        if (selfAssessment != null) {
+            return new ResponseEntity<>(selfAssessment, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     @DeleteMapping("/deleteById/{id}")
@@ -142,6 +154,85 @@ public class SelfAssessmentController {
         }
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            String uploadResult = selfAssessmentService.uploadFile(file);
+            Map<String, Object> response = new HashMap<>();
+            if(Objects.equals(uploadResult, "empty")){
+                response.put("message", "empty-file");
+                return ResponseEntity.ok(response);
+            }
+            response.put("message", "success");
+            response.put("filepath", uploadResult);
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "error");
+            errorResponse.put("error_message", "An unexpected error occurred during file upload");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+
+    private static final String BASE_PATH = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\";
+
+    @DeleteMapping("/deleteFile/{filename}")
+    public ResponseEntity<?> deleteFile(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(BASE_PATH + filename);
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                Map<String, String> successResponse = new HashMap<>();
+                successResponse.put("message", "success");
+                successResponse.put("result", "File deleted successfully");
+                return ResponseEntity.ok(successResponse);
+            } else {
+                Map<String, String> notFoundResponse = new HashMap<>();
+                notFoundResponse.put("message", "error");
+                notFoundResponse.put("result", "File not found");
+                return ResponseEntity.ok(notFoundResponse);
+            }
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "error");
+            errorResponse.put("result", "An unexpected error occurred while deleting the file");
+            return ResponseEntity.status(500).body(errorResponse);
+        }
+    }
+
+    @GetMapping("/download/{fileName:.+}")
+    public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String fileName) {
+        FileSystemResource fileResource = selfAssessmentService.getFile(fileName);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(fileResource.getFile().length())
+                .body(fileResource);
+    }
+
+    @PostMapping("/initialize/{masterId}")
+    public ResponseEntity<?> initializeAssessment(@PathVariable Long masterId) {
+        try {
+            Map<String, String> resp = new HashMap<>();
+            selfAssessmentService.submitWithDefaultQuestions(masterId);
+            resp.put("message", "initialized");
+            resp.put("result", "Assessment initialized successfully");
+            return new ResponseEntity<>(resp, HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, String> resp = new HashMap<>();
+            resp.put("message", "failed");
+            resp.put("result", "Failed to initialize assessment");
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    ///-------trash
 
     @GetMapping("/getbymid/{mid}")
     public ResponseEntity<List<SelfAssessment>> getSelfAssessmentsByMid(@PathVariable Integer mid) {
@@ -160,33 +251,19 @@ public class SelfAssessmentController {
         return new ResponseEntity<>(updatedAssessmentResult, HttpStatus.OK);
     }
 
+    @GetMapping("/status/{eid}")
+    public ResponseEntity<?> getStatus(@PathVariable Integer eid){
 
-    @PostMapping("/upload")
-    public Map<String, String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        return selfAssessmentService.uploadFile(file);
+        return ResponseEntity.ok(selfAssessmentService.getStatus(eid));
     }
 
-
-    @GetMapping("/download/{fileName:.+}")
-    public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String fileName) {
-        FileSystemResource fileResource = selfAssessmentService.getFile(fileName);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(fileResource.getFile().length())
-                .body(fileResource);
-    }
-
-    @PostMapping("/initialize/{masterId}")
-    public ResponseEntity<String> initializeAssessment(@PathVariable Long masterId) {
+    @GetMapping("/get-all-rows")
+    public ResponseEntity<List<SelfAssessment>> getSelfAssessmentForm() {
         try {
-            selfAssessmentService.submitWithDefaultQuestions(masterId);
-            return new ResponseEntity<>("Assessment initialized successfully.", HttpStatus.OK);
+            List<SelfAssessment> selfAssessmentForm = selfAssessmentService.getSelfAssessmentForm();
+            return new ResponseEntity<>(selfAssessmentForm, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Failed to initialize assessment: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
