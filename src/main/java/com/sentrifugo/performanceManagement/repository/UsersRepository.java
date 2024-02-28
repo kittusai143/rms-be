@@ -39,4 +39,20 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     List<Map<String,Object>> find();
 
 
+    @Query("select name from Users where email=:email")
+    String findByEmail(String email);
+
+    @Query(value="SELECT Users.email,Users.name " +
+            "FROM Users " +
+            "JOIN appraisal_master ON Users.Id = appraisal_master.employee_id " +
+            "WHERE appraisal_master.status = 'Initialized' ", nativeQuery=true)
+    List<Map<String,String>> findbystatus();
+    @Query(value = "SELECT u.name as employeename, rm.name as managername, u.email AS employee_email, rm.email AS reporting_manager_email " +
+            "FROM appraisal_master am " +
+            "JOIN employee e ON am.employee_id = e.Id " +
+            "JOIN Users u ON e.user_id = u.Id " +
+            "JOIN Users rm ON e.reporting_manager = rm.Id " +
+            "WHERE am.Id =:id", nativeQuery = true)
+    Map<String,String> findbymanageremployeestatus(Integer id);
+
 }

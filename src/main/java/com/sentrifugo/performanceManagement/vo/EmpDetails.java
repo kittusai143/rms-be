@@ -15,4 +15,7 @@ public class EmpDetails {
     private String client;
     private String project;
     private String reportingManager;
+
+    public EmpDetails(String recipient, String msgBody, String subject) {
+    }
 }

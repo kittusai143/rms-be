@@ -3,6 +3,7 @@ import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.repository.SelfAssessmentRepository;
+import com.sentrifugo.performanceManagement.vo.EmailController;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class SelfAssessmentService {
     private SelfAssessmentRepository selfAssessmentRepository;
     @Autowired
     private AppraisalMasterRepository aprepo;
+
+    @Autowired
+    private EmailController email;
 
 
      public List<SelfAssessment> getSelfAssessmentForm() {
@@ -117,6 +121,8 @@ public class SelfAssessmentService {
             appraisalMaster.setStatus(newStatus);
             aprepo.save(appraisalMaster);
             aprepo.flush();
+            if(newStatus=="Employeesubmitted")
+                 email.sendindivisualstatus(mid);
             return "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus();
         } else {
             return "AppraisalMaster with ID " + mid + " not found";
