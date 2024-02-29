@@ -14,8 +14,6 @@ import java.util.Map;
 public interface UsersRepository extends JpaRepository<Users, Integer> {
     List<Users> findByEmpRole(Integer empRole);
 
-
-
     @Query(value = "SELECT T.id, T.name, A.status " +
             "FROM ( " +
             "    SELECT E.* " +
@@ -47,7 +45,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
             "JOIN appraisal_master ON Users.Id = appraisal_master.employee_id " +
             "WHERE appraisal_master.status = 'Initialized' ", nativeQuery=true)
     List<Map<String,String>> findbystatus();
-    @Query(value = "SELECT u.name as employeename, rm.name as managername, u.email AS employee_email, rm.email AS reporting_manager_email " +
+    @Query(value = "SELECT u.name as employeename, rm.name as managername, u.email AS employee_email, rm.email AS reporting_manager_email, am.status " +
             "FROM appraisal_master am " +
             "JOIN employee e ON am.employee_id = e.Id " +
             "JOIN Users u ON e.user_id = u.Id " +
