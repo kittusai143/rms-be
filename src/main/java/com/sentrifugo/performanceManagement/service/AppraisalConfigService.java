@@ -2,6 +2,7 @@ package com.sentrifugo.performanceManagement.service;
 
 import com.sentrifugo.performanceManagement.Exceptions.ResourceNotFoundException;
 import com.sentrifugo.performanceManagement.entity.AppraisalConfig;
+import com.sentrifugo.performanceManagement.entity.AppraisalEmpHistory;
 import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.Employee;
 import com.sentrifugo.performanceManagement.repository.AppraisalConfigRepository;
@@ -25,6 +26,10 @@ public class AppraisalConfigService {
     private AppraisalMasterRepository appraisalMasterRepository;
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private AppraisalEmpHistoryService appraisalEmpHistoryService;
+
     public List<AppraisalConfig> getAllAppraisalConfig() {
         return appraisalConfigRepository.findAll();
     }
@@ -74,7 +79,15 @@ public class AppraisalConfigService {
             appraisalMaster.setCreatedDate(new Date());
             appraisalMaster.setActive(true);
             appraisalMaster.setStatus("Initialized");
-            appraisalMasterRepository.save(appraisalMaster);
+            AppraisalMaster saved = appraisalMasterRepository.save(appraisalMaster);
+            // Create a new AppraisalEmpHistory object for each employee
+            AppraisalEmpHistory appraisalEmpHistory = new AppraisalEmpHistory();
+            appraisalEmpHistory.setAppraisalMasId(saved.getId());
+            appraisalEmpHistory.setEmpId(empid);
+            appraisalEmpHistory.setDate(new Date());
+            appraisalEmpHistory.setStatus("Initialized");
+            appraisalEmpHistory.setCreatedBy(appraisalConfig.getCreatedBy());
+            appraisalEmpHistoryService.createAppraisalEmpHistory(appraisalEmpHistory);
         }
         control.send();
     }

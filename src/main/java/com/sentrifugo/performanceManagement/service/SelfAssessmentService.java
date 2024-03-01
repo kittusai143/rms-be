@@ -1,4 +1,5 @@
 package com.sentrifugo.performanceManagement.service;
+import com.sentrifugo.performanceManagement.entity.AppraisalEmpHistory;
 import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
@@ -29,6 +30,9 @@ public class SelfAssessmentService {
 
     @Autowired
     private EmailController email;
+
+    @Autowired
+    private AppraisalEmpHistoryService appraisalEmpHistoryService;
 
     public List<SelfAssessment> getSelfAssessmentForm() {
         return selfAssessmentRepository.findAll();
@@ -91,7 +95,17 @@ public class SelfAssessmentService {
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
             aprepo.save(appraisalMaster);
-            if(newStatus=="Employeesubmitted"){
+
+            // Create a new AppraisalEmpHistory object for each employee updated status
+            AppraisalEmpHistory appraisalEmpHistory = new AppraisalEmpHistory();
+            appraisalEmpHistory.setAppraisalMasId(appraisalMaster.getId());
+            appraisalEmpHistory.setEmpId(appraisalMaster.getEmployeeId());
+            appraisalEmpHistory.setDate(new Date());
+            appraisalEmpHistory.setStatus(newStatus);
+            appraisalEmpHistory.setCreatedBy(appraisalMaster.getCreatedBy());
+            appraisalEmpHistoryService.createAppraisalEmpHistory(appraisalEmpHistory);
+
+            if(newStatus == "Employeesubmitted"){
                 email.sendindivisualstatus(mid);
             }
             response.put("message", "success");
