@@ -21,8 +21,8 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 110MB
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 
   mail:
@@ -35,7 +35,4 @@ spring:
         smtp:
           auth: true
           starttls.enable: true
-#
-#  file:
-#    storage:
-#      path: file.storage.path=C:/Users/user/Desktop/performance-managament-system/src/main/java/com/sentrifugo/performanceManagement/attachments/
+

@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("login")
 public class EmailAuthenController {
     @Autowired

@@ -18,7 +18,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/sa")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class SelfAssessmentController {
     @Autowired
     SelfAssessmentService selfAssessmentService;
@@ -159,8 +159,12 @@ public class SelfAssessmentController {
         try {
             String uploadResult = selfAssessmentService.uploadFile(file);
             Map<String, Object> response = new HashMap<>();
-            if(Objects.equals(uploadResult, "empty")){
+            if(uploadResult.equals("empty")){
                 response.put("message", "empty-file");
+                return ResponseEntity.ok(response);
+            }
+            else if(uploadResult.equals("max__size")){
+                response.put("message", "sizeErr");
                 return ResponseEntity.ok(response);
             }
             response.put("message", "success");

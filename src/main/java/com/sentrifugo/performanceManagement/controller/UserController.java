@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -130,7 +130,7 @@ public class UserController {
             // Access the 'status' field value
             total++;
             Object status = obj.get("status");
-            System.out.println(status);
+//            System.out.println(status);
             if ("ManagerSubmitted".equals(status) || "EmployeeEscalated".equals(status) || "HRSubmitted".equals(status) || "closed".equals(status)) {
                 System.out.println("matched");
                 Mcount++;

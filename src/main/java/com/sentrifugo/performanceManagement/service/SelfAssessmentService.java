@@ -4,7 +4,7 @@ import com.sentrifugo.performanceManagement.entity.SelfAssessment;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import com.sentrifugo.performanceManagement.repository.SelfAssessmentRepository;
 
-import com.sentrifugo.performanceManagement.vo.EmailController;
+//import com.sentrifugo.performanceManagement.vo.EmailController;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.core.io.FileSystemResource;
@@ -27,8 +27,8 @@ public class SelfAssessmentService {
     @Autowired
     private AppraisalMasterRepository aprepo;
 
-    @Autowired
-    private EmailController email;
+//    @Autowired
+//    private EmailController email;
 
     public List<SelfAssessment> getSelfAssessmentForm() {
         return selfAssessmentRepository.findAll();
@@ -91,9 +91,10 @@ public class SelfAssessmentService {
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
             aprepo.save(appraisalMaster);
-            if(newStatus=="Employeesubmitted"){
-                email.sendindivisualstatus(mid);
-            }
+//            if(newStatus.equals("EmployeeSubmitted") || newStatus.equals("ManagerSubmitted")){
+////                              email.sendindivisualstatus(mid);
+//
+//            }
             response.put("message", "success");
             response.put("result", "Status changed from " + oldStatus + " to " + appraisalMaster.getStatus());
         } else {

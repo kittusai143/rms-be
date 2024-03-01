@@ -6,7 +6,7 @@ import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.Employee;
 import com.sentrifugo.performanceManagement.repository.AppraisalConfigRepository;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
-import com.sentrifugo.performanceManagement.vo.EmailController;
+//import com.sentrifugo.performanceManagement.vo.EmailController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppraisalConfigService {
-    @Autowired
-    private EmailController control;
+//    @Autowired
+//    private EmailController control;
     @Autowired
     private AppraisalConfigRepository appraisalConfigRepository;
     @Autowired
@@ -75,7 +75,7 @@ public class AppraisalConfigService {
             appraisalMaster.setStatus("Initialized");
             appraisalMasterRepository.save(appraisalMaster);
         }
-        control.send();
+//        control.send();
     }
 
 

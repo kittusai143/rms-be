@@ -10,6 +10,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -125,8 +127,10 @@ public class EscalationMasterService {
 
 
 
-    public void addHrComments (Integer id, String string) {
-        escalationMasterRepository.hrCommentsSaving(id,string);
+    public void  addHrComments (Integer id, String string) throws UnsupportedEncodingException {
+        String ans= URLDecoder.decode(string, "UTF-8");
+        System.out.println(ans);
+        escalationMasterRepository.hrCommentsSaving(id,ans);
     }
 
     public void statusUpdate(Integer id, String str) {
