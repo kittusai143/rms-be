@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/escalateMaster")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${custom.frontendUrl}")
 
 public class EscalationMasterController {
 

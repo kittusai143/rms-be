@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/workFlowConfig")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${custom.frontendUrl}")
 public class WorkFlowController {
 @Autowired
 private  WorkFlowService workFlowService;

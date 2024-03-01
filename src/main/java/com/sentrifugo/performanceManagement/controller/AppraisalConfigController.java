@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/appraisalsconfig")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${custom.frontendUrl}")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class AppraisalConfigController {
 
     private final AppraisalConfigService appraisalConfigService;

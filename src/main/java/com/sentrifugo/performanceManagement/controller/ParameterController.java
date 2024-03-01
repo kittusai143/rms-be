@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/parameters")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${custom.frontendUrl}")
 public class ParameterController {
 
     @Autowired

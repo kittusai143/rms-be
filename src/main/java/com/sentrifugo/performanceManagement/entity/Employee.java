@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Entity
 @Data
@@ -45,5 +47,8 @@ public class Employee{
 
     @Column(name = "project")
     private String project;
+
+    @Column(name="date_of_joining")
+    private Date dateOfJoining;
 
 }

@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/questions")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${custom.frontendUrl}")
 public class QuestionsController {
 
     @Autowired
@@ -36,8 +36,18 @@ public class QuestionsController {
         return questionsService.getAllQuestions();
     }
 
-    @PostMapping("add")
+    @GetMapping("/getConfig/{configId}")
+    public ResponseEntity<?> getQuestionsByConfigId(@PathVariable("configId") Integer configId) {
+        try {
+            List<Questions> questions = questionsRepository.findByConfigId(configId);
+            return ResponseEntity.ok(questions);
+        } catch (Exception e) {
+            String errorMessage = "An error occurred while fetching questions by config ID.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+        }
+    }
 
+    @PostMapping("add")
     public ResponseEntity<?> postQuestions(@RequestBody Map<String, Object> requestBody) {
 
         try {
@@ -76,7 +86,6 @@ public class QuestionsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
-
 
     @DeleteMapping("/delete/{id}")
     public String deleteQuestions(@PathVariable("id") Integer id) {

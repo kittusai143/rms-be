@@ -14,8 +14,6 @@ import java.util.Map;
 public interface UsersRepository extends JpaRepository<Users, Integer> {
     List<Users> findByEmpRole(Integer empRole);
 
-
-
     @Query(value = "SELECT T.id, T.name, A.status " +
             "FROM ( " +
             "    SELECT E.* " +

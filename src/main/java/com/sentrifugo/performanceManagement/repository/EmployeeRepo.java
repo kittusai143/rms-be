@@ -8,7 +8,7 @@ import jakarta.persistence.Column;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 //FIELDS IN EMPLOYEE
@@ -99,8 +99,7 @@ public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
     List<String> findDistinctBusinessunit();
     @Query("SELECT DISTINCT e.department FROM Employee e")
     List<String> findDistinctDepartment();
-    @Query("SELECT e FROM Employee e WHERE e.user_id IN :userIds AND e.businessunit = :businessunit AND e.department IN :departments")
-    List<Employee> findByUserIdInAndBusinessunitAndDepartmentIn(List<Integer> userIds, String businessunit, List<String> departments);
-
+    @Query("SELECT e FROM Employee e WHERE e.user_id IN :userIds AND e.businessunit = :businessunit AND e.department IN :departments AND e.dateOfJoining >= :dateOfJoining")
+    List<Employee> findByUserIdInAndBusinessunitAndDepartmentInAndDateOfJoining(List<Integer> userIds, String businessunit, List<String> departments, Date dateOfJoining );
 
 }
