@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +27,13 @@ public class AppraisalEmpHistoryController {
         System.out.println(Emphistory);
 
         return Emphistory;
+    }
+
+    @GetMapping("/getHistoryON/{date}")
+    public List<AppraisalEmpHistory> getbydate(@PathVariable(value = "date")Date date) throws ResourceNotFoundException {
+        List<AppraisalEmpHistory> EmpHistoryOn = appraisalEmpHistoryService.getbydate(date);
+        System.out.println(EmpHistoryOn);
+        return EmpHistoryOn;
     }
 
     @PostMapping("/addAppraisalHist")

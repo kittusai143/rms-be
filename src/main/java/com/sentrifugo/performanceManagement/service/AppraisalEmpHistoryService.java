@@ -6,6 +6,7 @@ import com.sentrifugo.performanceManagement.repository.AppraisalEmpHistoryReposi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 @Service
 public class AppraisalEmpHistoryService {
@@ -22,4 +23,16 @@ public class AppraisalEmpHistoryService {
         return repo.findByAppraisalMasId(id);
     }
 
+    public List<AppraisalEmpHistory> getbydate(Date date){
+
+        // Convert java.util.Date to java.sql.Date with time part set to 00:00:00
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        java.sql.Date mdate = new java.sql.Date(cal.getTimeInMillis());
+        return  repo.findByDate(mdate);
+    }
 }
