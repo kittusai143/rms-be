@@ -36,6 +36,7 @@ public class AppraisalConfigService {
 
     public AppraisalConfig createAppraisalConfig(AppraisalConfig appraisalConfig) {
         AppraisalConfig savedAppraisalConfig = appraisalConfigRepository.save(appraisalConfig);
+        System.out.println("Saved the config : "+savedAppraisalConfig);
         createAppraisalMastersForEmployees(savedAppraisalConfig);
         return savedAppraisalConfig;
 
@@ -50,8 +51,8 @@ public class AppraisalConfigService {
         List<String> departments = Arrays.asList(appraisalConfig.getDepartment().split(", "));
 
         // Get the employees with the given role ID in the specified departments and business unit
-        List<Employee> employees = employeeService.getEmployeesByBusinessUnitAndDepartmentsAndRoleId(
-                appraisalConfig.getBusinessUnit(), departments, appraisalConfig.getEnableTo());
+        List<Employee> employees = employeeService.getEmployeesByBusinessUnitAndDepartmentsAndRoleIdAndDateOfJoining(
+                appraisalConfig.getBusinessUnit(), departments, appraisalConfig.getEnableTo(), appraisalConfig.getCutOffDate());
 
         System.out.println(employees);
 

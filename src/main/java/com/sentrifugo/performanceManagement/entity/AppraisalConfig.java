@@ -68,5 +68,7 @@ public class AppraisalConfig {
     @Column(name = "created_by")
     private Long createdBy;
 
+    @Column(name="cut_off_date")
+    private Date cutOffDate;
 
 }

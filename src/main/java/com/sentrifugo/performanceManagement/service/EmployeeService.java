@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -85,11 +86,21 @@ public class EmployeeService {
         return details;
     }
 
-    public List<Employee> getEmployeesByBusinessUnitAndDepartmentsAndRoleId(
-            String businessUnit, List<String> departments, Integer roleId) {
+    public List<Employee> getEmployeesByBusinessUnitAndDepartmentsAndRoleIdAndDateOfJoining(
+            String businessUnit, List<String> departments, Integer roleId, Date dateOfJoining) {
+        // Convert java.util.Date to java.sql.Date with time part set to 00:00:00
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(dateOfJoining);
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 0);
+        java.sql.Date sqlDateOfJoining = new java.sql.Date(cal.getTimeInMillis());
+
         List<Users> users = usersService.getUsersByRoleId(roleId);
         List<Integer> userIds = users.stream().map(Users::getId).collect(Collectors.toList());
-        return employeeRepository.findByUserIdInAndBusinessunitAndDepartmentIn(userIds, businessUnit, departments);
+        return employeeRepository.findByUserIdInAndBusinessunitAndDepartmentInAndDateOfJoining(userIds, businessUnit, departments, sqlDateOfJoining);
+
     }
 
     public List<String> getDistinctBusinessUnit() {
