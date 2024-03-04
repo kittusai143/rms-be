@@ -5,14 +5,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
-@CrossOrigin
 @Getter
 @Setter
 @Table(name = "AppraisalEmpHistory", schema = "dbo")

@@ -6,10 +6,9 @@ import com.sentrifugo.performanceManagement.entity.WorkFlow;
 import com.sentrifugo.performanceManagement.repository.WorkFlowConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
-@CrossOrigin("*")
+
 @Service
 public class WorkFlowService {
 
