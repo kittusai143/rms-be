@@ -39,4 +39,7 @@ public class AppraisalMaster {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "updated_date")
+    private  Date updatedDate;
 }
