@@ -27,6 +27,17 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
             "LEFT JOIN appraisal_master AS A ON T.id = A.employee_id", nativeQuery = true)
     List<Map<String,Object>> findDetailsWithStatusByManagerId(Integer managerId);
 
+
+
+//    @Query(value="SELECT T.id, T.name, A.status FROM ( " +
+//            "                   SELECT Users.id, Users.name " +
+//            "                   FROM Users " +
+//            "                    JOIN employee ON Users.id = employee.Id " +
+//            "            ) AS T " +
+//            "            LEFT JOIN appraisal_master AS A ON T.id = A.employee_id")
+//    List<Map<String,Object>> findDetailsWithStatus();
+
+
    @Query(value="select Id,name from Users where empRole=4",nativeQuery = true)
     List<Map<String,Object>> findManagers();
 

@@ -22,8 +22,8 @@ public class AppraisalMaster {
     @Column(name = "employee_id")
     private Long employeeId;
 
-    @Column(name = "appraisal_intitation_id")
-    private Long appraisalIntitationId;
+    @Column(name = "appraisal_initiation_id")
+    private Long appraisalInitiationId;
 
     @Column(name = "period")
     private Integer period;

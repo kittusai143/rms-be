@@ -22,7 +22,7 @@ public class AppraisalConfig {
     @Column(name = "workflow_config_id")
     private Long workflowConfigId;
 
-    @Column(name = "business_unit")
+    @Column(name = "bussiness_unit")
     private String businessUnit;
 
     @Column(name = "appraisal_mode" , nullable = true)
@@ -64,7 +64,7 @@ public class AppraisalConfig {
     @Column(name = "rating")
     private String rating;
 
-    @Column(name = "created_by")
+    @Column(name = "createdBy")
     private Long createdBy;
 
     @Column(name="cut_off_date")

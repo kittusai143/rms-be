@@ -148,7 +148,7 @@ public class UserController {
         }
     }
     @GetMapping("emplis")
-    //to get total Employee Submitted count
+
     public ResponseEntity<?> find()
     {
         List<Map<String,Object>> vales=repo.find();
