@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Entity
 @Table(name = "workflow_config", schema = "dbo")
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@CrossOrigin("*")
 public class WorkFlow {
 
     @Id

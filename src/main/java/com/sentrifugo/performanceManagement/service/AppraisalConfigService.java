@@ -67,6 +67,7 @@ public class AppraisalConfigService {
             List<AppraisalMaster> existingRecords = appraisalMasterRepository.findByEmployeeIdAndActive(Long.valueOf(employee.getId()), true);
             for (AppraisalMaster existingRecord : existingRecords) {
                 existingRecord.setActive(false);
+                existingRecord.setUpdatedDate(new Date());
                 appraisalMasterRepository.save(existingRecord);
             }
             Long empid = Long.valueOf(employee.getId());
@@ -77,6 +78,7 @@ public class AppraisalConfigService {
             appraisalMaster.setPeriod(appraisalConfig.getPeriod());
             appraisalMaster.setCreatedBy(appraisalConfig.getCreatedBy());
             appraisalMaster.setCreatedDate(new Date());
+            appraisalMaster.setUpdatedDate((new Date()));
             appraisalMaster.setActive(true);
             appraisalMaster.setStatus("Initialized");
             AppraisalMaster saved = appraisalMasterRepository.save(appraisalMaster);

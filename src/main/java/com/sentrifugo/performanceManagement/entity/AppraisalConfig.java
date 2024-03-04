@@ -3,7 +3,7 @@ package com.sentrifugo.performanceManagement.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 
 @Data
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@CrossOrigin
 @Table(name = "appraisal_initiation", schema = "dbo")
 public class AppraisalConfig {
 

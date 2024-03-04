@@ -94,6 +94,7 @@ public class SelfAssessmentService {
             AppraisalMaster appraisalMaster = optionalAppraisalMaster.get();
             String oldStatus = appraisalMaster.getStatus();
             appraisalMaster.setStatus(newStatus);
+            appraisalMaster.setUpdatedDate(new Date());
             aprepo.save(appraisalMaster);
 
 //            if(newStatus.equals("EmployeeSubmitted") || newStatus.equals("ManagerSubmitted")){

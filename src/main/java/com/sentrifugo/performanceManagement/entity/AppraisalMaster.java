@@ -2,7 +2,7 @@ package com.sentrifugo.performanceManagement.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import java.util.Date;
 
@@ -39,4 +39,7 @@ public class AppraisalMaster {
 
     @Column(name = "status")
     private String status;
+
+    @Column(name = "updated_date")
+    private  Date updatedDate;
 }
