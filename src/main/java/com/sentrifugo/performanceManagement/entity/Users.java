@@ -43,4 +43,7 @@ public class Users {
     @Column(name = "employeeId")
     private String employeeId;
 
+    @Column(name = "password")
+    private String password;
+
 }

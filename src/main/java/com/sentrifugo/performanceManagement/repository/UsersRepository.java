@@ -53,4 +53,5 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
             "WHERE am.Id =:id", nativeQuery = true)
     Map<String,String> findbymanageremployeestatus(Integer id);
 
+    Users findByemployeeId(String silId);
 }
