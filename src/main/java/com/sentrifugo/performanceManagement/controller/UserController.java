@@ -1,15 +1,14 @@
 package com.sentrifugo.performanceManagement.controller;
 
+import com.sentrifugo.performanceManagement.entity.Users;
 import com.sentrifugo.performanceManagement.repository.EmailAuthenticationRepo;
 import com.sentrifugo.performanceManagement.repository.UsersRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.management.ObjectName;
 import java.util.ArrayList;
@@ -23,6 +22,9 @@ public class UserController {
 
     @Autowired
     private EmailAuthenticationRepo customRepository;
+
+    @Autowired
+    private UsersRepository urepo;
 
     @GetMapping("/managers")
     public ResponseEntity<?> getManagers(@RequestParam Integer Id) {
@@ -161,6 +163,31 @@ public class UserController {
                 submittedcount++;
         }
         return ResponseEntity.ok(vales);
+
+    }
+
+    @GetMapping("loginByPassword/{sil_id}/{pwd}")
+    public ResponseEntity<?> checkPassword(@PathVariable String sil_id,@PathVariable String pwd){
+        Map<String,String> map=new HashMap<>();
+        Users user= urepo.findByemployeeId(sil_id);
+        System.out.println(user);
+        if(user!=null)
+        {
+            if(user.getPassword().equals(pwd))
+            {
+                map.put("message","success");
+                return ResponseEntity.ok(map);
+            }
+            else {
+                map.put("message","incorrect-password");
+                return ResponseEntity.ok(map);
+            }
+        }
+        else {
+            map.put("message","Invalid sil-Id");
+            return ResponseEntity.ok(map);
+
+        }
 
     }
 
