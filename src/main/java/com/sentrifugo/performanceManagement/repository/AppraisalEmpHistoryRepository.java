@@ -14,7 +14,7 @@ public interface AppraisalEmpHistoryRepository extends JpaRepository<AppraisalEm
     @Query("SELECT a FROM AppraisalEmpHistory a WHERE a.appraisalMasId = :appraisalMasId")
     List<AppraisalEmpHistory> findByAppraisalMasId(Long appraisalMasId);
 
-    @Query("SELECT a FROM AppraisalEmpHistory a WHERE YEAR(a.date) = YEAR(:date) AND MONTH(a.date) = MONTH(:date) AND DAY(a.date) = DAY(:date)")
+    @Query("SELECT a, u.name FROM AppraisalEmpHistory a JOIN Users u ON a.empId = u.id WHERE YEAR(a.date) = YEAR(:date) AND MONTH(a.date) = MONTH(:date) AND DAY(a.date) = DAY(:date)")
     List<AppraisalEmpHistory> findByDate(@Param("date") Date date);
 
 }
