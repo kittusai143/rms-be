@@ -204,6 +204,7 @@ public class UserController {
 
     @GetMapping("loginByPassword/{email}/{pwd}")
     public ResponseEntity<?> checkPassword(@PathVariable String email,@PathVariable String pwd){
+        try{
         Map<String,Object> map=new HashMap<>();
         Users user= urepo.findByEmail(email);
         System.out.println(user);
@@ -226,9 +227,11 @@ public class UserController {
             return ResponseEntity.ok(map);
 
         }
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
 
     }
-
-
 
 }
