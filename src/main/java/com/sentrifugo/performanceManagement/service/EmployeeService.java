@@ -96,7 +96,6 @@ public class EmployeeService {
         cal.set(java.util.Calendar.SECOND, 0);
         cal.set(java.util.Calendar.MILLISECOND, 0);
         java.sql.Date sqlDateOfJoining = new java.sql.Date(cal.getTimeInMillis());
-
         List<Users> users = usersService.getUsersByRoleId(roleId);
         List<Integer> userIds = users.stream().map(Users::getId).collect(Collectors.toList());
         return employeeRepository.findByUserIdInAndBusinessunitAndDepartmentInAndDateOfJoining(userIds, businessUnit, departments, sqlDateOfJoining);

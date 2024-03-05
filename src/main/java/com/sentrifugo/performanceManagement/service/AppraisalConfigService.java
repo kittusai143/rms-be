@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AppraisalConfigService {
@@ -54,12 +52,12 @@ public class AppraisalConfigService {
 
         // Split the comma-separated departments into a list
         List<String> departments = Arrays.asList(appraisalConfig.getDepartment().split(", "));
-
+        System.out.println("Departments"+departments);
         // Get the employees with the given role ID in the specified departments and business unit
         List<Employee> employees = employeeService.getEmployeesByBusinessUnitAndDepartmentsAndRoleIdAndDateOfJoining(
                 appraisalConfig.getBusinessUnit(), departments, appraisalConfig.getEnableTo(), appraisalConfig.getCutOffDate());
 
-        System.out.println(employees);
+        System.out.println("Employees"+employees);
 
         // Iterate over the employees
         for (Employee employee : employees) {
@@ -74,7 +72,7 @@ public class AppraisalConfigService {
             // Create a new AppraisalMaster object for each employee
             AppraisalMaster appraisalMaster = new AppraisalMaster();
             appraisalMaster.setEmployeeId(empid);
-            appraisalMaster.setAppraisalIntitationId(appraisalConfig.getAppraisalConfigId());
+            appraisalMaster.setAppraisalInitiationId(appraisalConfig.getAppraisalConfigId());
             appraisalMaster.setPeriod(appraisalConfig.getPeriod());
             appraisalMaster.setCreatedBy(appraisalConfig.getCreatedBy());
             appraisalMaster.setCreatedDate(new Date());

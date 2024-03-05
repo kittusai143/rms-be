@@ -16,4 +16,6 @@ public class UsersService {
     public List<Users> getUsersByRoleId(Integer roleId) {
         return usersRepository.findByEmpRole(roleId);
     }
+
+
 }
