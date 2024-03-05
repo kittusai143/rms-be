@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      hbm2ddl: update
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       properties:
