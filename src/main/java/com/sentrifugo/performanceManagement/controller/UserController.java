@@ -28,19 +28,19 @@ public class UserController {
 
     @GetMapping("/managers")
     public ResponseEntity<?> getManagers(@RequestParam Integer Id) {
-         try {
-             // Retrieve reporting manager name
-             List<String> reportingManagerNames = customRepository.getReportingManagerNames(Id);
+        try {
+            // Retrieve reporting manager name
+            List<String> reportingManagerNames = customRepository.getReportingManagerNames(Id);
 
-             if (reportingManagerNames.isEmpty())
-                 return ResponseEntity.ok("No Manager Found");
-             else
-                 return ResponseEntity.ok(reportingManagerNames);
-         }
-         catch (Exception e)
-         {
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
-         }
+            if (reportingManagerNames.isEmpty())
+                return ResponseEntity.ok("No Manager Found");
+            else
+                return ResponseEntity.ok(reportingManagerNames);
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
 
     }
     @GetMapping("/l2managers")
@@ -120,11 +120,11 @@ public class UserController {
 
     }
 
-//  @GetMapping("/getemployestatus")
+    //  @GetMapping("/getemployestatus")
     public String getstatus(Integer id)
     {
 
-      List<Map<String,Object>> values = getdetailsstatus(id);
+        List<Map<String,Object>> values = getdetailsstatus(id);
         int Mcount = 0;
         int Ecount = 0;
         int total=0;
@@ -150,7 +150,7 @@ public class UserController {
         }
     }
     @GetMapping("emplis")
-
+    //to get total Employee Submitted count
     public ResponseEntity<?> find()
     {
         List<Map<String,Object>> vales=repo.find();
@@ -165,18 +165,56 @@ public class UserController {
         return ResponseEntity.ok(vales);
 
     }
+    @GetMapping("/getemployeestatus")
+    public ResponseEntity<?>  getEmployeesStatus(){
+        try{
+            System.out.println("HI");
+            List<Map<String,String>> users=repo.findDetailsWithStatus();
+            System.out.println("Users"+users);
+            int total=0;
+            int sub = 0;
+            int progress = 0;
+            int yet=0;
+            for (Map<String, String> obj : users) {
+                total++;
+                String status = obj.get("status");
+                if (status != null) {
+                    if ("EmployeeSubmitted".equals(status) || "ManagerSubmitted".equals(status) || "EmployeeEscalated".equals(status) || "HRSubmitted".equals(status) || "closed".equals(status)) {
+                        System.out.println("matched");
+                        sub++;
+                    } else if ("saved".equals(status)) {
+                        progress++;
+                    } else if ("Initialized".equals(status)) {
+                        yet++;
+                    }
+                }
+            }
+            Map<String,Integer> map=new HashMap<>();
+            map.put("Yet to start",yet);
+            map.put("In progress",progress);
+            map.put("Submitted",sub);
+            return ResponseEntity.ok(map);
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
 
-    @GetMapping("loginByPassword/{sil_id}/{pwd}")
-    public ResponseEntity<?> checkPassword(@PathVariable String sil_id,@PathVariable String pwd){
-        Map<String,String> map=new HashMap<>();
-        Users user= urepo.findByemployeeId(sil_id);
+    }
+
+    @GetMapping("loginByPassword/{email}/{pwd}")
+    public ResponseEntity<?> checkPassword(@PathVariable String email,@PathVariable String pwd){
+        Map<String,Object> map=new HashMap<>();
+        Users user= urepo.findByEmail(email);
         System.out.println(user);
         if(user!=null)
         {
             if(user.getPassword().equals(pwd))
             {
-                map.put("message","success");
-                return ResponseEntity.ok(map);
+//                map.put("message","success");
+                Map<String,Object> var=customRepository.findDetailsBYEmail(email);
+                // map.put("data",var);
+                return ResponseEntity.ok(var);
             }
             else {
                 map.put("message","incorrect-password");
@@ -184,7 +222,7 @@ public class UserController {
             }
         }
         else {
-            map.put("message","Invalid sil-Id");
+            map.put("message","Invalid  email");
             return ResponseEntity.ok(map);
 
         }

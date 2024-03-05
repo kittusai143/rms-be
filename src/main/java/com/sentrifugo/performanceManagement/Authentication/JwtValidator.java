@@ -23,7 +23,7 @@ public class JwtValidator {
             Claims claims = Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody();
             String email = claims.get("email", String.class);
             System.out.println(email);
-            String user = userRepository.findByEmail(email);
+            String user = userRepository.findByEmailJWT(email);
             System.out.println(user);
             return user != null ? user : null; // Return username or null
         } catch (Exception e) {
