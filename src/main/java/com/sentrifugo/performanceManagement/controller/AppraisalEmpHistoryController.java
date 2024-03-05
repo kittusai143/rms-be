@@ -30,9 +30,8 @@ public class AppraisalEmpHistoryController {
     }
 
     @GetMapping("/getHistoryON/{date}")
-    public List<AppraisalEmpHistory> getbydate(@PathVariable(value = "date")Date date) throws ResourceNotFoundException {
-        List<AppraisalEmpHistory> EmpHistoryOn = appraisalEmpHistoryService.getbydate(date);
-        System.out.println(EmpHistoryOn);
+    public List<Map<String,Object>> getbydate(@PathVariable(value = "date")Date date) throws ResourceNotFoundException {
+        List<Map<String,Object>> EmpHistoryOn = appraisalEmpHistoryService.getbydate(date);
         return EmpHistoryOn;
     }
 

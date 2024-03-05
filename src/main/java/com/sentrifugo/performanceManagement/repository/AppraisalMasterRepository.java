@@ -32,8 +32,8 @@ public interface AppraisalMasterRepository extends JpaRepository<AppraisalMaster
     @Query("select Id from AppraisalMaster where employeeId=:id and isActive=true")
     Integer findAppraisalMasterId(Integer id);
 
-    @Query("SELECT a.id, a.employeeId, u.name, a.status, a.updatedDate FROM AppraisalMaster a JOIN Users u ON a.employeeId = u.id WHERE a.isActive = true")
-   List< Map<String,Object>> findActiveStatusOfEmployee();
+    @Query("SELECT a.employeeId as empid, u.name AS name, a.status as status, a.updatedDate as updateddate FROM AppraisalMaster a INNER JOIN Users u ON a.employeeId = u.id WHERE a.isActive = true")
+    List<Map<String,Object>> findActiveStatusOfEmployee();
 
 }
 

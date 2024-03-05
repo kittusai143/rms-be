@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class AppraisalEmpHistoryService {
 
@@ -23,7 +25,7 @@ public class AppraisalEmpHistoryService {
         return repo.findByAppraisalMasId(id);
     }
 
-    public List<AppraisalEmpHistory> getbydate(Date date){
+    public List<Map<String,Object>> getbydate(Date date){
 
         // Convert java.util.Date to java.sql.Date with time part set to 00:00:00
         java.util.Calendar cal = java.util.Calendar.getInstance();

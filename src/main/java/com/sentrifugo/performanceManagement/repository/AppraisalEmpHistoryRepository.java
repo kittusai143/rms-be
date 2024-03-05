@@ -8,14 +8,20 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface AppraisalEmpHistoryRepository extends JpaRepository<AppraisalEmpHistory, Long> {
     @Query("SELECT a FROM AppraisalEmpHistory a WHERE a.appraisalMasId = :appraisalMasId")
     List<AppraisalEmpHistory> findByAppraisalMasId(Long appraisalMasId);
 
-    @Query("SELECT a, u.name FROM AppraisalEmpHistory a JOIN Users u ON a.empId = u.id WHERE YEAR(a.date) = YEAR(:date) AND MONTH(a.date) = MONTH(:date) AND DAY(a.date) = DAY(:date)")
-    List<AppraisalEmpHistory> findByDate(@Param("date") Date date);
+    @Query(value = "SELECT a.appraisal_Hist_id, a.appraisalMasId, a.createdBy, a.date, a.employee_id, a.status, u.name " +
+            "FROM AppraisalEmpHistory a " +
+            "JOIN Users u ON a.employee_id = u.id " +
+            "WHERE YEAR(a.date) = YEAR(:date) AND MONTH(a.date) = MONTH(:date) AND DAY(a.date) = DAY(:date)",
+            nativeQuery = true)
+    List<Map<String,Object>> findByDate(@Param("date") Date date);
+
 
 }
 

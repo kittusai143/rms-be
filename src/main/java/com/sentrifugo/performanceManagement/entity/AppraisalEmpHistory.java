@@ -24,7 +24,7 @@ public class AppraisalEmpHistory {
     @Column(name = "appraisalMasId")
     private Long appraisalMasId;
 
-    @Column(name = "emp_id")
+    @Column(name = "employee_id")
     private Long empId;
 
     @Column(name = "date")

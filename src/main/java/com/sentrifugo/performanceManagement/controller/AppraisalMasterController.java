@@ -1,5 +1,7 @@
 package com.sentrifugo.performanceManagement.controller;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sentrifugo.performanceManagement.repository.AppraisalMasterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,6 @@ public class AppraisalMasterController {
     @GetMapping("/getactivestatusEmp")
     public List<Map<String,Object>> findActiveAppraisalStatus(){
         List<Map<String,Object>> res= appraisalMasterRepository.findActiveStatusOfEmployee();
-        System.out.println(res);
         return appraisalMasterRepository.findActiveStatusOfEmployee();
     }
 }
