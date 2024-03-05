@@ -2,6 +2,8 @@ package com.sentrifugo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
 public class  PerformanceManagementApplication {
@@ -11,4 +13,10 @@ public class  PerformanceManagementApplication {
 		System.out.println("Application started");
 	}
 
+//	@Override
+//	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+//		return builder.sources(PerformanceManagementApplication.class);
+//	} extends SpringBootServletInitializer
+
 }
+
