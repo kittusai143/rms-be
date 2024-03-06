@@ -11,52 +11,52 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "${custom.frontendUrl}")
 @Component
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
+
     @Autowired
     private JwtValidator jwtValidator;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        try {
-            // First, handle the OPTIONS preflight request as before
-            if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-                filterChain.doFilter(request, response);
-                return; // Important to prevent further processing
-            }
-            // Then, checking for the exempted path
-            String path = request.getRequestURI();
-            if ("/login/verify".equals(path)) {
-                filterChain.doFilter(request, response);
-                return; // Skip JWT validation for this path
-            }
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // First, handle the OPTIONS preflight request as before
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return; // Important to prevent further processing
+        }
 
-            // Continue with JWT validation logic for other paths
-            String authHeader = request.getHeader("Authorization");
-            System.out.println("auth header" + authHeader);
-            String token = null;
-            String username = null;
+        // Then, check for the exempted path
+        String path = request.getRequestURI();
+        System.out.println(path);
+        if (path.startsWith("/loginByPassword") || path.equals("/login/verify")) {
+            filterChain.doFilter(request, response);
+            return; // Skip JWT validation for this path
+        }
 
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                token = authHeader.substring(7); // Remove "Bearer " prefix
-                System.out.println("Tok"+token);
-                username = jwtValidator.validateToken(token);
-            }
+        if (path.startsWith("/api/sa/download/")) {
+            filterChain.doFilter(request, response);
+            return; // Skip JWT validation for this path
+        }
 
-            if (username != null) {
-                // If a valid username is found, proceed with the filter chain
-                filterChain.doFilter(request, response);
-            } else {
-                // If the token is invalid or missing, send an unauthorized response
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            }
-        } catch (IOException | ServletException e) {
-            // Handling any IOException
-            //  sending an appropriate response
-            e.printStackTrace(); // Printing
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        // Continue with JWT validation logic for other paths
+        String authHeader = request.getHeader("Authorization");
+        System.out.println("auth header" + authHeader);
+        String token = null;
+        String username = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7); // Remove "Bearer " prefix
+            System.out.println("Tok"+token);
+            username = jwtValidator.validateToken(token);
+        }
+
+        if (username != null) {
+            // If a valid username is found, proceed with the filter chain
+            filterChain.doFilter(request, response);
+        } else {
+            // If the token is invalid or missing, send an unauthorized response
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
-
 }
