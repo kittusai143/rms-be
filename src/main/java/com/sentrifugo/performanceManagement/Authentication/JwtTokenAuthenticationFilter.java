@@ -29,12 +29,12 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         // Then, check for the exempted path
         String path = request.getRequestURI();
         System.out.println(path);
-        if (path.startsWith("/loginByPassword") || path.equals("/login/verify")) {
+        if (path.contains("/loginByPassword") || path.contains("/login/verify")) {
             filterChain.doFilter(request, response);
             return; // Skip JWT validation for this path
         }
 
-        if (path.startsWith("/api/sa/download/")) {
+        if (path.contains("/api/sa/download/")) {
             filterChain.doFilter(request, response);
             return; // Skip JWT validation for this path
         }
