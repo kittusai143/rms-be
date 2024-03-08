@@ -38,7 +38,7 @@ public interface AppraisalMasterRepository extends JpaRepository<AppraisalMaster
 
 
     @Query(value = "SELECT am.id, am.employee_id, am.appraisal_initiation_id, am.updated_date, am.status, am.isactive, u.name as name FROM appraisal_master am " +
-            "INNER JOIN Users u ON am.employee_id = u.id " +
+            "INNER JOIN users u ON am.employee_id = u.id " +
             "WHERE YEAR(am.updated_date) = YEAR(:date) AND MONTH(am.updated_date) = MONTH(:date) AND DAY(am.updated_date) = DAY(:date) AND am.isActive = 1",
             nativeQuery = true)
     List<Map<String,Object>> findByDate(@Param("date") Date date);

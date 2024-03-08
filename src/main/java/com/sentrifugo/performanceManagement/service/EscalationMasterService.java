@@ -29,8 +29,8 @@ public class EscalationMasterService {
     AppraisalMasterRepository appraisalMasterRepository;
 
     public EscalationMaster addEscalationMaster(EscalationMaster escalationMaster,Integer employeeId) {
-
-        Integer appraisalMaster = escalationMasterRepository.findAppraisalIdByEmployeeId(employeeId);
+        Integer empId = employeeRepo.getEmpId(employeeId);
+        Integer appraisalMaster = escalationMasterRepository.findAppraisalIdByEmployeeId(empId);
 
         EscalationMaster escalationMaster1 = new EscalationMaster();
         escalationMaster1.setAppraisalMasterId(appraisalMaster);

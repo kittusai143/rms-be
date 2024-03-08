@@ -2,6 +2,7 @@ package com.sentrifugo.performanceManagement.controller;
 
 import com.sentrifugo.performanceManagement.entity.AppraisalMaster;
 import com.sentrifugo.performanceManagement.entity.SelfAssessment;
+import com.sentrifugo.performanceManagement.repository.EmployeeRepo;
 import com.sentrifugo.performanceManagement.service.SelfAssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -22,11 +23,13 @@ import java.util.*;
 public class SelfAssessmentController {
     @Autowired
     SelfAssessmentService selfAssessmentService;
-
+       @Autowired
+       EmployeeRepo ERepo;
     @GetMapping("/am-status/{eid}")
     public ResponseEntity<?> getamStatus(@PathVariable Integer eid) {
         try {
-            AppraisalMaster appraisalMaster = selfAssessmentService.getamStatus(eid);
+          Integer employeeId=  ERepo.getEmpId(eid);
+            AppraisalMaster appraisalMaster = selfAssessmentService.getamStatus(employeeId);
 
             if (appraisalMaster != null) {
                 Map<String, Object> successResponse = new HashMap<>();
