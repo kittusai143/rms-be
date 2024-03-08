@@ -196,13 +196,10 @@ public class EscalationMasterController {
                 list = escalationMasterService.getAllEscalationDetailsByStatus(status);
             }
             if (list == null || list.isEmpty()) {
-                Map<String, String> responseMap = new HashMap<>();
-                responseMap.put("message", "No records found");
-                return ResponseEntity.ok().body(responseMap);
+
+                return ResponseEntity.ok().body(list);
             }
-            map.put("message","data not exist");
-            l.add(map);
-            return ResponseEntity.ok().body(l);
+            return ResponseEntity.ok().body(list);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }

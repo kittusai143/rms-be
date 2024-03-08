@@ -3,19 +3,19 @@ server:
 
 spring:
   datasource:
-    url: jdbc:sqlserver://192.168.100.5;databaseName=performance_appraisal;encrypt=true;trustServerCertificate=true
-    username: sa
-    password: Sql@2019
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:mysql://192.168.20.17:3306/performancemanagement?useSSL=false&serverTimezone=UTC
+    username: sagarsoft
+    password: 76dHkq36ZfAV
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       properties:
         hibernate:
-          dialect: org.hibernate.dialect.SQLServer2012Dialect
+          dialect: org.hibernate.dialect.MySQL8Dialect
           format_sql: true
           show_sql: true
 
@@ -23,7 +23,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-
 
   mail:
     host: smtp.gmail.com
@@ -35,7 +34,7 @@ spring:
         smtp:
           auth: true
           starttls.enable: true
+
 custom:
   apiKey: 2566e68e32de951520875cd5106d217e93f753ffa04c0ab12e10d2f1c07e22c0
-  frontendUrl: "http://localhost:3000"
-
+  frontendUrl: "http://localhost:3100"

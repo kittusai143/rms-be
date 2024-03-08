@@ -146,9 +146,13 @@ public class SelfAssessmentService {
                 return "empty";
             }
 
+
+            String projectDirectory = System.getProperty("user.dir");
+            System.out.println(projectDirectory);
+
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
             String fileName = originalFileName.replaceAll(" ", "_");  // Replace spaces with underscores
-            Path filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+            Path filePath = Paths.get(projectDirectory+"\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
 
             // Check if the file already exists, if so, append "(copy)" to the file name
             int count = 0;
@@ -162,7 +166,7 @@ public class SelfAssessmentService {
                 } else {
                     fileName = originalFileName + "(copy)" + count;
                 }
-                filePath = Paths.get("C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+                filePath = Paths.get(projectDirectory+"\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
             }
 
             Files.copy(file.getInputStream(), filePath);
@@ -173,8 +177,10 @@ public class SelfAssessmentService {
     }
 
 
+
     public FileSystemResource getFile(String fileName) {
-        String filePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName;
+        String projectDirectory = System.getProperty("user.dir");
+        String filePath = projectDirectory+"\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName;
         // Adjust the path based on your folder structureString absolutePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\" + fileName;
         File file = new File(filePath);
         System.out.println(filePath);
@@ -185,7 +191,6 @@ public class SelfAssessmentService {
             throw new RuntimeException("File not found: " + fileName);
         }
     }
-
     //------------------------------------------------Unused Services-----------------------------------------
     public List<SelfAssessment> submitWithDefaultQuestions(Long masterId) {
         List<SelfAssessment> defaultAssessments = getDefaultAssessments(masterId);
