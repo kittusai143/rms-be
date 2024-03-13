@@ -143,8 +143,13 @@ public class SelfAssessmentService {
         String projectDirectory = System.getProperty("user.dir");
         System.out.println("path where file is stored"+ projectDirectory);
         // Validate file
+
         try{
-            String folderPath = "attachments"; // Change this to your desired folder path
+            if (file.isEmpty()) {
+                return "empty";
+            }
+//            String folderPath = "attachments"; // Change this to your desired folder path
+            String folderPath = projectDirectory+"attachments";
             File folder = new File(folderPath);
             if (!folder.exists()) {
                 boolean created = folder.mkdirs();
@@ -152,9 +157,7 @@ public class SelfAssessmentService {
                     throw new IOException("Failed to create directory for attachments at"+projectDirectory);
                 }
             }
-            if (file.isEmpty()) {
-                return "empty";
-            }
+
 
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
             String fileName = originalFileName.replaceAll(" ", "_");  // Replace spaces with underscores
