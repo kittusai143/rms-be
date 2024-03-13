@@ -140,6 +140,8 @@ public class SelfAssessmentService {
     //---------------------------------------------File Upload and Download Services---------------------------------------------------
 
     public  String uploadFile(MultipartFile file) throws IOException {
+        String projectDirectory = System.getProperty("user.dir");
+        System.out.println("path where file is stored"+ projectDirectory);
         // Validate file
         try{
             String folderPath = "attachments"; // Change this to your desired folder path
@@ -147,16 +149,12 @@ public class SelfAssessmentService {
             if (!folder.exists()) {
                 boolean created = folder.mkdirs();
                 if (!created) {
-                    throw new IOException("Failed to create directory for attachments");
+                    throw new IOException("Failed to create directory for attachments at"+projectDirectory);
                 }
             }
             if (file.isEmpty()) {
                 return "empty";
             }
-
-
-            String projectDirectory = System.getProperty("user.dir");
-            System.out.println("path where file is stored"+ projectDirectory);
 
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
             String fileName = originalFileName.replaceAll(" ", "_");  // Replace spaces with underscores
