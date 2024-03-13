@@ -23,5 +23,6 @@ public interface AppraisalEmpHistoryRepository extends JpaRepository<AppraisalEm
     List<Map<String,Object>> findByDate(@Param("date") Date date);
 
 
+    List<AppraisalEmpHistory> findByEmpId(Long id);
 }
 

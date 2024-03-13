@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,4 +38,18 @@ public class AppraisalEmpHistoryService {
         java.sql.Date mdate = new java.sql.Date(cal.getTimeInMillis());
         return  repo.findByDate(mdate);
     }
+
+
+        public List<AppraisalEmpHistory> getByEmpId(Long eid) {
+            List<AppraisalEmpHistory> history= repo.findByEmpId(eid);
+            Iterator<AppraisalEmpHistory> iterator = history.iterator();
+            while(iterator.hasNext()) {
+                AppraisalEmpHistory row = iterator.next();
+                if(!(row.getStatus().equals("HRSubmitted") || row.getStatus().equals("Closed"))) {
+                    iterator.remove();
+                }
+            }
+            return history;
+
+        }
 }
