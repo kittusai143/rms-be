@@ -166,8 +166,9 @@ public class SelfAssessmentController {
                 response.put("message", "empty-file");
                 return ResponseEntity.ok(response);
             }
-            else if(uploadResult.equals("max__size")){
+            else if(uploadResult.startsWith("exception")){
                 response.put("message", "sizeErr");
+                response.put("Exception",uploadResult);
                 return ResponseEntity.ok(response);
             }
             response.put("message", "success");

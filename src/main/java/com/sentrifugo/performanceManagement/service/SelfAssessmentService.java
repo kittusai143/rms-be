@@ -142,17 +142,25 @@ public class SelfAssessmentService {
     public  String uploadFile(MultipartFile file) throws IOException {
         // Validate file
         try{
+            String folderPath = "attachments"; // Change this to your desired folder path
+            File folder = new File(folderPath);
+            if (!folder.exists()) {
+                boolean created = folder.mkdirs();
+                if (!created) {
+                    throw new IOException("Failed to create directory for attachments");
+                }
+            }
             if (file.isEmpty()) {
                 return "empty";
             }
 
 
             String projectDirectory = System.getProperty("user.dir");
-            System.out.println(projectDirectory);
+            System.out.println("path where file is stored"+ projectDirectory);
 
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
             String fileName = originalFileName.replaceAll(" ", "_");  // Replace spaces with underscores
-            Path filePath = Paths.get(projectDirectory+"\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+            Path filePath = Paths.get(projectDirectory+"\\attachments\\" + fileName);
 
             // Check if the file already exists, if so, append "(copy)" to the file name
             int count = 0;
@@ -166,13 +174,13 @@ public class SelfAssessmentService {
                 } else {
                     fileName = originalFileName + "(copy)" + count;
                 }
-                filePath = Paths.get(projectDirectory+"\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName);
+                filePath = Paths.get(projectDirectory+"\\attachments\\" + fileName);
             }
 
             Files.copy(file.getInputStream(), filePath);
             return fileName;}
         catch (Exception e){
-            return "max__size";
+            return "exception"+e.toString();
         }
     }
 
@@ -180,7 +188,7 @@ public class SelfAssessmentService {
 
     public FileSystemResource getFile(String fileName) {
         String projectDirectory = System.getProperty("user.dir");
-        String filePath = projectDirectory+"\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\attachments\\" + fileName;
+        String filePath = projectDirectory+"\\attachments\\" + fileName;
         // Adjust the path based on your folder structureString absolutePath = "C:\\Users\\user\\Desktop\\performance-managament-system\\src\\main\\java\\com\\sentrifugo\\performanceManagement\\" + fileName;
         File file = new File(filePath);
         System.out.println(filePath);
