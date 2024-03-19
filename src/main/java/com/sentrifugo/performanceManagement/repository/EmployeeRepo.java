@@ -1,4 +1,3 @@
-
 package com.sentrifugo.performanceManagement.repository;
 
 
@@ -101,7 +100,7 @@ public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
     List<String> findDistinctBusinessunit();
     @Query("SELECT DISTINCT e.department FROM Employee e")
     List<String> findDistinctDepartment();
-    @Query("SELECT e FROM Employee e WHERE e.user_id IN :userIds AND e.businessunit = :businessunit AND e.department IN :departments AND e.dateOfJoining >= :dateOfJoining")
+    @Query("SELECT e FROM Employee e WHERE e.user_id IN :userIds AND e.businessunit = :businessunit AND e.department IN :departments AND e.dateOfJoining <= :dateOfJoining")
     List<Employee> findByUserIdInAndBusinessunitAndDepartmentInAndDateOfJoining(List<Integer> userIds, String businessunit, List<String> departments, Date dateOfJoining );
 
 }
