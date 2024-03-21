@@ -2,34 +2,15 @@ package com.sentrifugo.performanceManagement.repository;
 
 
 import com.sentrifugo.performanceManagement.entity.Employee;
-import com.sentrifugo.performanceManagement.vo.EmpDetails;
-import jakarta.persistence.Column;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
-//FIELDS IN EMPLOYEE
-//id
-//user_id
-//reportingManager
-//l2Manager
-//businessunit,department,isActive,createdBy,updatedBy,client,project
-
-
-
-//FIELDS IN USERS
-//private Integer id;
-//private String email;
-//private String name;
-//private Integer empRole;
-//private Date dob;
-//@Column(name = "userfullname")
-//private String userFullName;
-//private String contactNumber;
-//private boolean isActive;
-//private String employeeId;
+@Repository
 public interface EmployeeRepo extends JpaRepository<Employee,Integer> {
 
     @Query("SELECT COUNT(emp.id) FROM Employee emp")

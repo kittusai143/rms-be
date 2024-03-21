@@ -18,17 +18,17 @@ public class Employee{
     @Column(name="Id")
     private Integer id;
 
-    @Column(name = "user_id")
-    private Integer user_id;
-
-    @Column(name = "reporting_manager")
-    private Integer reportingManager;
-
-    @Column(name = "l2_manager")
-    private Integer l2Manager;
-
     @Column(name = "businessunit")
     private String businessunit;
+
+    @Column(name = "client")
+    private String client;
+
+    @Column(name = "createdby")
+    private Integer createdBy;
+
+    @Column(name="date_of_joining")
+    private Date dateOfJoining;
 
     @Column(name = "department")
     private String department;
@@ -36,19 +36,25 @@ public class Employee{
     @Column(name = "isactive")
     private boolean isActive;
 
-    @Column(name = "createdby")
-    private Integer createdBy;
-
-    @Column(name = "updatedby")
-    private Integer updatedBy;
-
-    @Column(name = "client")
-    private String client;
+    @Column(name = "l2_manager")
+    private Integer l2Manager;
 
     @Column(name = "project")
     private String project;
 
-    @Column(name="date_of_joining")
-    private Date dateOfJoining;
+    @Column(name = "reporting_manager")
+    private Integer reportingManager;
+
+    @Column(name = "updatedby")
+    private Integer updatedBy;
+
+    @Column(name = "user_id")
+    private Integer user_id;
+
+    @Column(name = "skills")
+    private String skills;
+
+    @Column(name = "location")
+    private String location;
 
 }

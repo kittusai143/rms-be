@@ -6,10 +6,11 @@ import com.sentrifugo.performanceManagement.vo.UserDetailsDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-
+@Repository
 public interface EmailAuthenticationRepo extends JpaRepository<Users,Integer> {
     @Query(value="SELECT u.id, e.id AS EmpId, u.empRole, r.rolename AS empRoleName, r.roletype AS empRoleType, u.name, u.email, u.employeeId " +
             "FROM users u " +

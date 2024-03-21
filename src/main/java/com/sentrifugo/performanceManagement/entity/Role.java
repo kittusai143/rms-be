@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "roleID")
     private  Integer roleID;
 
@@ -35,6 +34,7 @@ public class Role {
 
     @Column(name = "isactive")
     private boolean isActive;
+
 }
 
 

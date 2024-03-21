@@ -6,12 +6,9 @@ import com.sentrifugo.performanceManagement.entity.Employee;
 import com.sentrifugo.performanceManagement.entity.Users;
 import com.sentrifugo.performanceManagement.repository.EmployeeRepo;
 import com.sentrifugo.performanceManagement.vo.DistinctData;
-import com.sentrifugo.performanceManagement.vo.EmpDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
