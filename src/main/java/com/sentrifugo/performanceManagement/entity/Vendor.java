@@ -15,6 +15,10 @@ import java.sql.Date;
 public class Vendor {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "SilId")
     private String silId;
 

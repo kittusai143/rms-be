@@ -14,6 +14,10 @@ import java.util.Date;
 @Table(name = "ResourceAllocation")
 public class ResourceAllocation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
+    private Long id;
+
     @Column(name = "SilId")
     private String silId;
 

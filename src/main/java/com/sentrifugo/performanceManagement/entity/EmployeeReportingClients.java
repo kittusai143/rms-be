@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "EmployeeReportingClients")
 public class EmployeeReportingClients {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "SilId")
     private String silId;
 

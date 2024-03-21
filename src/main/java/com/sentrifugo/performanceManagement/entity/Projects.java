@@ -14,8 +14,10 @@ import java.sql.Date;
 @Table(name = "Projects")
 public class Projects {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "ProjectCode")
     private String projectCode;
 
