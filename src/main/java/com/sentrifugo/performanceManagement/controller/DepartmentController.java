@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
-@RequestMapping("clients")
+@RequestMapping("departments")
 public class DepartmentController {
 
     @Autowired
