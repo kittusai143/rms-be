@@ -51,10 +51,4 @@ public class Employee{
     @Column(name = "user_id")
     private Integer user_id;
 
-    @Column(name = "skills")
-    private String skills;
-
-    @Column(name = "location")
-    private String location;
-
 }

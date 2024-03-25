@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
 @RequestMapping("login")
-public class EmailAuthenController {
+public class EmailAuthenController { 
     @Autowired
     private EmailAuthenService service;
     @GetMapping("verify")
