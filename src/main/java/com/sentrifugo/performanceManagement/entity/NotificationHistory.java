@@ -26,7 +26,7 @@ public class NotificationHistory {
     private Long resAllocId;
 
     @Column(name = "CreatedBy")
-    private Long createdBy;
+    private String createdBy;
 
     @Column(name = "createddate")
     private Date createdDate;
