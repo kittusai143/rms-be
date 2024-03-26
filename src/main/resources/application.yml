@@ -38,4 +38,4 @@ spring:
 custom:
   apiKey: 2566e68e32de951520875cd5106d217e93f753ffa04c0ab12e10d2f1c07e22c0
 #  frontendUrl: "http://14.140.148.227:3100"
-  frontendUrl: "http://localhost:3100"
+  frontendUrl: "http://localhost:3000"
