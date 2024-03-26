@@ -1,5 +1,6 @@
 package com.sentrifugo.performanceManagement.service;
 
+import com.sentrifugo.performanceManagement.entity.NotificationHistory;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,13 @@ public class ResourceAllocProcessService {
     @Autowired
     private ResourceAllocProcessRepository resourceAllocProcessRepository;
 
-    public List<Object[]> getResourceAllocProcessAndUsers() {
+    @Autowired
+    private UsersService usersService;
+
+    @Autowired
+    private ResourceAllocationService resourceAllocationService;
+
+    public List<Map<String,Object>> getResourceAllocProcessAndUsers() {
         return resourceAllocProcessRepository.getResourceAllocProcessAndUsers(true);
     }
 
@@ -25,7 +32,15 @@ public class ResourceAllocProcessService {
     }
 
     public ResourceAllocProcess createResourceAllocProcess(ResourceAllocProcess resourceAllocProcess) {
-        return resourceAllocProcessRepository.save(resourceAllocProcess);
+        ResourceAllocProcess updated = resourceAllocProcessRepository.save(resourceAllocProcess);
+        NotificationHistory notification = new NotificationHistory();
+        notification.setSilId( updated.getSilId());
+        notification.setResAllocId( updated.getResAllocId());
+        notification.setCreatedBy( updated.getUpdatedBy() );
+        notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
+        notification.setComment(usersService.getbyEmployeeID(updated.getUpdatedBy())+" "+ updated.getProcessStatus() +" "+resourceAllocationService.getById(updated.getResAllocId()).getName());
+
+        return updated;
     }
 
     public ResourceAllocProcess updateStatus(Long id, Map<String, ?> requestBody) {
@@ -35,7 +50,16 @@ public class ResourceAllocProcessService {
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
-            return resourceAllocProcessRepository.save(allocation);
+            ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
+
+            NotificationHistory notification = new NotificationHistory();
+            notification.setSilId( updated.getSilId());
+            notification.setResAllocId( updated.getResAllocId());
+            notification.setCreatedBy( updated.getUpdatedBy() );
+            notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
+            notification.setComment(usersService.getbyEmployeeID(updated.getUpdatedBy())+" "+ updated.getProcessStatus() +" "+resourceAllocationService.getById(updated.getResAllocId()).getName());
+
+            return updated;
         } else {
             return null;
         }

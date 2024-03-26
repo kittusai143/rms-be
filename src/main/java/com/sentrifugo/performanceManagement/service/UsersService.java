@@ -17,5 +17,6 @@ public class UsersService {
         return usersRepository.findByEmpRole(roleId);
     }
 
+    public List<Users> getbyEmployeeID(String employeeID){return usersRepository.findByEmployeeId(employeeID);}
 
 }

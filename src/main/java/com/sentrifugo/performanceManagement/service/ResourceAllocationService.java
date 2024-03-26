@@ -20,6 +20,7 @@ public class ResourceAllocationService {
       return resourceAllocationRepository.findAll();
     }
 
+    public ResourceAllocation getById(Long id){ return resourceAllocationRepository.findById(id).get();}
     public List<ResourceAllocation> findByLocation(List<String> location) {
         return resourceAllocationRepository.findByLocation(location);
     }

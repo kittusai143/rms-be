@@ -65,4 +65,6 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     List<Map<String,String>> findDetailsWithStatus();
 
 
+    @Query("SELECT u from Users u where employeeId=:employeeID")
+    List<Users> findByEmployeeId(String employeeID);
 }
