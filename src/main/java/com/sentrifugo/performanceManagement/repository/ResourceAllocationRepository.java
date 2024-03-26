@@ -17,6 +17,9 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
     @Query("SELECT ra FROM ResourceAllocation ra WHERE ra.billability IN :billabilities")
     List<ResourceAllocation> findByBillability(List<String> billabilities);
 
+//    List<ResourceAllocation> findByRoles(List<String> roles);
+//
+//    List<ResourceAllocation> findByTechGroups(List<String> techGroups);
     @Query("SELECT ra FROM ResourceAllocation ra WHERE ra.location IN :locations AND (ra.skillset1 LIKE CONCAT('%', :skill, '%') OR ra.skillset2 LIKE CONCAT('%', :skill, '%'))")
     List<ResourceAllocation> findByLocationAndSkill(List<String> locations, String skill);
 
@@ -37,6 +40,7 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
 
     @Query("SELECT ra FROM ResourceAllocation ra WHERE ra.location IN :locations AND (ra.skillset1 IN :skills OR ra.skillset2 IN :skills) AND ra.billability IN :billabilities ")
     List<ResourceAllocation> findByLocationAndSkillsAndBillability(List<String> locations, List<String> skills, List<String> billabilities);
+
 
 
 }

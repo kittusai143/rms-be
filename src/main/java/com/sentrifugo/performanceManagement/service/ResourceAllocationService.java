@@ -68,6 +68,15 @@ public class ResourceAllocationService {
         return resourceAllocationRepository.findByBillability(billabilities);
     }
 
+//    public List<ResourceAllocation> findByRoles(List<String> roles) {
+//        return resourceAllocationRepository.findByRoles(roles);
+//    }
+//
+//    public List<ResourceAllocation> findByTechGroups(List<String> techGroups) {
+//        return resourceAllocationRepository.findByTechGroups(techGroups);
+//    }
+
+
 //    public ResourceAllocation updateResourceAllocation(Long id, Map<String,?> updatedAllocation) {
 //        Optional<ResourceAllocation> optionalAllocation = resourceAllocationRepository.findById(id);
 //        if (optionalAllocation.isPresent()) {

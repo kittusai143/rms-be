@@ -62,6 +62,14 @@ public class ResourceAllocationController {
         else if (billabilities != null && !billabilities.isEmpty()) {
             return resourceAllocationService.findByBillability(billabilities);
         }
+        //only roles
+//        else if (roles != null && !roles.isEmpty()){
+//            return resourceAllocationService.findByRoles(roles);
+//        }
+//        //only techGroups
+//        else if (techGroups != null && !techGroups.isEmpty()) {
+//            return resourceAllocationService.findByTechGroups(techGroups);
+//        }
         // no filters
         else {
             return resourceAllocationService.getAllResourceAllocations();

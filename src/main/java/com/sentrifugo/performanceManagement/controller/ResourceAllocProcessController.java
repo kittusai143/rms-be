@@ -41,17 +41,12 @@ public class ResourceAllocProcessController {
             resourceAllocProcess.setResAllocId(((Integer) requestBody.get("resAllocId")).longValue());
             resourceAllocProcess.setProjectCode( (String) requestBody.get("projectCode"));
             resourceAllocProcess.setProcessStatus( (String) requestBody.get("processStatus"));
-            // Parse start date and end date strings to java.util.Date objects
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
             Date startDate = sdf.parse((String) requestBody.get("startDate"));
             Date endDate = sdf.parse((String) requestBody.get("endDate"));
             resourceAllocProcess.setStartDate(startDate);
             resourceAllocProcess.setEndDate(endDate);
-
-//            Date startDate = new Date(((java.util.Date) requestBody.get("startDate")).getTime());
-//            resourceAllocProcess.setStartDate(startDate);
-//            Date endDate = new Date(((java.util.Date) requestBody.get("endDate")).getTime());
-//            resourceAllocProcess.setEndDate(endDate);
 
             resourceAllocProcess.setCreatedBy(((String) requestBody.get("createdBy")));
             resourceAllocProcess.setCreatedDate(new Date(System.currentTimeMillis()));

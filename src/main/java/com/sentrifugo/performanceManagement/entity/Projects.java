@@ -14,9 +14,9 @@ import java.sql.Date;
 @Table(name = "Projects")
 public class Projects {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-//    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Long id;
 
     @Column(name = "ProjectCode")
     private String projectCode;
@@ -62,23 +62,5 @@ public class Projects {
 
     @Column(name = "SizeOfProjectHrs")
     private Integer sizeOfProjectHrs;
-
-    @Column(name = "BillableHeadcount")
-    private Integer billableHeadcount;
-
-    @Column(name = "ClientManager")
-    private String clientManager;
-
-    @Column(name = "NonBillableHeadcount")
-    private Integer nonBillableHeadcount;
-
-    @Column(name = "OffshoreHeadcount")
-    private Integer offshoreHeadcount;
-
-    @Column(name = "OnshoreHeadcount")
-    private Integer onshoreHeadcount;
-
-    @Column(name = "TotalHeadcount")
-    private Integer totalHeadcount;
 
 }
