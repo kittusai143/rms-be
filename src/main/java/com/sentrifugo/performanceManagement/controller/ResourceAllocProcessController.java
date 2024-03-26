@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +21,12 @@ public class ResourceAllocProcessController {
 
     @Autowired
     public ResourceAllocProcessService resourceAllocProcessService;
+
+    @GetMapping("/getlistusers")
+    public List<Object[]> getResourceAllocProcessAndUsers() {
+        return resourceAllocProcessService.getResourceAllocProcessAndUsers();
+    }
+
 
     @GetMapping("/byId/{id}")
     public ResourceAllocProcess getById(@PathVariable long id){
@@ -46,7 +53,7 @@ public class ResourceAllocProcessController {
 //            Date endDate = new Date(((java.util.Date) requestBody.get("endDate")).getTime());
 //            resourceAllocProcess.setEndDate(endDate);
 
-            resourceAllocProcess.setCreatedBy(((Integer) requestBody.get("createdBy")).longValue());
+            resourceAllocProcess.setCreatedBy(((String) requestBody.get("createdBy")));
             resourceAllocProcess.setCreatedDate(new Date(System.currentTimeMillis()));
             resourceAllocProcess.setActive(true);
 

@@ -15,11 +15,17 @@ import java.util.Date;
 public class ResourceAllocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
-    private Long id;
+    @Column(name = "AllocationId")
+    private Integer allocationId;
 
     @Column(name = "SilId")
     private String silId;
+
+    @Column(name = "VendorID")
+    private String vendorId;
+
+    @Column(name = "ConsultantID")
+    private String consultantId;
 
     @Column(name = "Name")
     private String name;
@@ -36,44 +42,17 @@ public class ResourceAllocation {
     @Column(name = "Status")
     private boolean status;
 
-    @Column(name = "Partner")
-    private String partner;
-
     @Column(name = "ClientCode")
     private String clientCode;
 
-    @Column(name = "ProjectName")
-    private String projectName;
-
     @Column(name = "ProjectCode")
     private String projectCode;
-
-    @Column(name = "ProjectType")
-    private String projectType;
-
-    @Column(name = "ProjectStartDate")
-    private Date projectStartDate;
 
     @Column(name = "BillingStartDate")
     private Date billingStartDate;
 
     @Column(name = "BillingEndDate")
     private Date billingEndDate;
-
-    @Column(name = "ProjectEndDate")
-    private Date projectEndDate;
-
-    @Column(name = "SOW")
-    private String sow;
-
-    @Column(name = "SOWStartDate")
-    private Date sowStartDate;
-
-    @Column(name = "SOWEndDate")
-    private Date sowEndDate;
-
-    @Column(name = "ClientManager")
-    private String clientManager;
 
     @Column(name = "Billability")
     private String billability;
@@ -122,5 +101,35 @@ public class ResourceAllocation {
 
     @Column(name = "Audit")
     private String audit;
+
+    @Column(name = "AllocationStatus")
+    private String allocationStatus;
+
+    @Column(name = "ClientManager")
+    private String clientManager;
+
+    @Column(name = "Partner")
+    private String partner;
+
+    @Column(name = "ProjectEndDate")
+    private Date projectEndDate;
+
+    @Column(name = "ProjectName")
+    private String projectName;
+
+    @Column(name = "ProjectStartDate")
+    private Date projectStartDate;
+
+    @Column(name = "ProjectType")
+    private String projectType;
+
+    @Column(name = "SOW")
+    private String sow;
+
+    @Column(name = "SOWStartDate")
+    private Date sowStartDate;
+
+    @Column(name = "SOWEndDate")
+    private Date sowEndDate;
 
 }

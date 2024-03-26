@@ -15,7 +15,7 @@ public class ResourceAllocProcess {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "Id")
     private Long id;
 
     @Column(name = "SilId")
@@ -37,10 +37,10 @@ public class ResourceAllocProcess {
     private Date endDate;
 
     @Column(name = "CreatedBy")
-    private Long createdBy;
+    private String createdBy;
 
     @Column(name = "UpdatedBy")
-    private Long updatedBy;
+    private String updatedBy;
 
     @Column(name = "createddate")
     private Date createdDate;

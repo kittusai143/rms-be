@@ -28,6 +28,11 @@ public class ResourceAllocationController {
         List<String> locations = filterRequest.getLocations();
         List<String> skills = filterRequest.getSkills();
         List<String> billabilities = filterRequest.getBillabilities();
+        List<String> roles = filterRequest.getRoles();
+        List<String> techGroups = filterRequest.getTechGroup();
+        List<String> Domain = filterRequest.getDomain();
+        Integer yearsofExp = filterRequest.getYearsOfExp();
+
 
         // three filters are provided
         if (locations != null && !locations.isEmpty() && skills != null && !skills.isEmpty() && billabilities != null && !billabilities.isEmpty()) {
