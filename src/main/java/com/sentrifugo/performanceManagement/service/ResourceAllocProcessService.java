@@ -16,7 +16,7 @@ public class ResourceAllocProcessService {
     @Autowired
     private ResourceAllocProcessRepository resourceAllocProcessRepository;
 
-    public List<Object[]> getResourceAllocProcessAndUsers() {
+    public List<Map<String,Object>> getResourceAllocProcessAndUsers() {
         return resourceAllocProcessRepository.getResourceAllocProcessAndUsers(true);
     }
 

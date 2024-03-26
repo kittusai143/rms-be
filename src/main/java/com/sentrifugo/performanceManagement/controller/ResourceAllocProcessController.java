@@ -23,7 +23,7 @@ public class ResourceAllocProcessController {
     public ResourceAllocProcessService resourceAllocProcessService;
 
     @GetMapping("/getlistusers")
-    public List<Object[]> getResourceAllocProcessAndUsers() {
+    public List<Map<String,Object>> getResourceAllocProcessAndUsers() {
         return resourceAllocProcessService.getResourceAllocProcessAndUsers();
     }
 
