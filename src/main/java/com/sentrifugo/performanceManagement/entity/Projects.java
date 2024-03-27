@@ -63,4 +63,9 @@ public class Projects {
     @Column(name = "SizeOfProjectHrs")
     private Integer sizeOfProjectHrs;
 
+    @Column(name = "DomainId")
+    private Integer domainId;
+
+    @Column(name = "DomainName")
+    private String domainName;
 }

@@ -108,5 +108,7 @@ public class ResourceAllocation {
     @Column(name = "AllocationStatus")
     private String allocationStatus;
 
+    @Column(name = "TechId")
+    private Integer techMId;
 
 }
