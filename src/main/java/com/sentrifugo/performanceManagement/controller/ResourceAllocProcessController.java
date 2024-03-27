@@ -1,14 +1,14 @@
 package com.sentrifugo.performanceManagement.controller;
 
-import com.sentrifugo.performanceManagement.entity.NotificationHistory;
+
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
-import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
 import com.sentrifugo.performanceManagement.service.ResourceAllocProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -27,7 +27,6 @@ public class ResourceAllocProcessController {
         return resourceAllocProcessService.getResourceAllocProcessAndUsers();
     }
 
-
     @GetMapping("/byId/{id}")
     public ResourceAllocProcess getById(@PathVariable long id){
         return resourceAllocProcessService.getById(id);
@@ -41,13 +40,13 @@ public class ResourceAllocProcessController {
             resourceAllocProcess.setResAllocId(((Integer) requestBody.get("resAllocId")).longValue());
             resourceAllocProcess.setProjectCode( (String) requestBody.get("projectCode"));
             resourceAllocProcess.setProcessStatus( (String) requestBody.get("processStatus"));
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-            Date startDate = sdf.parse((String) requestBody.get("startDate"));
-            Date endDate = sdf.parse((String) requestBody.get("endDate"));
-            resourceAllocProcess.setStartDate(startDate);
-            resourceAllocProcess.setEndDate(endDate);
-
+            if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                Date startDate = sdf.parse((String) requestBody.get("startDate"));
+                Date endDate = sdf.parse((String) requestBody.get("endDate"));
+                resourceAllocProcess.setStartDate(startDate);
+                resourceAllocProcess.setEndDate(endDate);
+            }
             resourceAllocProcess.setCreatedBy(((String) requestBody.get("createdBy")));
             resourceAllocProcess.setCreatedDate(new Date(System.currentTimeMillis()));
             resourceAllocProcess.setActive(true);
@@ -61,7 +60,7 @@ public class ResourceAllocProcessController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> updateProcess(@PathVariable Long id, @RequestBody Map<String, ?> requestbody){
+    public ResponseEntity<?> updateProcess(@PathVariable Long id, @RequestBody Map<String, ?> requestbody) throws ParseException {
 
         ResourceAllocProcess allocation = resourceAllocProcessService.updateStatus(id, requestbody);
         if (allocation != null) {

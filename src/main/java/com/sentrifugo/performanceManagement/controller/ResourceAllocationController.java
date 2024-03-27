@@ -25,55 +25,8 @@ public class ResourceAllocationController {
 
     @PostMapping("/filter")
     public List<ResourceAllocation> filterResourceAllocations(@RequestBody ResourceAllocFilters filterRequest) {
-        List<String> locations = filterRequest.getLocations();
-        List<String> skills = filterRequest.getSkills();
-        List<String> billabilities = filterRequest.getBillabilities();
-        List<String> roles = filterRequest.getRoles();
-        List<String> techGroups = filterRequest.getTechGroup();
-        List<String> Domain = filterRequest.getDomain();
-        Integer yearsofExp = filterRequest.getYearsOfExp();
+       return resourceAllocationService.filterResourceAllocations(filterRequest);
 
-
-        // three filters are provided
-        if (locations != null && !locations.isEmpty() && skills != null && !skills.isEmpty() && billabilities != null && !billabilities.isEmpty()) {
-            return resourceAllocationService.findByLocationAndSkillsAndBillability(locations, skills, billabilities);
-        }
-        // locations and skills
-        else if (locations != null && !locations.isEmpty() && skills != null && !skills.isEmpty()) {
-            return resourceAllocationService.findByLocationAndSkills(locations, skills);
-        }
-        // only locations and Billability
-        else if (locations != null && !locations.isEmpty() && billabilities != null && !billabilities.isEmpty()) {
-            return resourceAllocationService.findByLocationAndBillability(locations, billabilities);
-        }
-        //only skills and Billability
-        else if (skills != null && !skills.isEmpty() && billabilities != null && !billabilities.isEmpty()) {
-            return resourceAllocationService.findBySkillsAndBillability(skills, billabilities);
-        }
-        //only locations
-        else if (locations != null && !locations.isEmpty()) {
-            return resourceAllocationService.findByLocation(locations);
-        }
-        // only skills
-        else if (skills != null && !skills.isEmpty()) {
-            return resourceAllocationService.findBySkills(skills);
-        }
-        //only Billability
-        else if (billabilities != null && !billabilities.isEmpty()) {
-            return resourceAllocationService.findByBillability(billabilities);
-        }
-        //only roles
-//        else if (roles != null && !roles.isEmpty()){
-//            return resourceAllocationService.findByRoles(roles);
-//        }
-//        //only techGroups
-//        else if (techGroups != null && !techGroups.isEmpty()) {
-//            return resourceAllocationService.findByTechGroups(techGroups);
-//        }
-        // no filters
-        else {
-            return resourceAllocationService.getAllResourceAllocations();
-        }
     }
 
 //    @PutMapping("/update/{id}")

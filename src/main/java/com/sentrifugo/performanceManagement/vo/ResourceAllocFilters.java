@@ -9,7 +9,7 @@ public class ResourceAllocFilters {
     private List<String> Locations;
     private List<String> Skills;
     private List<String> Billabilities;
-    private List<String> TechGroup;
+    private List<String> Techgroups;
     private List<String> Roles;
     private List<String> Domain;
     private Integer yearsOfExp;

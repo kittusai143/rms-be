@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,20 +38,28 @@ public class ResourceAllocProcessService {
         NotificationHistory notification = new NotificationHistory();
         notification.setSilId( updated.getSilId());
         notification.setResAllocId( updated.getResAllocId());
-        notification.setCreatedBy( updated.getUpdatedBy() );
+        notification.setCreatedBy( updated.getCreatedBy() );
         notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
-        notification.setComment(usersService.getbyEmployeeID(updated.getUpdatedBy())+" "+ updated.getProcessStatus() +" "+resourceAllocationService.getById(updated.getResAllocId()).getName());
+        notification.setComment(usersService.getbyEmployeeID(updated.getCreatedBy())+" "+ updated.getProcessStatus() +" "+resourceAllocationService.getById(updated.getResAllocId()).getName());
 
         return updated;
     }
 
-    public ResourceAllocProcess updateStatus(Long id, Map<String, ?> requestBody) {
+    public ResourceAllocProcess updateStatus(Long id, Map<String, ?> requestBody) throws ParseException {
         Optional<ResourceAllocProcess> optionalAllocation = resourceAllocProcessRepository.findById(id);
         if (optionalAllocation.isPresent()) {
             ResourceAllocProcess allocation = optionalAllocation.get();
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
+            if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                java.util.Date startDate = sdf.parse((String) requestBody.get("startDate"));
+                java.util.Date endDate = sdf.parse((String) requestBody.get("endDate"));
+                allocation.setStartDate(startDate);
+                allocation.setEndDate(endDate);
+            }
+
             ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
 
             NotificationHistory notification = new NotificationHistory();

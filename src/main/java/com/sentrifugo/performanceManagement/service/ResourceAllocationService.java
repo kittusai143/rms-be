@@ -2,7 +2,10 @@ package com.sentrifugo.performanceManagement.service;
 
 import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocationRepository;
+import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
+import com.sentrifugo.performanceManagement.vo.ResourceAllocSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,66 +19,17 @@ public class ResourceAllocationService {
     @Autowired
     public ResourceAllocationRepository resourceAllocationRepository;
 
+
+    public List<ResourceAllocation> filterResourceAllocations(ResourceAllocFilters criteria) {
+        Specification<ResourceAllocation> spec = ResourceAllocSpecification.filterResourceAllocations(criteria);
+        return resourceAllocationRepository.findAll(spec);
+    }
+
     public List<ResourceAllocation> getAllResourceAllocations(){
       return resourceAllocationRepository.findAll();
     }
 
     public ResourceAllocation getById(Long id){ return resourceAllocationRepository.findById(id).get();}
-    public List<ResourceAllocation> findByLocation(List<String> location) {
-        return resourceAllocationRepository.findByLocation(location);
-    }
-
-    public List<ResourceAllocation> findBySkills(List<String> skills) {
-        List<ResourceAllocation> resultList = new ArrayList<>();
-        for (String skill : skills) {
-            List<ResourceAllocation> bySkill = resourceAllocationRepository.findBySkill(skill);
-            resultList.addAll(bySkill);
-        }
-        return resultList;
-    }
-    public List<ResourceAllocation> findByLocationAndSkills(List<String> locations, List<String> skills) {
-        List<ResourceAllocation> resultList = new ArrayList<>();
-        for (String skill : skills) {
-            List<ResourceAllocation> byLocationAndSkill = resourceAllocationRepository.findByLocationAndSkill(locations, skill);
-            resultList.addAll(byLocationAndSkill);
-        }
-        return resultList;
-    }
-    public List<ResourceAllocation> findByLocationAndSkillsAndBillability(List<String> locations, List<String> skills, List<String> billabilities) {
-        List<ResourceAllocation> resultList = new ArrayList<>();
-        for (String skill : skills) {
-            List<ResourceAllocation> byLocationAndSkillAndBillability = resourceAllocationRepository.findByLocationAndSkillAndBillability(locations, skill, billabilities);
-            resultList.addAll(byLocationAndSkillAndBillability);
-        }
-        return resultList;
-    }
-
-    public List<ResourceAllocation> findByLocationAndBillability(List<String> locations, List<String> billabilities) {
-        return resourceAllocationRepository.findByLocationAndBillability(locations,billabilities);
-    }
-
-
-    public List<ResourceAllocation> findBySkillsAndBillability(List<String> skills, List<String> billabilities) {
-        List<ResourceAllocation> resultList = new ArrayList<>();
-        for (String skill : skills) {
-            List<ResourceAllocation> bySkillAndBillability = resourceAllocationRepository.findBySkillAndBillability(skill, billabilities);
-            resultList.addAll(bySkillAndBillability);
-        }
-        return resultList;
-    }
-
-    public List<ResourceAllocation> findByBillability(List<String> billabilities) {
-        return resourceAllocationRepository.findByBillability(billabilities);
-    }
-
-//    public List<ResourceAllocation> findByRoles(List<String> roles) {
-//        return resourceAllocationRepository.findByRoles(roles);
-//    }
-//
-//    public List<ResourceAllocation> findByTechGroups(List<String> techGroups) {
-//        return resourceAllocationRepository.findByTechGroups(techGroups);
-//    }
-
 
 //    public ResourceAllocation updateResourceAllocation(Long id, Map<String,?> updatedAllocation) {
 //        Optional<ResourceAllocation> optionalAllocation = resourceAllocationRepository.findById(id);

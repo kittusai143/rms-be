@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ResourceAllocation")
+@Table(name = "resource_allocation")
 public class ResourceAllocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,7 +97,7 @@ public class ResourceAllocation {
     private String certifications;
 
     @Column(name = "TechnologyDivision")
-    private String technologyDivision;
+    private String technologydivision;
 
     @Column(name = "Awards")
     private String awards;
