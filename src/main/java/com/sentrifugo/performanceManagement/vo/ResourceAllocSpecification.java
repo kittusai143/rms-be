@@ -36,10 +36,10 @@ public class ResourceAllocSpecification {
 //                // Assuming domain is a property in ResourceAllocation entity
 //                predicates.add(root.get("domain").in(filters.getDomain()));
 //            }
-//            if (filters.getYearsOfExp() != null) {
-//                // Assuming yearsOfExp is a property in ResourceAllocation entity
-//                predicates.add(criteriaBuilder.equal(root.get("yearsOfExp"), filters.getYearsOfExp()));
-//            }
+            if (filters.getYearsOfExp() != null && !filters.getYearsOfExp().isEmpty() ) {
+                // Assuming yearsOfExp is a property in ResourceAllocation entity
+                predicates.add(criteriaBuilder.between(root.get("yearsOfExp"), filters.getYearsOfExp().get(0), filters.getYearsOfExp().get(1)));
+            }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }

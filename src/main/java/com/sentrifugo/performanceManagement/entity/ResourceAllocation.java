@@ -111,4 +111,6 @@ public class ResourceAllocation {
     @Column(name = "TechId")
     private Integer techMId;
 
+    @Column(name = "YearsOfExp")
+    private Integer yearsOfExp;
 }

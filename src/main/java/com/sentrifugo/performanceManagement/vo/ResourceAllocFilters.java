@@ -12,7 +12,7 @@ public class ResourceAllocFilters {
     private List<String> Techgroups;
     private List<String> Roles;
     private List<String> Domain;
-    private Integer yearsOfExp;
+    private List<Integer> yearsOfExp;
 
 
 }
