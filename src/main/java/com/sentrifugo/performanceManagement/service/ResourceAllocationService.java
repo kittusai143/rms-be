@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class ResourceAllocationService {
@@ -31,48 +30,50 @@ public class ResourceAllocationService {
 
     public ResourceAllocation getById(Long id){ return resourceAllocationRepository.findById(id).get();}
 
-//    public ResourceAllocation updateResourceAllocation(Long id, Map<String,?> updatedAllocation) {
-//        Optional<ResourceAllocation> optionalAllocation = resourceAllocationRepository.findById(id);
-//        if (optionalAllocation.isPresent()) {
-//            ResourceAllocation allocation = optionalAllocation.get();
-//
-//            allocation.setRole(updatedAllocation.getRole());
-//            allocation.setEmployeeType(updatedAllocation.getEmployeeType());
-//            allocation.setDoj(updatedAllocation.getDoj());
-//            allocation.setStatus(updatedAllocation.isStatus());
-//            allocation.setPartner(updatedAllocation.getPartner());
-//            allocation.setProjectName(updatedAllocation.getProjectName());
-//            allocation.setProjectCode(updatedAllocation.getProjectCode());
-//            allocation.setProjectType(updatedAllocation.getProjectType());
-//            allocation.setProjectStartDate(updatedAllocation.getProjectStartDate());
-//            allocation.setBillingStartDate(updatedAllocation.getBillingStartDate());
-//            allocation.setBillingEndDate(updatedAllocation.getBillingEndDate());
-//            allocation.setProjectEndDate(updatedAllocation.getProjectEndDate());
-//            allocation.setSow(updatedAllocation.getSow());
-//            allocation.setSowStartDate(updatedAllocation.getSowStartDate());
-//            allocation.setSowEndDate(updatedAllocation.getSowEndDate());
-//            allocation.setClientManager(updatedAllocation.getClientManager());
-//            allocation.setBillability(updatedAllocation.getBillability());
-//            allocation.setLocation(updatedAllocation.getLocation());
-//            allocation.setClientTimesheetAccess(updatedAllocation.getClientTimesheetAccess());
-//            allocation.setPartnerEmailID(updatedAllocation.getPartnerEmailID());
-//            allocation.setClientEmailID(updatedAllocation.getClientEmailID());
-//            allocation.setYubikey(updatedAllocation.getYubikey());
-//            allocation.setYubikeySno(updatedAllocation.getYubikeySno());
-//            allocation.setContactNumber(updatedAllocation.getContactNumber());
-//            allocation.setGender(updatedAllocation.getGender());
-//            allocation.setSkillset1(updatedAllocation.getSkillset1());
-//            allocation.setSkillset2(updatedAllocation.getSkillset2());
-//            allocation.setTraining(updatedAllocation.getTraining());
-//            allocation.setCertifications(updatedAllocation.getCertifications());
-//            allocation.setTechnologyDivision(updatedAllocation.getTechnologyDivision());
-//            allocation.setAwards(updatedAllocation.getAwards());
-//            allocation.setAudit(updatedAllocation.getAudit());
-//
-//            return resourceAllocationRepository.save(allocation);
-//        } else {
-//            return null;
-//        }
-//    }
+    public ResourceAllocation updateResourceAllocation(Long id, Map<String,?> updatedAllocation) throws ParseException {
+        Optional<ResourceAllocation> optionalAllocation = resourceAllocationRepository.findById(id);
+        if (optionalAllocation.isPresent()) {
+            ResourceAllocation allocation = optionalAllocation.get();
+
+            allocation.setVendorId((String) updatedAllocation.get("vendorId"));
+            allocation.setConsultantId((String) updatedAllocation.get("consultantId"));
+            allocation.setSowID((String) updatedAllocation.get("sowID"));
+            allocation.setRole((String) updatedAllocation.get("role"));
+            allocation.setClientCode((String) updatedAllocation.get("clientCode"));
+            allocation.setProjectCode((String) updatedAllocation.get("projectCode"));
+
+            if((String) updatedAllocation.get("billingStartDate")!=null && (String) updatedAllocation.get("billingEndDate") !=null){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                java.util.Date billingStartDate = sdf.parse((String) updatedAllocation.get("startDate"));
+                java.util.Date billingEndDate = sdf.parse((String) updatedAllocation.get("endDate"));
+                allocation.setBillingStartDate(billingStartDate);
+                allocation.setBillingEndDate(billingEndDate);
+            }
+
+            allocation.setBillability((String) updatedAllocation.get("billability"));
+            allocation.setLocation((String) updatedAllocation.get("location"));
+            allocation.setClientTimesheetAccess((String) updatedAllocation.get("clientTimesheetAccess"));
+            allocation.setPartnerEmailID((String) updatedAllocation.get("partnerEmailID"));
+            allocation.setClientEmailID((String) updatedAllocation.get("clientEmailID"));
+            allocation.setYubikey((String) updatedAllocation.get("yubikey"));
+            allocation.setYubikeySno((String) updatedAllocation.get("yubikeySno"));
+            allocation.setContactNumber((String) updatedAllocation.get("contactNumber"));
+            allocation.setGender((String) updatedAllocation.get("gender"));
+            allocation.setSkillset1((String) updatedAllocation.get("skillset1"));
+            allocation.setSkillset2((String) updatedAllocation.get("skillset2"));
+            allocation.setTraining((String) updatedAllocation.get("training"));
+            allocation.setCertifications((String) updatedAllocation.get("certifications"));
+            allocation.setTechnologydivision((String) updatedAllocation.get("technologydivision"));
+            allocation.setAwards((String) updatedAllocation.get("awards"));
+            allocation.setAudit((String) updatedAllocation.get("audit"));
+            allocation.setAllocationStatus((String) updatedAllocation.get("allocationStatus"));
+            allocation.setTechMId((Integer) updatedAllocation.get("techMId"));
+            allocation.setYearsOfExp((Integer) updatedAllocation.get("yearsOfExp"));
+
+            return resourceAllocationRepository.save(allocation);
+        } else {
+            return null;
+        }
+    }
 
 }

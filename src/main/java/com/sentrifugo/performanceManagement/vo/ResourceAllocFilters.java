@@ -14,5 +14,4 @@ public class ResourceAllocFilters {
     private List<String> Domain;
     private List<Integer> yearsOfExp;
 
-
 }

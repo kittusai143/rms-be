@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -29,14 +30,14 @@ public class ResourceAllocationController {
 
     }
 
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<ResourceAllocation> updateResourceAllocation(@PathVariable Long id, @RequestBody Map<String,?> updatedAllocation) {
-//        ResourceAllocation allocation = resourceAllocationService.updateResourceAllocation(id, updatedAllocation);
-//        if (allocation != null) {
-//            return ResponseEntity.ok(allocation);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResourceAllocation> updateResourceAllocation(@PathVariable Long id, @RequestBody Map<String,?> updatedAllocation) throws ParseException {
+        ResourceAllocation allocation = resourceAllocationService.updateResourceAllocation(id, updatedAllocation);
+        if (allocation != null) {
+            return ResponseEntity.ok(allocation);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
