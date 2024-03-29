@@ -74,4 +74,8 @@ public class ResourceAllocProcessService {
             return null;
         }
     }
+
+    public List<ResourceAllocProcess> getAll() {
+        return resourceAllocProcessRepository.findAll();
+    }
 }

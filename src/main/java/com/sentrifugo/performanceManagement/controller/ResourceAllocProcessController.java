@@ -22,6 +22,10 @@ public class ResourceAllocProcessController {
     @Autowired
     public ResourceAllocProcessService resourceAllocProcessService;
 
+    @GetMapping("getAll")
+    public  List<ResourceAllocProcess> getAll(){
+       return resourceAllocProcessService.getAll();
+    }
     @GetMapping("/getlistusers")
     public List<Map<String,Object>> getResourceAllocProcessAndUsers() {
         return resourceAllocProcessService.getResourceAllocProcessAndUsers();
