@@ -76,4 +76,11 @@ public class ResourceAllocationService {
         }
     }
 
+    public List<String> getDistinctLocations() {
+        return resourceAllocationRepository.getDistinctLocations();
+    }
+
+    public List<String> getDistinctRoles() {
+        return resourceAllocationRepository.getDistinctRoles();
+    }
 }

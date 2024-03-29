@@ -20,14 +20,17 @@ public class ResourceAllocationController {
     public ResourceAllocationService resourceAllocationService;
 
     @GetMapping("/getAll")
-    public List<ResourceAllocation> getallResourceAllocation(){
-        return resourceAllocationService.getAllResourceAllocations();
-    }
+    public List<ResourceAllocation> getAllResourceAllocation(){ return resourceAllocationService.getAllResourceAllocations(); }
+
+    @GetMapping("/getLocations")
+    public List<String> getDistinctLocations(){ return resourceAllocationService.getDistinctLocations(); }
+
+    @GetMapping("/getRoles")
+    public List<String> getDistinctRoles(){ return resourceAllocationService.getDistinctRoles(); }
 
     @PostMapping("/filter")
     public List<ResourceAllocation> filterResourceAllocations(@RequestBody ResourceAllocFilters filterRequest) {
        return resourceAllocationService.filterResourceAllocations(filterRequest);
-
     }
 
     @PutMapping("/update/{id}")
