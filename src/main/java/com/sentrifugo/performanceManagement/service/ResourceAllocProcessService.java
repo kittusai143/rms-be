@@ -49,6 +49,7 @@ public class ResourceAllocProcessService {
         Optional<ResourceAllocProcess> optionalAllocation = resourceAllocProcessRepository.findById(id);
         if (optionalAllocation.isPresent()) {
             ResourceAllocProcess allocation = optionalAllocation.get();
+            allocation.setProjectCode((String) requestBody.get("projectCode"));
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
