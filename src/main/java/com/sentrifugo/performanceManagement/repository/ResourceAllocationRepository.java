@@ -28,9 +28,6 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
   @Query("SELECT DISTINCT ra.role FROM ResourceAllocation ra")
   List<String> getDistinctRoles();
 
-    @Query("Select ra, rap FROM ResourceAllocation ra JOIN ResourceAllocProcess rap where ra.allocationId =rap.resAllocId AND rap.isActive=:b")
-    List<Object[]> findResourceWithProcesses(boolean b);
-
   @Query(value = "SELECT ra.allocationId, GROUP_CONCAT(rap.Id) AS processes " +
           "FROM resource_allocation ra " +
           " JOIN ResourceAllocProcess rap ON ra.AllocationId = rap.ResAllocID " +

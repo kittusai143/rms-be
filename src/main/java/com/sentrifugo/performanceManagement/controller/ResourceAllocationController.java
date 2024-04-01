@@ -30,7 +30,7 @@ public class ResourceAllocationController {
     public List<String> getDistinctRoles(){ return resourceAllocationService.getDistinctRoles(); }
 
     @GetMapping("/filter")
-    public List<ResourceAllocation> filterResourceAllocations(@RequestParam(required = false) List<String> locations,
+    public List<Resources> filterResourceAllocations(@RequestParam(required = false) List<String> locations,
                                                               @RequestParam(required = false) List<String> skills,
                                                               @RequestParam(required = false) List<String> billabilities,
                                                               @RequestParam(required = false) List<String> techgroups,
@@ -49,7 +49,7 @@ public class ResourceAllocationController {
     }
 
     @PostMapping("/filter")
-    public List<ResourceAllocation> filterResourceAllocations(@RequestBody ResourceAllocFilters filterRequest) {
+    public List<Resources> filterResourceAllocations(@RequestBody ResourceAllocFilters filterRequest) {
        return resourceAllocationService.filterResourceAllocations(filterRequest);
     }
 

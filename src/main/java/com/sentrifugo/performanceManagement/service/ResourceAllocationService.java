@@ -22,9 +22,19 @@ public class ResourceAllocationService {
     public ResourceAllocationRepository resourceAllocationRepository;
     @Autowired
     public ResourceAllocProcessRepository resourceAllocProcessRepository;
-    public List<ResourceAllocation> filterResourceAllocations(ResourceAllocFilters criteria) {
+    public List<Resources> filterResourceAllocations(ResourceAllocFilters criteria) {
         Specification<ResourceAllocation> spec = ResourceAllocSpecification.filterResourceAllocations(criteria);
-        return resourceAllocationRepository.findAll(spec);
+        List<ResourceAllocation> resource = resourceAllocationRepository.findAll(spec);
+        List<Resources> allresources = getAllResourceAllocations();
+        List<Resources> response = new ArrayList<Resources>();
+        for (ResourceAllocation filtered: resource){
+            for (Resources res: allresources){
+                if( res.getResource().getAllocationId().equals(filtered.getAllocationId()) ){
+                    response.add( res );
+                }
+            }
+        }
+        return response;
     }
 
     public List<Resources> getAllResourceAllocations() {

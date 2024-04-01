@@ -2,6 +2,7 @@ package com.sentrifugo.performanceManagement.service;
 
 import com.sentrifugo.performanceManagement.entity.NotificationHistory;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
+import com.sentrifugo.performanceManagement.repository.NotificationHistoryRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,10 +21,10 @@ public class ResourceAllocProcessService {
 
     @Autowired
     private ResourceAllocProcessRepository resourceAllocProcessRepository;
-
     @Autowired
     private UsersService usersService;
-
+    @Autowired
+    private NotificationHistoryRepository notificationHistoryRepository;
     @Autowired
     private ResourceAllocationService resourceAllocationService;
 
@@ -46,7 +48,7 @@ public class ResourceAllocProcessService {
         notification.setCreatedBy( updated.getCreatedBy() );
         notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
         notification.setComment(usersService.getbyEmployeeID(updated.getCreatedBy())+" "+ updated.getProcessStatus() +" "+resourceAllocationService.getById(updated.getResAllocId()).getName());
-
+        notificationHistoryRepository.save(notification);
         return updated;
     }
 
@@ -65,27 +67,30 @@ public class ResourceAllocProcessService {
                 allocation.setStartDate(startDate);
                 allocation.setEndDate(endDate);
             }
-
             ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
-
             NotificationHistory notification = new NotificationHistory();
             notification.setSilId( updated.getSilId());
             notification.setResAllocId( updated.getResAllocId());
             notification.setCreatedBy( updated.getUpdatedBy() );
             notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
             notification.setComment(usersService.getbyEmployeeID(updated.getUpdatedBy())+" "+ updated.getProcessStatus() +" "+resourceAllocationService.getById(updated.getResAllocId()).getName());
-
+            notificationHistoryRepository.save(notification);
             return updated;
         } else {
             return null;
         }
     }
-//    @Scheduled(cron = "@hourly")
-//    public void deactivate() throws InterruptedException{
-//        System.out.println("Running scheduled task");
-//        List<ResourceAllocProcess> processes = resourceAllocProcessRepository.setIsActiveToFalse(true);
-//        for(ResourceAllocProcess process: processes){
-//
-//        }
-//    }
+
+    @Scheduled(cron = "@daily")
+    public void getResourceAllocProcessesWithActiveStatusAndFutureEndDate() {
+        List<ResourceAllocProcess> processes = resourceAllocProcessRepository.findActiveProcessesWithFutureEndDate();
+        System.out.println(processes);
+        for(ResourceAllocProcess process: processes){
+            ResourceAllocProcess prop = process;
+            prop.setActive(false);
+            ResourceAllocProcess r = resourceAllocProcessRepository.save(prop);
+            System.out.println(r);
+        }
+    }
+
 }
