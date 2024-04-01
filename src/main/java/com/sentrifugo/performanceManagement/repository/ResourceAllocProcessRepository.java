@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,4 +17,6 @@ public interface ResourceAllocProcessRepository extends JpaRepository<ResourceAl
             "JOIN Users u ON (rap.updatedBy = u.employeeId OR rap.createdBy = u.employeeId) where rap.isActive =:b")
     List<Map<String,Object>> getResourceAllocProcessAndUsers(boolean b);
 
+//    @Query("SELECT rap FROM ResourceAllocProcess rap WHERE DATE(rap.endDate) > curdate() AND rap.isActive =:b")
+//    List<ResourceAllocProcess> setIsActiveToFalse(boolean b);
 }

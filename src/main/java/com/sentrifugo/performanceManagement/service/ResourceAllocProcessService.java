@@ -4,6 +4,7 @@ import com.sentrifugo.performanceManagement.entity.NotificationHistory;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -24,6 +25,10 @@ public class ResourceAllocProcessService {
 
     @Autowired
     private ResourceAllocationService resourceAllocationService;
+
+    public List<ResourceAllocProcess> getAll() {
+        return resourceAllocProcessRepository.findAll();
+    }
 
     public List<Map<String,Object>> getResourceAllocProcessAndUsers() {
         return resourceAllocProcessRepository.getResourceAllocProcessAndUsers(true);
@@ -75,8 +80,12 @@ public class ResourceAllocProcessService {
             return null;
         }
     }
-
-    public List<ResourceAllocProcess> getAll() {
-        return resourceAllocProcessRepository.findAll();
-    }
+//    @Scheduled(cron = "@hourly")
+//    public void deactivate() throws InterruptedException{
+//        System.out.println("Running scheduled task");
+//        List<ResourceAllocProcess> processes = resourceAllocProcessRepository.setIsActiveToFalse(true);
+//        for(ResourceAllocProcess process: processes){
+//
+//        }
+//    }
 }

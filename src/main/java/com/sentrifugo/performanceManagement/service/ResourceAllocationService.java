@@ -1,9 +1,12 @@
 package com.sentrifugo.performanceManagement.service;
 
+import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
+import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocationRepository;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocSpecification;
+import com.sentrifugo.performanceManagement.vo.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -17,15 +20,48 @@ public class ResourceAllocationService {
 
     @Autowired
     public ResourceAllocationRepository resourceAllocationRepository;
-
-
+    @Autowired
+    public ResourceAllocProcessRepository resourceAllocProcessRepository;
     public List<ResourceAllocation> filterResourceAllocations(ResourceAllocFilters criteria) {
         Specification<ResourceAllocation> spec = ResourceAllocSpecification.filterResourceAllocations(criteria);
         return resourceAllocationRepository.findAll(spec);
     }
 
-    public List<ResourceAllocation> getAllResourceAllocations(){
-      return resourceAllocationRepository.findAll();
+    public List<Resources> getAllResourceAllocations() {
+        List<Object[]> result = resourceAllocationRepository.findResourcesWithActiveProcesses(true);
+        List<Resources> resourcesList = new ArrayList<>();
+
+        for (Object[] row : result) {
+            Long resourceId = ((Number) row[0]).longValue();
+            ResourceAllocation resourceAllocation = resourceAllocationRepository.findById(resourceId).orElse(null);
+
+            if (resourceAllocation == null) {continue;}
+
+            String processConcatenated = (String) row[1];
+            List<ResourceAllocProcess> processes = parseProcesses(processConcatenated);
+
+            Resources resources = new Resources();
+            resources.setResource(resourceAllocation);
+            resources.setProcesses(processes);
+
+            resourcesList.add(resources);
+        }
+        return resourcesList;
+    }
+
+    private List<ResourceAllocProcess> parseProcesses(String processConcatenated) {
+        List<ResourceAllocProcess> processes = new ArrayList<>();
+        if (processConcatenated != null && !processConcatenated.isEmpty()) {
+            String[] processIds = processConcatenated.split(",");
+            for (String id : processIds) {
+                Optional<ResourceAllocProcess> OptionalProcess = resourceAllocProcessRepository.findById(Long.parseLong(id));
+                if(OptionalProcess.isPresent()){
+                    ResourceAllocProcess process = OptionalProcess.get();
+                    processes.add(process);
+                }
+            }
+        }
+        return processes;
     }
 
     public ResourceAllocation getById(Long id){ return resourceAllocationRepository.findById(id).get();}
