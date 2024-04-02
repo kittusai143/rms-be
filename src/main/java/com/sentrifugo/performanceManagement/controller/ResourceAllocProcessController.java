@@ -63,7 +63,7 @@ public class ResourceAllocProcessController {
         }
     }
 
-    @PutMapping("update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProcess(@PathVariable Long id, @RequestBody Map<String, ?> requestbody) throws ParseException {
 
         ResourceAllocProcess allocation = resourceAllocProcessService.updateStatus(id, requestbody);

@@ -15,10 +15,5 @@ public class  PerformanceManagementApplication {
 		System.out.println("Application started");
 	}
 
-//	@Override
-//	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-//		return builder.sources(PerformanceManagementApplication.class);
-//	} extends SpringBootServletInitializer
-
 }
 

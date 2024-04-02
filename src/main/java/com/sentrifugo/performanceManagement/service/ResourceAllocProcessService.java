@@ -61,9 +61,10 @@ public class ResourceAllocProcessService {
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
             if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date startDate = sdf.parse((String) requestBody.get("startDate"));
                 java.util.Date endDate = sdf.parse((String) requestBody.get("endDate"));
+
                 allocation.setStartDate(startDate);
                 allocation.setEndDate(endDate);
             }
