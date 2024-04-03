@@ -30,10 +30,8 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
 
   @Query(value = "SELECT ra.allocationId, GROUP_CONCAT(rap.Id) AS processes " +
           "FROM resource_allocation ra " +
-          " JOIN ResourceAllocProcess rap ON ra.AllocationId = rap.ResAllocID " +
-          "WHERE rap.IsActive = :isActive " +
-          "GROUP BY ra.AllocationId", nativeQuery = true)
+          "LEFT JOIN ResourceAllocProcess rap ON ra.AllocationId = rap.ResAllocID AND rap.IsActive = :isActive " +
+          "GROUP BY ra.allocationId", nativeQuery = true)
   List<Object[]> findResourcesWithActiveProcesses(@Param("isActive") boolean isActive);
-
 
 }
