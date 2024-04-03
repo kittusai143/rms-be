@@ -42,12 +42,13 @@ public class ResourceAllocProcessService {
 
     public ResourceAllocProcess createResourceAllocProcess(ResourceAllocProcess resourceAllocProcess) {
         ResourceAllocProcess updated = resourceAllocProcessRepository.save(resourceAllocProcess);
+
         NotificationHistory notification = new NotificationHistory();
         notification.setSilId( updated.getSilId());
         notification.setResAllocId( updated.getResAllocId());
         notification.setCreatedBy( updated.getCreatedBy() );
         notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
-        notification.setComment(usersService.getbyEmployeeID(updated.getCreatedBy())+" "+ updated.getProcessStatus() +" "+resourceAllocationService.getById(updated.getResAllocId()).getName());
+        notification.setComment(updated.getProcessStatus());
         notificationHistoryRepository.save(notification);
         return updated;
     }
@@ -74,7 +75,7 @@ public class ResourceAllocProcessService {
             notification.setResAllocId( updated.getResAllocId());
             notification.setCreatedBy( updated.getUpdatedBy() );
             notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
-            notification.setComment(usersService.getbyEmployeeID(updated.getUpdatedBy())+" "+ updated.getProcessStatus() +" "+resourceAllocationService.getById(updated.getResAllocId()).getName());
+            notification.setComment(updated.getProcessStatus());
             notificationHistoryRepository.save(notification);
             return updated;
         } else {
