@@ -13,6 +13,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
@@ -72,6 +73,18 @@ public class ResourceAllocProcessController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteProcess(@PathVariable Long id){
+        ResourceAllocProcess process = resourceAllocProcessService.getById(id);
+        if(process !=null){
+            resourceAllocProcessService.deleteProcess(id);
+            return ResponseEntity.ok("Process deleted successfully");
+        }else {
+            return ResponseEntity.badRequest().body("Invalid id");
+        }
+
     }
 
 }
