@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NotificationHistoryService {
@@ -14,7 +15,7 @@ public class NotificationHistoryService {
     public NotificationHistoryRepository notificationHIstoryRepository;
 
 
-    public List<NotificationHistory> getByResAllocID(Long id) {
+    public List<Map<String,Object>> getByResAllocID(Long id) {
         return notificationHIstoryRepository.getByResAllocID(id);
     }
 

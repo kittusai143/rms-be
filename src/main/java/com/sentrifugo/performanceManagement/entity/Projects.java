@@ -39,8 +39,8 @@ public class Projects {
     @Column(name = "ProjectEndDate")
     private Date projectEndDate;
 
-    @Column(name = "SOW")
-    private boolean sow;
+    @Column(name = "SOW_Id")
+    private boolean sowId;
 
     @Column(name = "SOWStartDate")
     private Date sowStartDate;
@@ -68,4 +68,10 @@ public class Projects {
 
     @Column(name = "DomainName")
     private String domainName;
+
+    @Column(name = "ProjectStatus")
+    private String projectStatus;
+
+    @Column(name = "SOW")
+    private boolean soq;
 }

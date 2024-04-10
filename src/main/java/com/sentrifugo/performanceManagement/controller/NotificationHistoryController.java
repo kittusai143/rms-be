@@ -18,7 +18,7 @@ public class NotificationHistoryController {
     @Autowired
     public NotificationHistoryService notificationHistoryService;
     @GetMapping("/byResAllocid/{id}")
-    public List<NotificationHistory> getByID(@PathVariable Long id){
+    public List<Map<String,Object>> getByID(@PathVariable Long id){
         return notificationHistoryService.getByResAllocID(id);
     }
     @PostMapping("/create")
