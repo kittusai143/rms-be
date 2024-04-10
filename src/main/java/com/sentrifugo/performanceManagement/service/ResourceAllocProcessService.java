@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -66,9 +67,13 @@ public class ResourceAllocProcessService {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date startDate = sdf.parse((String) requestBody.get("startDate"));
                 java.util.Date endDate = sdf.parse((String) requestBody.get("endDate"));
-
-                allocation.setStartDate(startDate);
-                allocation.setEndDate(endDate);
+                if(allocation.getSBstartDate()!=null && allocation.getSBstartDate()!=null){
+                    allocation.setAllocStartDate(startDate);
+                    allocation.setAllocEndDate(endDate);
+                }else{
+                    allocation.setSBstartDate(startDate);
+                    allocation.setSBendDate(endDate);
+                }
             }
             ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
             NotificationHistory notification = new NotificationHistory();

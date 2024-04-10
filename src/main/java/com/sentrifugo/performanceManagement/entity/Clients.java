@@ -40,6 +40,11 @@ public class Clients {
     private String clientEmail;
 
     @Column(name = "ClientOnboardDate")
-    private Date clientOnboardDate;
+    private String clientOnboardDate;
 
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "Role")
+    private String role;
 }
