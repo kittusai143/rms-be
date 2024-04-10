@@ -11,12 +11,12 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Projects")
+@Table(name = "project_data")
 public class Projects {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-//    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Long id;
 
     @Column(name = "ProjectCode")
     private String projectCode;
@@ -63,22 +63,9 @@ public class Projects {
     @Column(name = "SizeOfProjectHrs")
     private Integer sizeOfProjectHrs;
 
-    @Column(name = "BillableHeadcount")
-    private Integer billableHeadcount;
+    @Column(name = "DomainId")
+    private Integer domainId;
 
-    @Column(name = "ClientManager")
-    private String clientManager;
-
-    @Column(name = "NonBillableHeadcount")
-    private Integer nonBillableHeadcount;
-
-    @Column(name = "OffshoreHeadcount")
-    private Integer offshoreHeadcount;
-
-    @Column(name = "OnshoreHeadcount")
-    private Integer onshoreHeadcount;
-
-    @Column(name = "TotalHeadcount")
-    private Integer totalHeadcount;
-
+    @Column(name = "DomainName")
+    private String domainName;
 }

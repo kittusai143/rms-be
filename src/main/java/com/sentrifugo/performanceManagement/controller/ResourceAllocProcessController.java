@@ -1,18 +1,19 @@
 package com.sentrifugo.performanceManagement.controller;
 
-import com.sentrifugo.performanceManagement.entity.NotificationHistory;
+
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
-import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
 import com.sentrifugo.performanceManagement.service.ResourceAllocProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
@@ -22,11 +23,14 @@ public class ResourceAllocProcessController {
     @Autowired
     public ResourceAllocProcessService resourceAllocProcessService;
 
+    @GetMapping("getAll")
+    public  List<ResourceAllocProcess> getAll(){
+       return resourceAllocProcessService.getAll();
+    }
     @GetMapping("/getlistusers")
     public List<Map<String,Object>> getResourceAllocProcessAndUsers() {
         return resourceAllocProcessService.getResourceAllocProcessAndUsers();
     }
-
 
     @GetMapping("/byId/{id}")
     public ResourceAllocProcess getById(@PathVariable long id){
@@ -41,18 +45,13 @@ public class ResourceAllocProcessController {
             resourceAllocProcess.setResAllocId(((Integer) requestBody.get("resAllocId")).longValue());
             resourceAllocProcess.setProjectCode( (String) requestBody.get("projectCode"));
             resourceAllocProcess.setProcessStatus( (String) requestBody.get("processStatus"));
-            // Parse start date and end date strings to java.util.Date objects
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-            Date startDate = sdf.parse((String) requestBody.get("startDate"));
-            Date endDate = sdf.parse((String) requestBody.get("endDate"));
-            resourceAllocProcess.setStartDate(startDate);
-            resourceAllocProcess.setEndDate(endDate);
-
-//            Date startDate = new Date(((java.util.Date) requestBody.get("startDate")).getTime());
-//            resourceAllocProcess.setStartDate(startDate);
-//            Date endDate = new Date(((java.util.Date) requestBody.get("endDate")).getTime());
-//            resourceAllocProcess.setEndDate(endDate);
-
+            if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                Date startDate = sdf.parse((String) requestBody.get("startDate"));
+                Date endDate = sdf.parse((String) requestBody.get("endDate"));
+                resourceAllocProcess.setStartDate(startDate);
+                resourceAllocProcess.setEndDate(endDate);
+            }
             resourceAllocProcess.setCreatedBy(((String) requestBody.get("createdBy")));
             resourceAllocProcess.setCreatedDate(new Date(System.currentTimeMillis()));
             resourceAllocProcess.setActive(true);
@@ -65,8 +64,8 @@ public class ResourceAllocProcessController {
         }
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<?> updateProcess(@PathVariable Long id, @RequestBody Map<String, ?> requestbody){
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateProcess(@PathVariable Long id, @RequestBody Map<String, ?> requestbody) throws ParseException {
 
         ResourceAllocProcess allocation = resourceAllocProcessService.updateStatus(id, requestbody);
         if (allocation != null) {
@@ -74,6 +73,18 @@ public class ResourceAllocProcessController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteProcess(@PathVariable Long id){
+        ResourceAllocProcess process = resourceAllocProcessService.getById(id);
+        if(process !=null){
+            resourceAllocProcessService.deleteProcess(id);
+            return ResponseEntity.ok("Process deleted successfully");
+        }else {
+            return ResponseEntity.badRequest().body("Invalid id");
+        }
+
     }
 
 }

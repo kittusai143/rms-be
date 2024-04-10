@@ -3,10 +3,12 @@ package com.sentrifugo.performanceManagement.controller;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
 import com.sentrifugo.performanceManagement.service.ResourceAllocationService;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
+import com.sentrifugo.performanceManagement.vo.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,63 +21,46 @@ public class ResourceAllocationController {
     public ResourceAllocationService resourceAllocationService;
 
     @GetMapping("/getAll")
-    public List<ResourceAllocation> getallResourceAllocation(){
-        return resourceAllocationService.getAllResourceAllocations();
+    public List<Resources> getAllResourceAllocation(){ return resourceAllocationService.getAllResourceAllocations(); }
+
+    @GetMapping("/getLocations")
+    public List<String> getDistinctLocations(){ return resourceAllocationService.getDistinctLocations(); }
+
+    @GetMapping("/getRoles")
+    public List<String> getDistinctRoles(){ return resourceAllocationService.getDistinctRoles(); }
+
+    @GetMapping("/filter")
+    public List<Resources> filterResourceAllocations(@RequestParam(required = false) List<String> locations,
+                                                              @RequestParam(required = false) List<String> skills,
+                                                              @RequestParam(required = false) List<String> billabilities,
+                                                              @RequestParam(required = false) List<String> techgroups,
+                                                              @RequestParam(required = false) List<String> roles,
+                                                              @RequestParam(required = false) List<String> domain,
+                                                              @RequestParam(required = false) List<Integer> yearsOfExp) {
+        ResourceAllocFilters filterRequest = new ResourceAllocFilters();
+        filterRequest.setBillabilities(billabilities);
+        filterRequest.setLocations(locations);
+        filterRequest.setSkills(skills);
+        filterRequest.setRoles(roles);
+        filterRequest.setTechgroups(techgroups);
+        filterRequest.setDomain(domain);
+        filterRequest.setYearsOfExp(yearsOfExp);
+        return resourceAllocationService.filterResourceAllocations(filterRequest);
     }
 
     @PostMapping("/filter")
-    public List<ResourceAllocation> filterResourceAllocations(@RequestBody ResourceAllocFilters filterRequest) {
-        List<String> locations = filterRequest.getLocations();
-        List<String> skills = filterRequest.getSkills();
-        List<String> billabilities = filterRequest.getBillabilities();
-        List<String> roles = filterRequest.getRoles();
-        List<String> techGroups = filterRequest.getTechGroup();
-        List<String> Domain = filterRequest.getDomain();
-        Integer yearsofExp = filterRequest.getYearsOfExp();
-
-
-        // three filters are provided
-        if (locations != null && !locations.isEmpty() && skills != null && !skills.isEmpty() && billabilities != null && !billabilities.isEmpty()) {
-            return resourceAllocationService.findByLocationAndSkillsAndBillability(locations, skills, billabilities);
-        }
-        // locations and skills
-        else if (locations != null && !locations.isEmpty() && skills != null && !skills.isEmpty()) {
-            return resourceAllocationService.findByLocationAndSkills(locations, skills);
-        }
-        // only locations and Billability
-        else if (locations != null && !locations.isEmpty() && billabilities != null && !billabilities.isEmpty()) {
-            return resourceAllocationService.findByLocationAndBillability(locations, billabilities);
-        }
-        //only skills and Billability
-        else if (skills != null && !skills.isEmpty() && billabilities != null && !billabilities.isEmpty()) {
-            return resourceAllocationService.findBySkillsAndBillability(skills, billabilities);
-        }
-        //only locations
-        else if (locations != null && !locations.isEmpty()) {
-            return resourceAllocationService.findByLocation(locations);
-        }
-        // only skills
-        else if (skills != null && !skills.isEmpty()) {
-            return resourceAllocationService.findBySkills(skills);
-        }
-        //only Billability
-        else if (billabilities != null && !billabilities.isEmpty()) {
-            return resourceAllocationService.findByBillability(billabilities);
-        }
-        // no filters
-        else {
-            return resourceAllocationService.getAllResourceAllocations();
-        }
+    public List<Resources> filterResourceAllocations(@RequestBody ResourceAllocFilters filterRequest) {
+       return resourceAllocationService.filterResourceAllocations(filterRequest);
     }
 
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<ResourceAllocation> updateResourceAllocation(@PathVariable Long id, @RequestBody Map<String,?> updatedAllocation) {
-//        ResourceAllocation allocation = resourceAllocationService.updateResourceAllocation(id, updatedAllocation);
-//        if (allocation != null) {
-//            return ResponseEntity.ok(allocation);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResourceAllocation> updateResourceAllocation(@PathVariable Long id, @RequestBody Map<String,?> updatedAllocation) throws ParseException {
+        ResourceAllocation allocation = resourceAllocationService.updateResourceAllocation(id, updatedAllocation);
+        if (allocation != null) {
+            return ResponseEntity.ok(allocation);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

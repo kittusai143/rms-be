@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ResourceAllocation")
+@Table(name = "resource_allocation")
 public class ResourceAllocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,9 @@ public class ResourceAllocation {
 
     @Column(name = "ConsultantID")
     private String consultantId;
+
+    @Column(name = "SowId")
+    private String sowID;
 
     @Column(name = "Name")
     private String name;
@@ -94,7 +97,7 @@ public class ResourceAllocation {
     private String certifications;
 
     @Column(name = "TechnologyDivision")
-    private String technologyDivision;
+    private String technologydivision;
 
     @Column(name = "Awards")
     private String awards;
@@ -105,31 +108,9 @@ public class ResourceAllocation {
     @Column(name = "AllocationStatus")
     private String allocationStatus;
 
-    @Column(name = "ClientManager")
-    private String clientManager;
+    @Column(name = "TechId")
+    private Integer techMId;
 
-    @Column(name = "Partner")
-    private String partner;
-
-    @Column(name = "ProjectEndDate")
-    private Date projectEndDate;
-
-    @Column(name = "ProjectName")
-    private String projectName;
-
-    @Column(name = "ProjectStartDate")
-    private Date projectStartDate;
-
-    @Column(name = "ProjectType")
-    private String projectType;
-
-    @Column(name = "SOW")
-    private String sow;
-
-    @Column(name = "SOWStartDate")
-    private Date sowStartDate;
-
-    @Column(name = "SOWEndDate")
-    private Date sowEndDate;
-
+    @Column(name = "YearsOfExp")
+    private Integer yearsOfExp;
 }

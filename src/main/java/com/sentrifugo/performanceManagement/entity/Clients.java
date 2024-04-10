@@ -11,18 +11,21 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Clients")
+@Table(name = "client_data")
 public class Clients {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-//    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Long id;
 
     @Column(name = "ClientCode")
     private String clientCode;
 
     @Column(name = "ClientName")
     private String clientName;
+
+    @Column(name = "ClientShortName")
+    private String clientShortName;
 
     @Column(name = "Partner")
     private String partner;
@@ -38,11 +41,5 @@ public class Clients {
 
     @Column(name = "ClientOnboardDate")
     private Date clientOnboardDate;
-
-    @Column(name = "ActiveProjects")
-    private Integer activeProjects;
-
-    @Column(name = "HeadCount")
-    private Integer headCount;
 
 }

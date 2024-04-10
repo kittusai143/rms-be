@@ -1,115 +1,132 @@
 package com.sentrifugo.performanceManagement.service;
 
+import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
+import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocationRepository;
+import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
+import com.sentrifugo.performanceManagement.vo.ResourceAllocSpecification;
+import com.sentrifugo.performanceManagement.vo.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class ResourceAllocationService {
 
     @Autowired
     public ResourceAllocationRepository resourceAllocationRepository;
+    @Autowired
+    public ResourceAllocProcessRepository resourceAllocProcessRepository;
+    public List<Resources> filterResourceAllocations(ResourceAllocFilters criteria) {
+        Specification<ResourceAllocation> spec = ResourceAllocSpecification.filterResourceAllocations(criteria);
+        List<ResourceAllocation> resource = resourceAllocationRepository.findAll(spec);
+        List<Resources> allresources = getAllResourceAllocations();
+        List<Resources> response = new ArrayList<Resources>();
+        for (ResourceAllocation filtered: resource){
+            for (Resources res: allresources){
+                if( res.getResource().getAllocationId().equals(filtered.getAllocationId()) ){
+                    response.add( res );
+                }
+            }
+        }
+        return response;
+    }
 
-    public List<ResourceAllocation> getAllResourceAllocations(){
-      return resourceAllocationRepository.findAll();
+    public List<Resources> getAllResourceAllocations() {
+        List<Object[]> result = resourceAllocationRepository.findResourcesWithActiveProcesses(true);
+        List<Resources> resourcesList = new ArrayList<>();
+
+        for (Object[] row : result) {
+            Long resourceId = ((Number) row[0]).longValue();
+            ResourceAllocation resourceAllocation = resourceAllocationRepository.findById(resourceId).orElse(null);
+
+            if (resourceAllocation == null) {continue;}
+
+            String processConcatenated = (String) row[1];
+            List<ResourceAllocProcess> processes = parseProcesses(processConcatenated);
+
+            Resources resources = new Resources();
+            resources.setResource(resourceAllocation);
+            resources.setProcesses(processes);
+
+            resourcesList.add(resources);
+        }
+        return resourcesList;
+    }
+
+    private List<ResourceAllocProcess> parseProcesses(String processConcatenated) {
+        List<ResourceAllocProcess> processes = new ArrayList<>();
+        if (processConcatenated != null && !processConcatenated.isEmpty()) {
+            String[] processIds = processConcatenated.split(",");
+            for (String id : processIds) {
+                Optional<ResourceAllocProcess> OptionalProcess = resourceAllocProcessRepository.findById(Long.parseLong(id));
+                if(OptionalProcess.isPresent()){
+                    ResourceAllocProcess process = OptionalProcess.get();
+                    processes.add(process);
+                }
+            }
+        }
+        return processes;
     }
 
     public ResourceAllocation getById(Long id){ return resourceAllocationRepository.findById(id).get();}
-    public List<ResourceAllocation> findByLocation(List<String> location) {
-        return resourceAllocationRepository.findByLocation(location);
-    }
 
-    public List<ResourceAllocation> findBySkills(List<String> skills) {
-        List<ResourceAllocation> resultList = new ArrayList<>();
-        for (String skill : skills) {
-            List<ResourceAllocation> bySkill = resourceAllocationRepository.findBySkill(skill);
-            resultList.addAll(bySkill);
+    public ResourceAllocation updateResourceAllocation(Long id, Map<String,?> updatedAllocation) throws ParseException {
+        Optional<ResourceAllocation> optionalAllocation = resourceAllocationRepository.findById(id);
+        if (optionalAllocation.isPresent()) {
+            ResourceAllocation allocation = optionalAllocation.get();
+
+            allocation.setVendorId((String) updatedAllocation.get("vendorId"));
+            allocation.setConsultantId((String) updatedAllocation.get("consultantId"));
+            allocation.setSowID((String) updatedAllocation.get("sowID"));
+            allocation.setRole((String) updatedAllocation.get("role"));
+            allocation.setClientCode((String) updatedAllocation.get("clientCode"));
+            allocation.setProjectCode((String) updatedAllocation.get("projectCode"));
+
+            if((String) updatedAllocation.get("billingStartDate")!=null && (String) updatedAllocation.get("billingEndDate") !=null){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                java.util.Date billingStartDate = sdf.parse((String) updatedAllocation.get("startDate"));
+                java.util.Date billingEndDate = sdf.parse((String) updatedAllocation.get("endDate"));
+                allocation.setBillingStartDate(billingStartDate);
+                allocation.setBillingEndDate(billingEndDate);
+            }
+
+            allocation.setBillability((String) updatedAllocation.get("billability"));
+            allocation.setLocation((String) updatedAllocation.get("location"));
+            allocation.setClientTimesheetAccess((String) updatedAllocation.get("clientTimesheetAccess"));
+            allocation.setPartnerEmailID((String) updatedAllocation.get("partnerEmailID"));
+            allocation.setClientEmailID((String) updatedAllocation.get("clientEmailID"));
+            allocation.setYubikey((String) updatedAllocation.get("yubikey"));
+            allocation.setYubikeySno((String) updatedAllocation.get("yubikeySno"));
+            allocation.setContactNumber((String) updatedAllocation.get("contactNumber"));
+            allocation.setGender((String) updatedAllocation.get("gender"));
+            allocation.setSkillset1((String) updatedAllocation.get("skillset1"));
+            allocation.setSkillset2((String) updatedAllocation.get("skillset2"));
+            allocation.setTraining((String) updatedAllocation.get("training"));
+            allocation.setCertifications((String) updatedAllocation.get("certifications"));
+            allocation.setTechnologydivision((String) updatedAllocation.get("technologydivision"));
+            allocation.setAwards((String) updatedAllocation.get("awards"));
+            allocation.setAudit((String) updatedAllocation.get("audit"));
+            allocation.setAllocationStatus((String) updatedAllocation.get("allocationStatus"));
+            allocation.setTechMId((Integer) updatedAllocation.get("techMId"));
+            allocation.setYearsOfExp((Integer) updatedAllocation.get("yearsOfExp"));
+
+            return resourceAllocationRepository.save(allocation);
+        } else {
+            return null;
         }
-        return resultList;
-    }
-    public List<ResourceAllocation> findByLocationAndSkills(List<String> locations, List<String> skills) {
-        List<ResourceAllocation> resultList = new ArrayList<>();
-        for (String skill : skills) {
-            List<ResourceAllocation> byLocationAndSkill = resourceAllocationRepository.findByLocationAndSkill(locations, skill);
-            resultList.addAll(byLocationAndSkill);
-        }
-        return resultList;
-    }
-    public List<ResourceAllocation> findByLocationAndSkillsAndBillability(List<String> locations, List<String> skills, List<String> billabilities) {
-        List<ResourceAllocation> resultList = new ArrayList<>();
-        for (String skill : skills) {
-            List<ResourceAllocation> byLocationAndSkillAndBillability = resourceAllocationRepository.findByLocationAndSkillAndBillability(locations, skill, billabilities);
-            resultList.addAll(byLocationAndSkillAndBillability);
-        }
-        return resultList;
     }
 
-    public List<ResourceAllocation> findByLocationAndBillability(List<String> locations, List<String> billabilities) {
-        return resourceAllocationRepository.findByLocationAndBillability(locations,billabilities);
+    public List<String> getDistinctLocations() {
+        return resourceAllocationRepository.getDistinctLocations();
     }
 
-
-    public List<ResourceAllocation> findBySkillsAndBillability(List<String> skills, List<String> billabilities) {
-        List<ResourceAllocation> resultList = new ArrayList<>();
-        for (String skill : skills) {
-            List<ResourceAllocation> bySkillAndBillability = resourceAllocationRepository.findBySkillAndBillability(skill, billabilities);
-            resultList.addAll(bySkillAndBillability);
-        }
-        return resultList;
+    public List<String> getDistinctRoles() {
+        return resourceAllocationRepository.getDistinctRoles();
     }
-
-    public List<ResourceAllocation> findByBillability(List<String> billabilities) {
-        return resourceAllocationRepository.findByBillability(billabilities);
-    }
-
-//    public ResourceAllocation updateResourceAllocation(Long id, Map<String,?> updatedAllocation) {
-//        Optional<ResourceAllocation> optionalAllocation = resourceAllocationRepository.findById(id);
-//        if (optionalAllocation.isPresent()) {
-//            ResourceAllocation allocation = optionalAllocation.get();
-//
-//            allocation.setRole(updatedAllocation.getRole());
-//            allocation.setEmployeeType(updatedAllocation.getEmployeeType());
-//            allocation.setDoj(updatedAllocation.getDoj());
-//            allocation.setStatus(updatedAllocation.isStatus());
-//            allocation.setPartner(updatedAllocation.getPartner());
-//            allocation.setProjectName(updatedAllocation.getProjectName());
-//            allocation.setProjectCode(updatedAllocation.getProjectCode());
-//            allocation.setProjectType(updatedAllocation.getProjectType());
-//            allocation.setProjectStartDate(updatedAllocation.getProjectStartDate());
-//            allocation.setBillingStartDate(updatedAllocation.getBillingStartDate());
-//            allocation.setBillingEndDate(updatedAllocation.getBillingEndDate());
-//            allocation.setProjectEndDate(updatedAllocation.getProjectEndDate());
-//            allocation.setSow(updatedAllocation.getSow());
-//            allocation.setSowStartDate(updatedAllocation.getSowStartDate());
-//            allocation.setSowEndDate(updatedAllocation.getSowEndDate());
-//            allocation.setClientManager(updatedAllocation.getClientManager());
-//            allocation.setBillability(updatedAllocation.getBillability());
-//            allocation.setLocation(updatedAllocation.getLocation());
-//            allocation.setClientTimesheetAccess(updatedAllocation.getClientTimesheetAccess());
-//            allocation.setPartnerEmailID(updatedAllocation.getPartnerEmailID());
-//            allocation.setClientEmailID(updatedAllocation.getClientEmailID());
-//            allocation.setYubikey(updatedAllocation.getYubikey());
-//            allocation.setYubikeySno(updatedAllocation.getYubikeySno());
-//            allocation.setContactNumber(updatedAllocation.getContactNumber());
-//            allocation.setGender(updatedAllocation.getGender());
-//            allocation.setSkillset1(updatedAllocation.getSkillset1());
-//            allocation.setSkillset2(updatedAllocation.getSkillset2());
-//            allocation.setTraining(updatedAllocation.getTraining());
-//            allocation.setCertifications(updatedAllocation.getCertifications());
-//            allocation.setTechnologyDivision(updatedAllocation.getTechnologyDivision());
-//            allocation.setAwards(updatedAllocation.getAwards());
-//            allocation.setAudit(updatedAllocation.getAudit());
-//
-//            return resourceAllocationRepository.save(allocation);
-//        } else {
-//            return null;
-//        }
-//    }
-
 }
