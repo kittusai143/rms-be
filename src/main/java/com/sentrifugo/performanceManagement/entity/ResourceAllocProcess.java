@@ -30,11 +30,11 @@ public class ResourceAllocProcess {
     @Column(name = "ProcessStatus")
     private String processStatus;
 
-    @Column(name = "startdate")
-    private Date startDate;
+    @Column(name = "SBstartdate")
+    private Date SBstartDate;
 
-    @Column(name = "enddate")
-    private Date endDate;
+    @Column(name = "SBenddate")
+    private Date SBendDate;
 
     @Column(name = "CreatedBy")
     private String createdBy;
@@ -50,5 +50,11 @@ public class ResourceAllocProcess {
 
     @Column(name = "isactive")
     private boolean isActive;
+
+    @Column(name = "allocStartDate")
+    private Date allocStartDate;
+
+    @Column(name = "allocEndDate")
+    private Date allocEndDate;
 
 }
