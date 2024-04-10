@@ -27,7 +27,7 @@ public class NotificationHistoryController {
             NotificationHistory notification = new NotificationHistory();
             notification.setSilId((String) request.get("silId"));
             notification.setResAllocId(((Integer) request.get("resAllocId")).longValue());
-            notification.setCreatedBy(((Integer) request.get("createdBy")).longValue());
+            notification.setCreatedBy((String) request.get("createdBy"));
             notification.setCreatedDate(new Date(System.currentTimeMillis())); // Assuming current date/time
             notification.setComment((String) request.get("comment"));
 
