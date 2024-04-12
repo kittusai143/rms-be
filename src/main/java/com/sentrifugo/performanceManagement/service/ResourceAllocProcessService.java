@@ -1,6 +1,7 @@
 package com.sentrifugo.performanceManagement.service;
 
 import com.sentrifugo.performanceManagement.entity.NotificationHistory;
+import com.sentrifugo.performanceManagement.entity.ProjectAllocation;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.repository.NotificationHistoryRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
@@ -30,6 +31,9 @@ public class ResourceAllocProcessService {
     @Autowired
     private ResourceAllocationService resourceAllocationService;
 
+    @Autowired
+    private ProjectAllocationService projectAllocationService;
+
     public List<ResourceAllocProcess> getAll() {
         return resourceAllocProcessRepository.findAll();
     }
@@ -57,6 +61,8 @@ public class ResourceAllocProcessService {
 
     public ResourceAllocProcess updateStatus(Long id, Map<String, ?> requestBody) throws ParseException {
         Optional<ResourceAllocProcess> optionalAllocation = resourceAllocProcessRepository.findById(id);
+        java.util.Date startDate;
+        java.util.Date endDate;
         if (optionalAllocation.isPresent()) {
             ResourceAllocProcess allocation = optionalAllocation.get();
             allocation.setProjectCode((String) requestBody.get("projectCode"));
@@ -65,8 +71,8 @@ public class ResourceAllocProcessService {
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
             if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date startDate = sdf.parse((String) requestBody.get("startDate"));
-                java.util.Date endDate = sdf.parse((String) requestBody.get("endDate"));
+                startDate = sdf.parse((String) requestBody.get("startDate"));
+                endDate = sdf.parse((String) requestBody.get("endDate"));
                 if(allocation.getSBstartDate()!=null && allocation.getSBstartDate()!=null){
                     allocation.setAllocStartDate(startDate);
                     allocation.setAllocEndDate(endDate);
@@ -76,6 +82,18 @@ public class ResourceAllocProcessService {
                 }
             }
             ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
+            if(Objects.equals(updated.getProcessStatus(), "Allocated")){
+                ProjectAllocation projectAllocation = new ProjectAllocation();
+                projectAllocation.setResAllocId(updated.getResAllocId());
+                projectAllocation.setProjectCode(updated.getProjectCode());
+                projectAllocation.setCreatedBy(updated.getUpdatedBy());
+                projectAllocation.setCreatedDate(updated.getUpdatedDate());
+                projectAllocation.setStartDate(updated.getAllocStartDate());
+                projectAllocation.setEndDate(updated.getAllocEndDate());
+                projectAllocation.setActive(true);
+                projectAllocationService.createProjectAllocation(projectAllocation);
+            }
+
             NotificationHistory notification = new NotificationHistory();
             notification.setSilId( updated.getSilId());
             notification.setResAllocId( updated.getResAllocId());
