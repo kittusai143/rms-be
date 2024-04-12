@@ -25,6 +25,11 @@ public class ResourceAllocSpecification {
             }
             if (filters.getBillabilities() != null && !filters.getBillabilities().isEmpty()) {
                 predicates.add(root.get("billability").in(filters.getBillabilities()));
+            }else{
+                List<String> billabilities = new ArrayList<>();
+                billabilities.add("NA");
+                billabilities.add("Non Billable");
+                predicates.add(root.get("billability").in(billabilities));
             }
             if (filters.getTechgroups() != null && !filters.getTechgroups().isEmpty()) {
                 predicates.add(root.get("technologydivision").in(filters.getTechgroups()));
