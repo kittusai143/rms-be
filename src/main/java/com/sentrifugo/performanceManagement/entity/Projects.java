@@ -39,13 +39,13 @@ public class Projects {
     @Column(name = "ProjectEndDate")
     private Date projectEndDate;
 
-    @Column(name = "SOW_Id")
-    private boolean sowId;
+    @Column(name = "SOWID")
+    private String sowId;
 
-    @Column(name = "SOWStartDate")
+    @Column(name = "sowStartDate")
     private Date sowStartDate;
 
-    @Column(name = "SOWEndDate")
+    @Column(name = "sowEndDate")
     private Date sowEndDate;
 
     @Column(name = "Duration")
@@ -60,11 +60,11 @@ public class Projects {
     @Column(name = "TypeOfProject")
     private String typeOfProject;
 
-    @Column(name = "SizeOfProjectHrs")
+    @Column(name = "sizeOfProjectHrs")
     private Integer sizeOfProjectHrs;
 
     @Column(name = "DomainId")
-    private Integer domainId;
+    private String domainId;
 
     @Column(name = "DomainName")
     private String domainName;
@@ -72,6 +72,4 @@ public class Projects {
     @Column(name = "ProjectStatus")
     private String projectStatus;
 
-    @Column(name = "SOW")
-    private boolean soq;
 }

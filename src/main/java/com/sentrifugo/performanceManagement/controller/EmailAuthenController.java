@@ -23,10 +23,8 @@ public class EmailAuthenController {
     private EmailAuthenService service;
     @GetMapping("verify")
     public ResponseEntity<?> getdetails(@RequestParam String email) {
-
         try {
             Map<String, Object> valueList = service.verify(email);
-
             if (valueList.isEmpty()) {
                 Map<String, String> map = new HashMap<>();
                 map.put("status", "Record not found for email: " + email);
@@ -39,10 +37,7 @@ public class EmailAuthenController {
         {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
-
-
     }
-
 
     @GetMapping("getby")
     public ResponseEntity<?> getfrom(@RequestParam Integer id) {
@@ -58,6 +53,5 @@ public class EmailAuthenController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
     }
-
 
 }
