@@ -4,6 +4,7 @@ import com.sentrifugo.performanceManagement.entity.NotificationHistory;
 import com.sentrifugo.performanceManagement.entity.ProjectAllocation;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.repository.NotificationHistoryRepository;
+import com.sentrifugo.performanceManagement.repository.ProjectAllocationRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,10 @@ public class ResourceAllocProcessService {
     private NotificationHistoryRepository notificationHistoryRepository;
     @Autowired
     private ResourceAllocationService resourceAllocationService;
-
     @Autowired
     private ProjectAllocationService projectAllocationService;
+    @Autowired
+    private ProjectAllocationRepository projectAllocationRepository;
 
     public List<ResourceAllocProcess> getAll() {
         return resourceAllocProcessRepository.findAll();
@@ -84,6 +86,7 @@ public class ResourceAllocProcessService {
             ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
             if(Objects.equals(updated.getProcessStatus(), "Allocated")){
                 ProjectAllocation projectAllocation = new ProjectAllocation();
+                projectAllocation.setAllocProcessId(updated.getId());
                 projectAllocation.setResAllocId(updated.getResAllocId());
                 projectAllocation.setProjectCode(updated.getProjectCode());
                 projectAllocation.setCreatedBy(updated.getUpdatedBy());
@@ -92,6 +95,13 @@ public class ResourceAllocProcessService {
                 projectAllocation.setEndDate(updated.getAllocEndDate());
                 projectAllocation.setActive(true);
                 projectAllocationService.createProjectAllocation(projectAllocation);
+            }
+            if(Objects.equals(updated.getProcessStatus(), "Deallocated")){
+                ProjectAllocation projectAllocation = projectAllocationService.findByProcessId(updated.getId());
+                projectAllocation.setCreatedBy(updated.getUpdatedBy());
+                projectAllocation.setCreatedDate(updated.getUpdatedDate());
+                projectAllocation.setActive(false);
+                projectAllocationService.updateProjectAllocation(projectAllocation);
             }
 
             NotificationHistory notification = new NotificationHistory();
