@@ -1,8 +1,6 @@
 package com.sentrifugo.performanceManagement.repository;
 
 import com.sentrifugo.performanceManagement.entity.Users;
-import com.sentrifugo.performanceManagement.vo.UserAndRoleDetailsDto;
-import com.sentrifugo.performanceManagement.vo.UserDetailsDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,17 +1,12 @@
 package com.sentrifugo.performanceManagement.controller;
 
-
-import com.sentrifugo.performanceManagement.Exceptions.ResourceNotFoundException;
 import com.sentrifugo.performanceManagement.service.EmailAuthenService;
-import com.sentrifugo.performanceManagement.vo.UserAndRoleDetailsDto;
-import com.sentrifugo.performanceManagement.vo.UserDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 

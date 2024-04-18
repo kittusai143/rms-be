@@ -25,7 +25,7 @@ public class ResourceAllocationService {
     public List<Resources> filterResourceAllocations(ResourceAllocFilters criteria) {
         Specification<ResourceAllocation> spec = ResourceAllocSpecification.filterResourceAllocations(criteria);
         List<ResourceAllocation> resource = resourceAllocationRepository.findAll(spec);
-        List<Resources> allresources = getAllResourceAllocations();
+        List<Resources> allresources = getAllResourceAllocations(criteria.getBillabilities());
         List<Resources> response = new ArrayList<Resources>();
         for (ResourceAllocation filtered: resource){
             for (Resources res: allresources){
@@ -55,6 +55,40 @@ public class ResourceAllocationService {
             resources.setProcesses(processes);
 
             resourcesList.add(resources);
+        }
+        return resourcesList;
+    }
+
+    public List<Resources> getAllResourceAllocations(List<String> billabilities) {
+        List<Object[]> result = resourceAllocationRepository.findResourcesWithActiveProcesses(true);
+        List<Resources> resourcesList = new ArrayList<>();
+
+        for (Object[] row : result) {
+            Long resourceId = ((Number) row[0]).longValue();
+            ResourceAllocation resourceAllocation = resourceAllocationRepository.findById(resourceId).orElse(null);
+
+            if (resourceAllocation == null) {continue;}
+
+            String processConcatenated = (String) row[1];
+            List<ResourceAllocProcess> processes = parseProcesses(processConcatenated);
+            boolean allocated= false;
+            if(billabilities == null ||  billabilities.isEmpty() || billabilities.contains("Non Billable") || billabilities.contains("NA") ){
+                for(ResourceAllocProcess process : processes){
+                    if (Objects.equals(process.getProcessStatus(), "Allocated")) {
+                        allocated = true;
+                        break;
+                    }
+                }
+            }
+
+            if(!allocated){
+                Resources resources = new Resources();
+                resources.setResource(resourceAllocation);
+                resources.setProcesses(processes);
+                resourcesList.add(resources);
+            }else{
+                 continue;
+            }
         }
         return resourcesList;
     }

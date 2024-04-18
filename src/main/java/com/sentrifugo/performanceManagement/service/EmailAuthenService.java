@@ -1,8 +1,6 @@
 package com.sentrifugo.performanceManagement.service;
 
 import com.sentrifugo.performanceManagement.repository.EmailAuthenticationRepo;
-import com.sentrifugo.performanceManagement.vo.UserAndRoleDetailsDto;
-import com.sentrifugo.performanceManagement.vo.UserDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

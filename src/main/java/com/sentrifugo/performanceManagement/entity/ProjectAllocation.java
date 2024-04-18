@@ -21,6 +21,9 @@ public class ProjectAllocation {
     @Column(name = "ResAllocID")
     private Long resAllocId;
 
+    @Column(name = "allocProcessId")
+    private Long allocProcessId;
+
     @Column(name = "ProjectCode")
     private String projectCode;
 

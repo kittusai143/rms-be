@@ -23,4 +23,13 @@ public class ProjectAllocationService {
     public ProjectAllocation createProjectAllocation(ProjectAllocation projectAllocation) {
         return projectAllocationRepository.save(projectAllocation);
     }
+
+    public ResponseEntity<?> updateProjectAllocation(ProjectAllocation projectAllocation) {
+        ProjectAllocation response= projectAllocationRepository.save(projectAllocation);
+        return ResponseEntity.ok(projectAllocation);
+    }
+
+    public ProjectAllocation findByProcessId(Long id) {
+        return projectAllocationRepository.findByAllocProcessId(id);
+    }
 }
