@@ -22,4 +22,8 @@ public class NotificationHistoryService {
     public NotificationHistory createNotification(NotificationHistory notification) {
         return notificationHIstoryRepository.save(notification);
     }
+
+    public List<Map<String, Object>> getNotifications() {
+        return notificationHIstoryRepository.getNotifications();
+    }
 }

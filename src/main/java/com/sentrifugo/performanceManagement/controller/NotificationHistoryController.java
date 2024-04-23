@@ -21,6 +21,17 @@ public class NotificationHistoryController {
     public List<Map<String,Object>> getByID(@PathVariable Long id){
         return notificationHistoryService.getByResAllocID(id);
     }
+
+    @GetMapping("/notifications")
+    public ResponseEntity<?> getNotifications() {
+
+        List<Map<String,Object>> data= notificationHistoryService.getNotifications();
+        if(data.isEmpty())
+            return ResponseEntity.ok("No DATa found");
+        else
+            return ResponseEntity.ok(data);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<String> createNotification(@RequestBody Map<String, ?> request) {
         try {

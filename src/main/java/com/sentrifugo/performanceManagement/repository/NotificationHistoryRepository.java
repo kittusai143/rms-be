@@ -13,4 +13,6 @@ public interface NotificationHistoryRepository extends JpaRepository<Notificatio
 
     @Query(value = "SELECT nh.*, u.name as createdName FROM notificationHistory nh join users u on nh.CreatedBy  = u.employeeId  and nh.ResAllocID  = :id",nativeQuery = true)
     List<Map<String,Object>> getByResAllocID(Long id);
+    @Query(value="SELECT u.name , n.* from users u Join notificationHistory n on n.silId=u.employeeId",nativeQuery=true)
+    List<Map<String,Object>> getNotifications();
 }
