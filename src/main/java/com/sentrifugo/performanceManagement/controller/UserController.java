@@ -57,5 +57,21 @@ public class UserController {
         }
 
     }
+    @GetMapping("/getdetails/{employeeid}")
+    public ResponseEntity<?> getdata(@PathVariable String employeeid) {
+        try {
+            Users user = urepo.findByEmployeeId(employeeid);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            }
+            return ResponseEntity.ok("No data for that employee");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+
+
+    }
+
 
 }
