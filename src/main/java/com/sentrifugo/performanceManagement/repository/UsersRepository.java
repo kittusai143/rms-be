@@ -20,4 +20,7 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
    Users findByEmail(String email);
 
+    @Query("SELECT u FROM Users u WHERE u.employeeId = :employeeId")
+    Users findByEmployeeId(String employeeId);
+
 }

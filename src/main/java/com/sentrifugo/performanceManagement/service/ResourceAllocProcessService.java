@@ -97,6 +97,11 @@ public class ResourceAllocProcessService {
                 projectAllocationService.createProjectAllocation(projectAllocation);
             }
             if(Objects.equals(updated.getProcessStatus(), "Deallocated")){
+                Optional<ResourceAllocProcess> resourceAllocProcess=resourceAllocProcessRepository.findById(updated.getId());
+                if (resourceAllocProcess.isPresent()) {
+                    ResourceAllocProcess allocations = optionalAllocation.get();
+                    allocations.setActive(false);
+                }
                 ProjectAllocation projectAllocation = projectAllocationService.findByProcessId(updated.getId());
                 projectAllocation.setCreatedBy(updated.getUpdatedBy());
                 projectAllocation.setCreatedDate(updated.getUpdatedDate());
