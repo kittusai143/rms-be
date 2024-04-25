@@ -57,4 +57,7 @@ public class ResourceAllocProcess {
     @Column(name = "allocEndDate")
     private Date allocEndDate;
 
+    @Column(name = "feedback")
+    private String feedback;
+
 }

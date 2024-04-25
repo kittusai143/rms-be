@@ -16,12 +16,27 @@ public class ResourceAllocSpecification {
                 predicates.add(root.get("location").in(filters.getLocations()));
             }
             if (filters.getSkills() != null && !filters.getSkills().isEmpty()) {
+
+                List<String> skills = filters.getSkills();
+                // Create a list to store predicates for each skill
                 List<Predicate> skillPredicates = new ArrayList<>();
-                for (String skill : filters.getSkills()) {
-                    skillPredicates.add(criteriaBuilder.like(root.get("skillset1"), "%" + skill + "%"));
-                    skillPredicates.add(criteriaBuilder.like(root.get("skillset2"), "%" + skill + "%"));
+                for (String skill : skills) {
+                    // Check if either skillset1 or skillset2 contains the skill
+                    Predicate skillPredicate = criteriaBuilder.or(
+                            criteriaBuilder.like(root.get("skillset1"), "%" + skill + "%"),
+                            criteriaBuilder.like(root.get("skillset2"), "%" + skill + "%")
+                    );
+                    skillPredicates.add(skillPredicate);
                 }
-                predicates.add(criteriaBuilder.or(skillPredicates.toArray(new Predicate[0])));
+                // Add an AND condition to ensure all skills are present
+                predicates.add(criteriaBuilder.and(skillPredicates.toArray(new Predicate[0])));
+
+//                List<Predicate> skillPredicates = new ArrayList<>();
+//                for (String skill : filters.getSkills()) {
+//                    skillPredicates.add(criteriaBuilder.like(root.get("skillset1"), "%" + skill + "%"));
+//                    skillPredicates.add(criteriaBuilder.like(root.get("skillset2"), "%" + skill + "%"));
+//                }
+//                predicates.add(criteriaBuilder.or(skillPredicates.toArray(new Predicate[0])));
             }
             if (filters.getBillabilities() != null && !filters.getBillabilities().isEmpty()) {
                 predicates.add(root.get("billability").in(filters.getBillabilities()));
