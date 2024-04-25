@@ -18,11 +18,35 @@ public class Projects {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "ClientCode")
+    private String clientCode;
+
+    @Column(name = "Sow_id")
+    private String sowId;
+
+    @Column(name = "projectStatus")
+    private String projectStatus;
+
     @Column(name = "ProjectCode")
     private String projectCode;
 
-    @Column(name = "ClientCode")
-    private String clientCode;
+    @Column(name = "DomainId")
+    private Integer domainId;
+
+    @Column(name = "Duration")
+    private Integer duration;
+
+    @Column(name = "DeliveryManager")
+    private String deliveryManager;
+
+    @Column(name = "DomainName")
+    private String domainName;
+
+    @Column(name = "ProjectEndDate")
+    private Date projectEndDate;
+
+    @Column(name = "ProjectManager")
+    private String projectManager;
 
     @Column(name = "ProjectName")
     private String projectName;
@@ -36,40 +60,22 @@ public class Projects {
     @Column(name = "ProjectStartDate")
     private Date projectStartDate;
 
-    @Column(name = "ProjectEndDate")
-    private Date projectEndDate;
+    @Column(name = "sizeOfProjectHrs")
+    private Integer sizeOfProjectHrs;
 
-    @Column(name = "SOWID")
-    private String sowId;
-
-    @Column(name = "sowStartDate")
+    @Column(name = "sowstartdate")
     private Date sowStartDate;
 
-    @Column(name = "sowEndDate")
+    @Column(name = "sowenddate")
     private Date sowEndDate;
-
-    @Column(name = "Duration")
-    private Integer duration;
-
-    @Column(name = "ProjectManager")
-    private String projectManager;
-
-    @Column(name = "DeliveryManager")
-    private String deliveryManager;
 
     @Column(name = "TypeOfProject")
     private String typeOfProject;
 
-    @Column(name = "sizeOfProjectHrs")
-    private Integer sizeOfProjectHrs;
+    @Column(name = "SOW")
+    private boolean sow;
 
-    @Column(name = "DomainId")
-    private String domainId;
-
-    @Column(name = "DomainName")
-    private String domainName;
-
-    @Column(name = "ProjectStatus")
-    private String projectStatus;
+    @Column(name = "ClientName")
+    private String clientName;
 
 }

@@ -1,7 +1,6 @@
 package com.sentrifugo.performanceManagement.controller;
 
 import com.sentrifugo.performanceManagement.entity.ProjectAllocation;
-import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.repository.ProjectAllocationRepository;
 import com.sentrifugo.performanceManagement.service.ProjectAllocationService;
 import org.springframework.beans.factory.annotation.Autowired;

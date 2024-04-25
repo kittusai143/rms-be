@@ -11,11 +11,17 @@ import java.util.Map;
 
 @Repository
 public interface ResourceAllocProcessRepository extends JpaRepository<ResourceAllocProcess, Long> {
-    @Query("SELECT rap.id AS id, rap.projectCode AS projectCode , rap.processStatus AS ProcessStatus, rap.createdBy AS createdBy, rap.updatedBy AS UpdatedBy, rap.createdDate AS createdDate, rap.updatedDate AS updatedDate,"+
-            " ra.allocationId AS ResAlloId, ra.silId AS ResEID, ra.name AS ResourceName, u.name AS PMOname, u.employeeId AS PMOEID FROM ResourceAllocProcess rap " +
-            "JOIN ResourceAllocation ra ON rap.resAllocId = ra.allocationId " +
-            "JOIN Users u ON (rap.createdBy = u.employeeId) where rap.isActive =:b")
-    List<Map<String,Object>> getResourceAllocProcessAndUsers(boolean b);
+    @Query( value = "SELECT rap.* ,createdUser.name AS createdByName, updatedUser.name AS updatedByName, " +
+            "ra.silId AS ResEID, ra.name AS ResourceName, pd.ProjectName, pd.ClientName  " +
+            "        FROM ResourceAllocProcess rap " +
+            "        JOIN resource_allocation ra  ON rap.resAllocId = ra.allocationId" +
+            "        JOIN users  createdUser ON rap.createdBy = createdUser.employeeId " +
+            "        JOIN users  updatedUser ON rap.updatedBy = updatedUser.employeeId " +
+            "        JOIN project_data pd on rap.ProjectCode =pd.ProjectCode " +
+            "        WHERE rap.isActive = :b", nativeQuery = true )
+    List<Map<String, Object>> getResourceAllocProcessAndUsers(boolean b);
+
+
 
     @Query("SELECT rap FROM ResourceAllocProcess rap WHERE DATE(rap.SBendDate) > curdate() AND rap.isActive =:b")
     List<ResourceAllocProcess> getByIsActiveAndEndDate(boolean b);
