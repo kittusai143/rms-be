@@ -20,4 +20,7 @@ public class TechnologyMaster {
     @Column(name = "TechGroup")
     private String techGroup;
 
+    @Column(name = "TechSkill")
+    private String techSkill;
+
 }

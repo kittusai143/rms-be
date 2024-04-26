@@ -16,12 +16,10 @@ public interface ResourceAllocProcessRepository extends JpaRepository<ResourceAl
             "        FROM ResourceAllocProcess rap " +
             "        JOIN resource_allocation ra  ON rap.resAllocId = ra.allocationId" +
             "        JOIN users  createdUser ON rap.createdBy = createdUser.employeeId " +
-            "        JOIN users  updatedUser ON rap.updatedBy = updatedUser.employeeId " +
-            "        JOIN project_data pd on rap.ProjectCode =pd.ProjectCode " +
+            "        LEFT JOIN users  updatedUser ON rap.updatedBy = updatedUser.employeeId " +
+            "        LEFT JOIN project_data pd on rap.ProjectCode =pd.ProjectCode " +
             "        WHERE rap.isActive = :b", nativeQuery = true )
     List<Map<String, Object>> getResourceAllocProcessAndUsers(boolean b);
-
-
 
     @Query("SELECT rap FROM ResourceAllocProcess rap WHERE DATE(rap.SBendDate) > curdate() AND rap.isActive =:b")
     List<ResourceAllocProcess> getByIsActiveAndEndDate(boolean b);
