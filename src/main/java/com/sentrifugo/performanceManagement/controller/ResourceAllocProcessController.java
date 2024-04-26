@@ -45,6 +45,7 @@ public class ResourceAllocProcessController {
             resourceAllocProcess.setResAllocId(((Integer) requestBody.get("resAllocId")).longValue());
             resourceAllocProcess.setProjectCode( (String) requestBody.get("projectCode"));
             resourceAllocProcess.setProcessStatus( (String) requestBody.get("processStatus"));
+            resourceAllocProcess.setReadStatus(false);
             if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
                 Date startDate = sdf.parse((String) requestBody.get("startDate"));
@@ -77,6 +78,18 @@ public class ResourceAllocProcessController {
             return ResponseEntity.ok(allocation);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("read/{ids}")
+    public ResponseEntity<?> markAsRead(@PathVariable List<ResourceAllocProcess> ids){
+        try{
+            for(ResourceAllocProcess process: ids){
+                resourceAllocProcessService.markProcessAsRead(process);
+            }
+            return ResponseEntity.ok("Marked as Read successfully");
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to mark as read: " + e.getMessage());
         }
     }
 

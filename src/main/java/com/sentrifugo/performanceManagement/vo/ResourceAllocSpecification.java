@@ -53,11 +53,9 @@ public class ResourceAllocSpecification {
                 predicates.add(root.get("role").in(filters.getRoles()));
             }
 //            if (filters.getDomain() != null && !filters.getDomain().isEmpty()) {
-//                // Assuming domain is a property in ResourceAllocation entity
 //                predicates.add(root.get("domain").in(filters.getDomain()));
 //            }
             if (filters.getYearsOfExp() != null && !filters.getYearsOfExp().isEmpty() ) {
-                // Assuming yearsOfExp is a property in ResourceAllocation entity
                 predicates.add(criteriaBuilder.between(root.get("yearsOfExp"), filters.getYearsOfExp().get(0), filters.getYearsOfExp().get(1)));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

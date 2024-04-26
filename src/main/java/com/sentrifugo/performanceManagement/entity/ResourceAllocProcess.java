@@ -60,4 +60,7 @@ public class ResourceAllocProcess {
     @Column(name = "feedback")
     private String feedback;
 
+    @Column(name = "ReadStatus")
+    private Boolean readStatus;
+
 }

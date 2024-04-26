@@ -1,5 +1,6 @@
 package com.sentrifugo.performanceManagement.controller;
 
+import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
 import com.sentrifugo.performanceManagement.service.ResourceAllocationService;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
@@ -22,6 +23,12 @@ public class ResourceAllocationController {
 
     @GetMapping("/getAll")
     public List<Resources> getAllResourceAllocation(){ return resourceAllocationService.getAllResourceAllocations(); }
+
+
+    @GetMapping("/byId/{id}")
+    public Resources getById(@PathVariable long id){
+        return resourceAllocationService.getById(id);
+    }
 
     @GetMapping("/getLocations")
     public List<String> getDistinctLocations(){ return resourceAllocationService.getDistinctLocations(); }

@@ -71,6 +71,7 @@ public class ResourceAllocProcessService {
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
+            allocation.setReadStatus(false);
             if( (String) requestBody.get("feedback")!=null){
                 allocation.setFeedback( (String) requestBody.get("feedback"));
             }
@@ -125,6 +126,14 @@ public class ResourceAllocProcessService {
         }
     }
 
+    public void markProcessAsRead(ResourceAllocProcess process) {
+        process.setReadStatus(true);
+        if(process.getProcessStatus().equals("Deallocated")){
+            process.setActive(false);
+        }
+        resourceAllocProcessRepository.save(process);
+    }
+
     @Scheduled(cron = "@daily")
     public void getResourceAllocProcessesWithActiveStatusAndFutureEndDate() {
         List<ResourceAllocProcess> processes = resourceAllocProcessRepository.findActiveProcessesWithFutureEndDate();
@@ -140,4 +149,6 @@ public class ResourceAllocProcessService {
     public void deleteProcess(Long id) {
          resourceAllocProcessRepository.deleteById(id);
     }
+
+
 }

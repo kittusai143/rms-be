@@ -108,7 +108,17 @@ public class ResourceAllocationService {
         return processes;
     }
 
-    public ResourceAllocation getById(Long id){ return resourceAllocationRepository.findById(id).get();}
+    public Resources getById(Long id){
+        Map<String, ?> result = resourceAllocationRepository.findByIdWithProcesses(true, id );
+        Resources resources = new Resources();
+        System.out.println(result.get("allocationId"));
+        resources.setResource(resourceAllocationRepository.findById(((Number) result.get("allocationId")).longValue()).orElse(null));
+        if (resources.getResource() == null) {return null;}
+        String processConcatenated = (String) result.get("processes");
+        List<ResourceAllocProcess> processes = parseProcesses(processConcatenated);
+        resources.setProcesses(processes);
+        return resources;
+    }
 
     public ResourceAllocation updateResourceAllocation(Long id, Map<String,?> updatedAllocation) throws ParseException {
         Optional<ResourceAllocation> optionalAllocation = resourceAllocationRepository.findById(id);
