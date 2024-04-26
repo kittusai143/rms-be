@@ -20,4 +20,16 @@ public class DomainMaster {
     @Column(name = "DomainName")
     private String domainName;
 
+    @Column(name = "SubDomainId")
+    private String subDomainId;
+
+    @Column(name = "SubDomain")
+    private String subDomain;
+
+    @Column(name = "IndustryRelevant")
+    private String IndustryRelevant;
+
+    @Column(name = "DomainCode")
+    private String domainCode;
+
 }
