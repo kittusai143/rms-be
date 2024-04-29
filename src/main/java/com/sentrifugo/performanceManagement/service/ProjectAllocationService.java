@@ -36,4 +36,7 @@ public class ProjectAllocationService {
         return projectAllocationRepository.findByAllocProcessId(id);
     }
 
+    public List<ProjectAllocation> getByResourceAllocationId(Long resAllocId) {
+        return projectAllocationRepository.findByResourceAllocId(resAllocId, true);
+    }
 }

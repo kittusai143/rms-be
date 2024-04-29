@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
@@ -19,7 +20,7 @@ public class ClientsController {
     public ClientsService clientsService;
 
     @GetMapping("/getAll")
-    public List<Clients> getAllClients(){
+    public List<Map<String,?>> getAllClients(){
         return clientsService.getAllClients();
     }
 

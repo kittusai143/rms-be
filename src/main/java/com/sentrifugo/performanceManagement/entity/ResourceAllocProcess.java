@@ -63,4 +63,6 @@ public class ResourceAllocProcess {
     @Column(name = "ReadStatus")
     private Boolean readStatus;
 
+    @Column(name = "projectId")
+    private long projectId;
 }
