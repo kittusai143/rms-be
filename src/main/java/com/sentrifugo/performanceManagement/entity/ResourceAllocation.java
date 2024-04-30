@@ -43,7 +43,7 @@ public class ResourceAllocation {
     private Date doj;
 
     @Column(name = "Status")
-    private boolean status;
+    private String status;
 
     @Column(name = "ClientCode")
     private String clientCode;
@@ -113,4 +113,21 @@ public class ResourceAllocation {
 
     @Column(name = "YearsOfExp")
     private Integer yearsOfExp;
+
+    @Column(name = "ProjectName")
+    private String projectName;
+
+    @Column(name = "ProjectType")
+    private String projectType;
+
+    @Column(name = "partner")
+    private String partner;
+
+    @Column(name = "StartDate")
+    private Date startDate;
+
+    @Column(name = "ProjectEndDate")
+    private Date projectEndDate;
+
+
 }
