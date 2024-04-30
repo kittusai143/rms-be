@@ -18,7 +18,6 @@ public class ResourceAllocSpecification {
             if (filters.getSkills() != null && !filters.getSkills().isEmpty()) {
 
                 List<String> skills = filters.getSkills();
-                // Create a list to store predicates for each skill
                 List<Predicate> skillPredicates = new ArrayList<>();
                 for (String skill : skills) {
                     // Check if either skillset1 or skillset2 contains the skill
@@ -38,13 +37,23 @@ public class ResourceAllocSpecification {
 //                }
 //                predicates.add(criteriaBuilder.or(skillPredicates.toArray(new Predicate[0])));
             }
-            if (filters.getBillabilities() != null && !filters.getBillabilities().isEmpty()) {
-                predicates.add(root.get("billability").in(filters.getBillabilities()));
+
+            if (filters.getBillabilities() != null && !filters.getBillabilities().isEmpty() ) {
+                if(filters.getBillabilities().contains("Available") && filters.getBillabilities().contains("Allocated")){
+                    System.out.println();
+                }else if (!filters.getBillabilities().contains("Available") && filters.getBillabilities().contains("Allocated")){
+                    predicates.add(root.get("allocationStatus").in(filters.getBillabilities()));
+                }else {
+                    predicates.add(criteriaBuilder.or(
+                            criteriaBuilder.notEqual(root.get("allocationStatus"), "Allocated"),
+                            criteriaBuilder.isNull(root.get("allocationStatus"))
+                    ));
+                }
             }else{
-                List<String> billabilities = new ArrayList<>();
-                billabilities.add("NA");
-                billabilities.add("Non Billable");
-                predicates.add(root.get("billability").in(billabilities));
+                predicates.add(criteriaBuilder.or(
+                        criteriaBuilder.notEqual(root.get("allocationStatus"), "Allocated"),
+                        criteriaBuilder.isNull(root.get("allocationStatus"))
+                ));
             }
             if (filters.getTechgroups() != null && !filters.getTechgroups().isEmpty()) {
                 predicates.add(root.get("technologydivision").in(filters.getTechgroups()));

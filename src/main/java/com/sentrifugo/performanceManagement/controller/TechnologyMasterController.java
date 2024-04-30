@@ -17,6 +17,11 @@ public class TechnologyMasterController {
     public List<TechnologyMaster> getAll(){
         return repository.findAll();
     }
+
+    @GetMapping("getDistinctGroups")
+    public List<String> getDistinctGroups(){
+        return repository.getDistinctGroups();
+    }
     @GetMapping("getBy/{id}")
     public TechnologyMaster getById(@PathVariable Integer id){
         return repository.findById(id).orElse(null);

@@ -1,11 +1,10 @@
 package com.sentrifugo.performanceManagement.service;
 
-import com.sentrifugo.performanceManagement.entity.NotificationHistory;
-import com.sentrifugo.performanceManagement.entity.ProjectAllocation;
-import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
+import com.sentrifugo.performanceManagement.entity.*;
 import com.sentrifugo.performanceManagement.repository.NotificationHistoryRepository;
 import com.sentrifugo.performanceManagement.repository.ProjectAllocationRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
+import com.sentrifugo.performanceManagement.repository.ResourceAllocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,6 +34,10 @@ public class ResourceAllocProcessService {
     private ProjectAllocationService projectAllocationService;
     @Autowired
     private ProjectAllocationRepository projectAllocationRepository;
+    @Autowired
+    private ResourceAllocationRepository resourceAllocationRepository;
+    @Autowired
+    private ProjectsService projectsService;
 
     public List<ResourceAllocProcess> getAll() {
         return resourceAllocProcessRepository.findAll();
@@ -67,7 +70,12 @@ public class ResourceAllocProcessService {
         java.util.Date endDate;
         if (optionalAllocation.isPresent()) {
             ResourceAllocProcess allocation = optionalAllocation.get();
-            allocation.setProjectCode((String) requestBody.get("projectCode"));
+            if( (String) requestBody.get("projectCode")!=null){
+                allocation.setProjectCode((String) requestBody.get("projectCode"));
+            }
+            if( (String) requestBody.get("projectId")!=null){
+                allocation.setProjectId( Long.parseLong((String) requestBody.get("projectId")) );
+            }
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
@@ -98,6 +106,24 @@ public class ResourceAllocProcessService {
                 projectAllocation.setStartDate(updated.getAllocStartDate());
                 projectAllocation.setEndDate(updated.getAllocEndDate());
                 projectAllocation.setActive(true);
+
+                //Check if resource is in any other projects in project allocation table
+                List<ProjectAllocation> projectAllocations = projectAllocationService.getByResourceAllocationId(updated.getResAllocId());
+                System.out.println("..................");
+                System.out.println(projectAllocations);
+                if(projectAllocations.isEmpty()){
+                    Projects project = projectsService.getProjectById(updated.getProjectId());
+                    System.out.println("..................Inside");
+                    ResourceAllocation resourceAllocation = resourceAllocationService.getById(updated.getResAllocId()).getResource();
+                    resourceAllocation.setAllocationStatus("Allocated");
+                    resourceAllocation.setSowID(project.getSowId());
+                    resourceAllocation.setClientCode(project.getClientCode());
+                    resourceAllocation.setProjectCode(project.getProjectCode());
+//                  resourceAllocation.setClientTimesheetAccess(.....);
+//                  resourceAllocation.setPartnerEmailID(.....);
+//                  resourceAllocation.setClientEmailID(........);
+                    resourceAllocationRepository.save(resourceAllocation);
+                }
                 projectAllocationService.createProjectAllocation(projectAllocation);
             }
             if(Objects.equals(updated.getProcessStatus(), "Deallocated")){
@@ -111,6 +137,17 @@ public class ResourceAllocProcessService {
                 projectAllocation.setCreatedDate(updated.getUpdatedDate());
                 projectAllocation.setActive(false);
                 projectAllocationService.updateProjectAllocation(projectAllocation);
+
+                //Check if resource is in any other projects in project allocation table
+                List<ProjectAllocation> projectAllocations = projectAllocationService.getByResourceAllocationId(updated.getResAllocId());
+                if(projectAllocations.isEmpty()){
+                    Projects project = projectsService.getProjectById( updated.getProjectId());
+
+                    ResourceAllocation resourceAllocation = resourceAllocationService.getById(updated.getResAllocId()).getResource();
+                    resourceAllocation.setAllocationStatus("Available");
+
+                    resourceAllocationRepository.save(resourceAllocation);
+                }
             }
 
             NotificationHistory notification = new NotificationHistory();
