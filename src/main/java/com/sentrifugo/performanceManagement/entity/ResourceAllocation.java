@@ -124,7 +124,7 @@ public class ResourceAllocation {
     private String partner;
 
     @Column(name = "StartDate")
-    private Date startDate;
+    private Date projectstartDate;
 
     @Column(name = "ProjectEndDate")
     private Date projectEndDate;

@@ -14,6 +14,10 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -84,9 +88,16 @@ public class ResourceAllocProcessService {
                 allocation.setFeedback( (String) requestBody.get("feedback"));
             }
             if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                startDate = sdf.parse((String) requestBody.get("startDate"));
-                endDate = sdf.parse((String) requestBody.get("endDate"));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate startdate = LocalDate.parse((String) requestBody.get("startDate"), formatter);
+                LocalDate enddate = LocalDate.parse((String) requestBody.get("endDate"), formatter);
+
+                ZoneId utcZone = ZoneId.of("UTC");
+                ZonedDateTime startDateZoned = startdate.atStartOfDay(utcZone);
+                ZonedDateTime endDateZoned = enddate.atStartOfDay(utcZone);
+
+                startDate = Date.from(startDateZoned.toInstant());
+                endDate = Date.from(endDateZoned.toInstant());
                 if(allocation.getSBstartDate()!=null && allocation.getSBendDate()!=null && allocation.getProcessStatus().equals("Allocation Requested")){
                     allocation.setAllocStartDate(startDate);
                     allocation.setAllocEndDate(endDate);
@@ -109,16 +120,17 @@ public class ResourceAllocProcessService {
 
                 //Check if resource is in any other projects in project allocation table
                 List<ProjectAllocation> projectAllocations = projectAllocationService.getByResourceAllocationId(updated.getResAllocId());
-                System.out.println("..................");
-                System.out.println(projectAllocations);
                 if(projectAllocations.isEmpty()){
                     Projects project = projectsService.getProjectById(updated.getProjectId());
-                    System.out.println("..................Inside");
                     ResourceAllocation resourceAllocation = resourceAllocationService.getById(updated.getResAllocId()).getResource();
                     resourceAllocation.setAllocationStatus("Allocated");
                     resourceAllocation.setSowID(project.getSowId());
                     resourceAllocation.setClientCode(project.getClientCode());
                     resourceAllocation.setProjectCode(project.getProjectCode());
+                    resourceAllocation.setProjectEndDate(updated.getAllocEndDate());
+                    resourceAllocation.setProjectstartDate(updated.getAllocStartDate());
+                    resourceAllocation.setProjectType(project.getTypeOfProject());
+                    resourceAllocation.setProjectName(project.getProjectName());
 //                  resourceAllocation.setClientTimesheetAccess(.....);
 //                  resourceAllocation.setPartnerEmailID(.....);
 //                  resourceAllocation.setClientEmailID(........);
