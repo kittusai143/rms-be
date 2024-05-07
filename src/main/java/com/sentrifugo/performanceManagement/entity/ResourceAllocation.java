@@ -112,7 +112,7 @@ public class ResourceAllocation {
     private Integer techMId;
 
     @Column(name = "YearsOfExp")
-    private Integer yearsOfExp;
+    private Double yearsOfExp;
 
     @Column(name = "ProjectName")
     private String projectName;

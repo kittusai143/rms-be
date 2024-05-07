@@ -9,10 +9,8 @@ import com.sentrifugo.performanceManagement.vo.ResourceAllocSpecification;
 import com.sentrifugo.performanceManagement.vo.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -131,4 +129,9 @@ public class ResourceAllocationService {
     public List<String> getDistinctRoles() {
         return resourceAllocationRepository.getDistinctRoles();
     }
+
+    public void addResourceAllocation(ResourceAllocation resourceAllocation) {
+        resourceAllocationRepository.save(resourceAllocation);
+    }
+
 }

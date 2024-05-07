@@ -68,22 +68,31 @@ public class ResourceAllocProcessService {
         return updated;
     }
 
-    public ResourceAllocProcess updateStatus(Long id, Map<String, ?> requestBody) throws ParseException {
+    public ResponseEntity<?> updateStatus(Long id, Map<String, ?> requestBody) throws ParseException {
         Optional<ResourceAllocProcess> optionalAllocation = resourceAllocProcessRepository.findById(id);
         java.util.Date startDate;
         java.util.Date endDate;
         if (optionalAllocation.isPresent()) {
             ResourceAllocProcess allocation = optionalAllocation.get();
+            if(((String) requestBody.get("processStatus")).equals("SoftBlock Requested") || ((String) requestBody.get("processStatus")).equals("SoftBlocked")){
+                List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByAllocaIDAndISActiveAndStatus(allocation.getResAllocId(),true,"SoftBlocked");
+                if(processes.stream().count()>=2){
+                    System.out.println("No more softBlocks Accepted");
+                    return ResponseEntity.badRequest().body("No more soft blocks Accepted");
+                }
+            }
             if( (String) requestBody.get("projectCode")!=null){
                 allocation.setProjectCode((String) requestBody.get("projectCode"));
             }
-            if( (String) requestBody.get("projectId")!=null){
-                allocation.setProjectId( Long.parseLong((String) requestBody.get("projectId")) );
+            if( (Integer) requestBody.get("projectId")!=null){
+                allocation.setProjectId( ((Integer) requestBody.get("projectId")).longValue() );
             }
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
-            allocation.setReadStatus(false);
+            allocation.setPmReadStatus(false);
+            allocation.setRmReadStatus(false);
+            allocation.setPMOReadStatus(false);
             if( (String) requestBody.get("feedback")!=null){
                 allocation.setFeedback( (String) requestBody.get("feedback"));
             }
@@ -169,18 +178,10 @@ public class ResourceAllocProcessService {
             notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
             notification.setComment(updated.getProcessStatus());
             notificationHistoryRepository.save(notification);
-            return updated;
+            return ResponseEntity.ok().body(updated);
         } else {
-            return null;
+            return ResponseEntity.badRequest().body("Invalid id");
         }
-    }
-
-    public void markProcessAsRead(ResourceAllocProcess process) {
-        process.setReadStatus(true);
-        if(process.getProcessStatus().equals("Deallocated")){
-            process.setActive(false);
-        }
-        resourceAllocProcessRepository.save(process);
     }
 
     @Scheduled(cron = "@daily")
@@ -196,8 +197,24 @@ public class ResourceAllocProcessService {
     }
 
     public void deleteProcess(Long id) {
-         resourceAllocProcessRepository.deleteById(id);
+        resourceAllocProcessRepository.deleteById(id);
     }
 
 
+    public void markProcessAsRead(Long id, String role) {
+        ResourceAllocProcess process = resourceAllocProcessRepository.findById(id).get();
+        if(role.equals("Manager")){
+            process.setPmReadStatus(true);
+        }
+        if(role.equals("Resource Manager")){
+            process.setRmReadStatus(true);
+        }
+        if(role.equals("PMO Analyst")){
+            process.setPMOReadStatus(true);
+        }
+        if(process.getProcessStatus().equals("Deallocated")){
+            process.setActive(false);
+        }
+        resourceAllocProcessRepository.save(process);
+    }
 }

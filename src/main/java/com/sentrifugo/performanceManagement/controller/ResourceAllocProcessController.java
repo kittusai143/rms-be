@@ -3,6 +3,7 @@ package com.sentrifugo.performanceManagement.controller;
 
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.service.ResourceAllocProcessService;
+import com.sentrifugo.performanceManagement.vo.ReadIDs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,9 @@ public class ResourceAllocProcessController {
             resourceAllocProcess.setResAllocId(((Integer) requestBody.get("resAllocId")).longValue());
             resourceAllocProcess.setProjectCode( (String) requestBody.get("projectCode"));
             resourceAllocProcess.setProcessStatus( (String) requestBody.get("processStatus"));
-            resourceAllocProcess.setReadStatus(false);
+            resourceAllocProcess.setPMOReadStatus(false);
+            resourceAllocProcess.setRmReadStatus(false);
+            resourceAllocProcess.setPmReadStatus(false);
             if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
                 Date startDate = sdf.parse((String) requestBody.get("startDate"));
@@ -72,20 +75,14 @@ public class ResourceAllocProcessController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProcess(@PathVariable Long id, @RequestBody Map<String, ?> requestbody) throws ParseException {
-
-        ResourceAllocProcess allocation = resourceAllocProcessService.updateStatus(id, requestbody);
-        if (allocation != null) {
-            return ResponseEntity.ok(allocation);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return resourceAllocProcessService.updateStatus(id, requestbody);
     }
 
-    @PutMapping("read/{ids}")
-    public ResponseEntity<?> markAsRead(@PathVariable List<ResourceAllocProcess> ids){
+    @PutMapping("/read")
+    public ResponseEntity<?> markAsRead( @RequestBody ReadIDs requestBody){
         try{
-            for(ResourceAllocProcess process: ids){
-                resourceAllocProcessService.markProcessAsRead(process);
+            for(Long id: requestBody.getIds()){
+                resourceAllocProcessService.markProcessAsRead(id,requestBody.getRole());
             }
             return ResponseEntity.ok("Marked as Read successfully");
         }catch (Exception e) {

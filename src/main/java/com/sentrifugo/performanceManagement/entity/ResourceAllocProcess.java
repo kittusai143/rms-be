@@ -60,9 +60,17 @@ public class ResourceAllocProcess {
     @Column(name = "feedback")
     private String feedback;
 
-    @Column(name = "ReadStatus")
-    private Boolean readStatus;
+    @Column(name = "RmReadStatus")
+    private Boolean RmReadStatus;
 
     @Column(name = "projectId")
     private long projectId;
+
+    @Column(name = "PmReadStatus")
+    private Boolean PmReadStatus;
+
+    @Column(name = "PmoReadStatus")
+    private Boolean PMOReadStatus;
+
+
 }
