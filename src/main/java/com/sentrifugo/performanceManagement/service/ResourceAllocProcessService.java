@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -91,8 +89,11 @@ public class ResourceAllocProcessService {
             if( (String) requestBody.get("projectCode")!=null){
                 allocation.setProjectCode((String) requestBody.get("projectCode"));
             }
-            if( (Integer) requestBody.get("projectId")!=null){
-                allocation.setProjectId( ((Integer) requestBody.get("projectId")).longValue() );
+            if( (String) requestBody.get("projectId")!=null){
+                allocation.setProjectId( Long.parseLong((String) requestBody.get("projectId")) );
+            }
+            if( (String) requestBody.get("referenceId")!=null){
+                allocation.setReferenceId( (String) requestBody.get("referenceId") );
             }
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
@@ -154,7 +155,7 @@ public class ResourceAllocProcessService {
                 projectAllocationService.createProjectAllocation(projectAllocation);
 
                 // Inactive the existing processes on allocating the resource
-                List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByAllocaIDAndISActiveAndStatus(allocation.getResAllocId(),true,"SoftBlocked");
+                List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByResourceAllocationIdAndIsActive(updated.getResAllocId(), true);
                 for(ResourceAllocProcess process:processes){
                     process.setActive(false);
                     process.setUpdatedBy(updated.getUpdatedBy());

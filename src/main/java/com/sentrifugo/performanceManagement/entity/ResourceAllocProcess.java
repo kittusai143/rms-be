@@ -72,5 +72,7 @@ public class ResourceAllocProcess {
     @Column(name = "PmoReadStatus")
     private Boolean PMOReadStatus;
 
+    @Column(name = "referenceID")
+    private String referenceId;
 
 }

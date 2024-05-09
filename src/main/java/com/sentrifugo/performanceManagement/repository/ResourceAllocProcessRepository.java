@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +28,7 @@ public interface ResourceAllocProcessRepository extends JpaRepository<ResourceAl
 
     @Query(value = "Select rap.* from ResourceAllocProcess rap Where rap.ResAllocID =:resAllocId AND rap.isactive=:b AND rap.ProcessStatus =:status",nativeQuery = true)
     List<ResourceAllocProcess> getByAllocaIDAndISActiveAndStatus(Long resAllocId, boolean b, String status);
+
+    @Query(value = "Select rap from ResourceAllocProcess rap Where rap.ResAllocID =:resAllocId AND rap.isactive=:b",nativeQuery = true)
+    List<ResourceAllocProcess> getByResourceAllocationIdAndIsActive(Long resAllocId, boolean b);
 }
