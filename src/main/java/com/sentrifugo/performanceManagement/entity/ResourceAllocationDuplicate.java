@@ -11,8 +11,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "resource_allocation_")
-public class ResourceAllocation {
+@Table(name = "resource_allocation")
+public class ResourceAllocationDuplicate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AllocationId")
@@ -119,6 +119,9 @@ public class ResourceAllocation {
 
     @Column(name = "ProjectType")
     private String projectType;
+
+    @Column(name = "partner")
+    private String partner;
 
     @Column(name = "StartDate")
     private Date projectstartDate;
