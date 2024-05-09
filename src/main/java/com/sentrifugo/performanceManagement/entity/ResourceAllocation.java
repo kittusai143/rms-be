@@ -120,9 +120,6 @@ public class ResourceAllocation {
     @Column(name = "ProjectType")
     private String projectType;
 
-    @Column(name = "partner")
-    private String partner;
-
     @Column(name = "StartDate")
     private Date projectstartDate;
 

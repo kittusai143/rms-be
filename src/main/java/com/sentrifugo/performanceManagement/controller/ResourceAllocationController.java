@@ -116,9 +116,6 @@ public class ResourceAllocationController {
                 if((String) requestBody.get("Status") !=null){
                     resourceAllocation.setStatus((String) requestBody.get("Status"));
                 }
-                if((String) requestBody.get("partner") !=null){
-                    resourceAllocation.setPartner((String) requestBody.get("partner"));
-                }
                 if( (String) requestBody.get("ProjectCode")!=null){
                     resourceAllocation.setProjectCode((String) requestBody.get("ProjectCode"));
                 }
