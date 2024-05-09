@@ -11,8 +11,7 @@ import java.util.Map;
 @Repository
 public interface ClientsRepository extends JpaRepository<Clients,Long> {
 
-    @Query("SELECT c.clientCode as clientCode, c.clientName as clientName FROM Clients c GROUP BY c.clientCode, c.clientName")
-    List<Map<String,?>> findAllDistinct();
-
+    @Query("SELECT c.clientCode as clientCode, c.clientName as clientName FROM Clients c WHERE c.status = :status GROUP BY c.clientCode, c.clientName")
+    List<Map<String, ?>> findAllDistinct(String status);
 
 }

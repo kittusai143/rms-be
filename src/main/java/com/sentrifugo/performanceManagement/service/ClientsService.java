@@ -15,7 +15,7 @@ public class ClientsService {
     public ClientsRepository clientsRepository;
 
     public List<Map<String,?>> getAllClients(){
-        return clientsRepository.findAllDistinct();
+        return clientsRepository.findAllDistinct("Active");
     }
 
 }

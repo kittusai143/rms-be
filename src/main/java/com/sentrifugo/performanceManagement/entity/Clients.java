@@ -11,7 +11,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "client_data")
+@Table(name = "client_data_")
 public class Clients {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +26,6 @@ public class Clients {
 
     @Column(name = "ClientShortName")
     private String clientShortName;
-
-    @Column(name = "Partner")
-    private String partner;
 
     @Column(name = "ClientManager")
     private String clientManager;
@@ -47,4 +44,8 @@ public class Clients {
 
     @Column(name = "Role")
     private String role;
+
+    @Column(name = "Comment")
+    private String comment;
+
 }

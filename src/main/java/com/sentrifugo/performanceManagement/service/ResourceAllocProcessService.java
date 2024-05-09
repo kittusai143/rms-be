@@ -81,6 +81,13 @@ public class ResourceAllocProcessService {
                     return ResponseEntity.badRequest().body("No more soft blocks Accepted");
                 }
             }
+            if(((String) requestBody.get("processStatus")).equals("Allocation Requested") || ((String) requestBody.get("processStatus")).equals("Allocated")){
+                List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByAllocaIDAndISActiveAndStatus(allocation.getResAllocId(),true,"Allocated");
+                if(processes.stream().count()>=1){
+                    System.out.println("No more Allocations Accepted");
+                    return ResponseEntity.badRequest().body("No more allocation requests Accepted");
+                }
+            }
             if( (String) requestBody.get("projectCode")!=null){
                 allocation.setProjectCode((String) requestBody.get("projectCode"));
             }
@@ -133,7 +140,6 @@ public class ResourceAllocProcessService {
                     Projects project = projectsService.getProjectById(updated.getProjectId());
                     ResourceAllocation resourceAllocation = resourceAllocationService.getById(updated.getResAllocId()).getResource();
                     resourceAllocation.setAllocationStatus("Allocated");
-                    resourceAllocation.setSowID(project.getSowId());
                     resourceAllocation.setClientCode(project.getClientCode());
                     resourceAllocation.setProjectCode(project.getProjectCode());
                     resourceAllocation.setProjectEndDate(updated.getAllocEndDate());
@@ -146,6 +152,15 @@ public class ResourceAllocProcessService {
                     resourceAllocationRepository.save(resourceAllocation);
                 }
                 projectAllocationService.createProjectAllocation(projectAllocation);
+
+                // Inactive the existing processes on allocating the resource
+                List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByAllocaIDAndISActiveAndStatus(allocation.getResAllocId(),true,"SoftBlocked");
+                for(ResourceAllocProcess process:processes){
+                    process.setActive(false);
+                    process.setUpdatedBy(updated.getUpdatedBy());
+                    process.setUpdatedDate(new Date(System.currentTimeMillis()));
+                    resourceAllocProcessRepository.save(process);
+                }
             }
             if(Objects.equals(updated.getProcessStatus(), "Deallocated")){
                 Optional<ResourceAllocProcess> resourceAllocProcess=resourceAllocProcessRepository.findById(updated.getId());
@@ -159,7 +174,7 @@ public class ResourceAllocProcessService {
                 projectAllocation.setActive(false);
                 projectAllocationService.updateProjectAllocation(projectAllocation);
 
-                //Check if resource is in any other projects in project allocation table
+                //Check if resource is in any other projects in project_allocation table
                 List<ProjectAllocation> projectAllocations = projectAllocationService.getByResourceAllocationId(updated.getResAllocId());
                 if(projectAllocations.isEmpty()){
                     Projects project = projectsService.getProjectById( updated.getProjectId());

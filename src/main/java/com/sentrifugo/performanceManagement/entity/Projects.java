@@ -21,9 +21,6 @@ public class Projects {
     @Column(name = "ClientCode")
     private String clientCode;
 
-    @Column(name = "Sow_id")
-    private String sowId;
-
     @Column(name = "projectStatus")
     private String projectStatus;
 
@@ -34,7 +31,7 @@ public class Projects {
     private Integer domainId;
 
     @Column(name = "Duration")
-    private Integer duration;
+    private Double duration;
 
     @Column(name = "DeliveryManager")
     private String deliveryManager;
@@ -61,7 +58,7 @@ public class Projects {
     private Date projectStartDate;
 
     @Column(name = "sizeOfProjectHrs")
-    private Integer sizeOfProjectHrs;
+    private Double sizeOfProjectHrs;
 
     @Column(name = "sowstartdate")
     private Date sowStartDate;
@@ -73,7 +70,7 @@ public class Projects {
     private String typeOfProject;
 
     @Column(name = "SOW")
-    private boolean sow;
+    private String sow;
 
     @Column(name = "ClientName")
     private String clientName;
