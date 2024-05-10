@@ -92,8 +92,8 @@ public class ResourceAllocProcessService {
             if( (String) requestBody.get("projectId")!=null){
                 allocation.setProjectId( Long.parseLong((String) requestBody.get("projectId")) );
             }
-            if( (String) requestBody.get("referenceId")!=null){
-                allocation.setReferenceId( (String) requestBody.get("referenceId") );
+            if( (String) requestBody.get("requirementId")!=null){
+                allocation.setRequirementID( (String) requestBody.get("requirementId") );
             }
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
@@ -157,6 +157,9 @@ public class ResourceAllocProcessService {
                 // Inactive the existing processes on allocating the resource
                 List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByResourceAllocationIdAndIsActive(updated.getResAllocId(), true);
                 for(ResourceAllocProcess process:processes){
+                    if(process.getId().equals(updated.getId())){
+                        continue;
+                    }
                     process.setActive(false);
                     process.setUpdatedBy(updated.getUpdatedBy());
                     process.setUpdatedDate(new Date(System.currentTimeMillis()));

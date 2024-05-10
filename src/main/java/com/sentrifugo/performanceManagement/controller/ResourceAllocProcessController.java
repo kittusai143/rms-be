@@ -44,23 +44,10 @@ public class ResourceAllocProcessController {
             ResourceAllocProcess resourceAllocProcess =new ResourceAllocProcess();
             resourceAllocProcess.setSilId( (String) requestBody.get("silId"));
             resourceAllocProcess.setResAllocId(((Integer) requestBody.get("resAllocId")).longValue());
-            resourceAllocProcess.setProjectCode( (String) requestBody.get("projectCode"));
             resourceAllocProcess.setProcessStatus( (String) requestBody.get("processStatus"));
             resourceAllocProcess.setPMOReadStatus(false);
             resourceAllocProcess.setRmReadStatus(false);
             resourceAllocProcess.setPmReadStatus(false);
-            if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-                Date startDate = sdf.parse((String) requestBody.get("startDate"));
-                Date endDate = sdf.parse((String) requestBody.get("endDate"));
-                if(requestBody.get("processStatus")=="SoftBlock Requested"){
-                    resourceAllocProcess.setSBstartDate(startDate);
-                    resourceAllocProcess.setSBendDate(endDate);
-                }else{
-                    resourceAllocProcess.setAllocStartDate(startDate);
-                    resourceAllocProcess.setAllocEndDate(endDate);
-                }
-            }
             resourceAllocProcess.setCreatedBy(((String) requestBody.get("createdBy")));
             resourceAllocProcess.setCreatedDate(new Date(System.currentTimeMillis()));
             resourceAllocProcess.setActive(true);
