@@ -124,6 +124,24 @@ public class ResourceAllocProcessService {
                 }
             }
             ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
+            
+            if(Objects.equals(updated.getProcessStatus(), "SoftBlocked")){
+                List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByAllocaIDAndISActiveAndStatus(updated.getResAllocId(),true,"SoftBlocked");
+                if(processes.stream().count()>=2){
+                    // Inactive the existing processes when softBlocked by two managers
+                    List<ResourceAllocProcess> allProcesses = resourceAllocProcessRepository.getByResourceAllocationIdAndIsActive(updated.getResAllocId(), true);
+                    for(ResourceAllocProcess process:allProcesses){
+                        if(Objects.equals(process.getProcessStatus(), "SoftBlocked")){
+                            continue;
+                        }
+                        process.setActive(false);
+                        process.setUpdatedBy(updated.getUpdatedBy());
+                        process.setUpdatedDate(new Date(System.currentTimeMillis()));
+                        resourceAllocProcessRepository.save(process);
+                    }
+                }
+            }
+
             if(Objects.equals(updated.getProcessStatus(), "Allocated")){
                 ProjectAllocation projectAllocation = new ProjectAllocation();
                 projectAllocation.setAllocProcessId(updated.getId());
