@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "resource_allocation_")
+@Table(name = "resource_allocation_test")
 public class ResourceAllocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

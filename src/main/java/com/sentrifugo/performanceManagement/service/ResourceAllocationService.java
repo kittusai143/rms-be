@@ -70,7 +70,7 @@ public class ResourceAllocationService {
             String processConcatenated = (String) row[1];
             List<ResourceAllocProcess> processes = parseProcesses(processConcatenated);
             boolean allocated= false;
-            if(billabilities == null ||  billabilities.isEmpty() || billabilities.contains("Non Billable") || billabilities.contains("NA") ){
+            if(billabilities == null ||  billabilities.isEmpty() || (billabilities.contains("Available") && !billabilities.contains("Allocated")) ){
                 for(ResourceAllocProcess process : processes){
                     if (Objects.equals(process.getProcessStatus(), "Allocated")) {
                         allocated = true;

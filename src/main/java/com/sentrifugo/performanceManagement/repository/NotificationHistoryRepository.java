@@ -11,8 +11,8 @@ import java.util.Map;
 @Repository
 public interface NotificationHistoryRepository extends JpaRepository<NotificationHistory, Long> {
 
-    @Query(value = "SELECT nh.*, u.name as createdName FROM notificationHistory nh join users u on nh.CreatedBy  = u.employeeId  and nh.ResAllocID  = :id",nativeQuery = true)
+    @Query(value = "SELECT nh.*, u.name as createdName FROM notificationHistory_test nh join users u on nh.CreatedBy  = u.employeeId  and nh.ResAllocID  = :id",nativeQuery = true)
     List<Map<String,Object>> getByResAllocID(Long id);
-    @Query(value="SELECT u.name , n.* from users u Join notificationHistory n on n.silId=u.employeeId",nativeQuery=true)
+    @Query(value="SELECT u.name , n.* from users u Join notificationHistory_test n on n.silId=u.employeeId",nativeQuery=true)
     List<Map<String,Object>> getNotifications();
 }

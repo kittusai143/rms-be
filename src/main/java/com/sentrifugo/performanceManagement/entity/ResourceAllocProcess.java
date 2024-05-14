@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ResourceAllocProcess")
+@Table(name = "ResourceAllocProcess_test")
 public class ResourceAllocProcess {
 
     @Id
