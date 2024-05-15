@@ -252,7 +252,7 @@ public class ResourceAllocProcessService {
         if(role.equals("PMO Analyst")){
             process.setPMOReadStatus(true);
         }
-        if(process.getProcessStatus().equals("Deallocated")){
+        if(process.getProcessStatus().equals("Deallocated") && process.getRmReadStatus().equals(true) && process.getPmReadStatus().equals(true) && process.getPMOReadStatus().equals(true) ){
             process.setActive(false);
         }
         resourceAllocProcessRepository.save(process);
