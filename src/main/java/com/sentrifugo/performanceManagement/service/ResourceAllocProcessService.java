@@ -95,6 +95,9 @@ public class ResourceAllocProcessService {
             if( (String) requestBody.get("requirementId")!=null){
                 allocation.setRequirementID( (String) requestBody.get("requirementId") );
             }
+            if( (String) requestBody.get("deAllocReason")!=null){
+                allocation.setDeAllocReason( (String) requestBody.get("deAllocReason") );
+            }
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));

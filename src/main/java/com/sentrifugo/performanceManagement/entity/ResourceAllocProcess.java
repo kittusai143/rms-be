@@ -75,4 +75,7 @@ public class ResourceAllocProcess {
     @Column(name = "RequirementID")
     private String requirementID;
 
+    @Column(name = "DeAllocReason")
+    private String deAllocReason;
+
 }
