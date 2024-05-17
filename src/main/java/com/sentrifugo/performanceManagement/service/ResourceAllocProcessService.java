@@ -98,6 +98,9 @@ public class ResourceAllocProcessService {
             if( (String) requestBody.get("deAllocReason")!=null){
                 allocation.setDeAllocReason( (String) requestBody.get("deAllocReason") );
             }
+            if( (String) requestBody.get("billability")!=null){
+                allocation.setBillability( (String) requestBody.get("billability") );
+            }
             allocation.setProcessStatus((String) requestBody.get("processStatus"));
             allocation.setUpdatedBy((String) requestBody.get("updatedBy"));
             allocation.setUpdatedDate(new Date(System.currentTimeMillis()));
@@ -168,6 +171,7 @@ public class ResourceAllocProcessService {
                     resourceAllocation.setProjectstartDate(updated.getAllocStartDate());
                     resourceAllocation.setProjectType(project.getTypeOfProject());
                     resourceAllocation.setProjectName(project.getProjectName());
+                    resourceAllocation.setBillability(updated.getBillability());
 //                  resourceAllocation.setClientTimesheetAccess(.....);
 //                  resourceAllocation.setPartnerEmailID(.....);
 //                  resourceAllocation.setClientEmailID(........);

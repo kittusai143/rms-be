@@ -11,5 +11,5 @@
 //
 //    // Method
 //    // To send an email with attachment
-////    String sendMailWithAttachment(EmailDetails details) throws MessagingException;
+//    String sendMailWithAttachment(EmailDetails details) throws MessagingException;
 //}

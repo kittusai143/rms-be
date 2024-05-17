@@ -78,4 +78,8 @@ public class ResourceAllocProcess {
     @Column(name = "DeAllocReason")
     private String deAllocReason;
 
+    @Column(name = "Billability")
+    private String billability;
+
+
 }
