@@ -35,6 +35,18 @@ spring:
           auth: true
           starttls.enable: true
 
+google:
+  secret:
+    Key:
+      path: GoogleDriveApp.json
+  oauth:
+    callback:
+      url:
+  credentials:
+    folder:
+      path:
+
+
 custom:
   apiKey: 2566e68e32de951520875cd5106d217e93f753ffa04c0ab12e10d2f1c07e22c0
 #  frontendUrl: "http://14.140.148.227:3100"

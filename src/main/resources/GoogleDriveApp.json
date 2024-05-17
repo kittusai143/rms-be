@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "smart-host-423409-c4",
+  "private_key_id": "443c08246a215df34acf61fa689209e7b91aac1f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQDBSQWd+K3uewiR\nJlNKqLODNHCRFHvdXfrP4C8P3Pk6wuxcLDCOz7c7nu1vwJJwL52TMMxzQ0Oy8zo7\nvzwv0EdrcxTArwAjKz53b+mcZaHf6zOj/DMjU2n9clxuDmWb4UZGyiNW2AV5MOXq\nqUQV9p2AWIdzK0KjqG1iUElYj4WeRYqATUYyGSk/mTM61MAaO/R+zlUiwUz5knyK\nG0IsHAxlW1Fyqt0w4Sn8OJ5eX84LzVqJWSrtxvpGw8rMp6WSO9ytzJogW2pOvlQe\nvmyj9cBlqI86Ru9Hah0h2CKQaGv6fqo9LLP2DdqptYjVl91WBmpzSnCvUF+IR1XD\n1xhwuEIzAgMBAAECgf9DHsu69lPWlq/i6x9n52DVr0abGwHokNPVKR5h49qoptTT\n+h4V4D9BKDxL30b7FMEjqOgjhR6whfmZX4KgsZm1No5LKBP9vCBB805GTjgCCl6X\nrUmueskG7ZYrbqFAzUbnGxfEKkAivCUbcd9/wQq9oM1osR0mUaOqmgOrPV8PsEiw\nRGqqaQEbTeE24JE6FwmC4YpvKjuQdUEC7I2I69Odqsy540aLvZ93U59cpVtO+Mtu\nFf7Eg2NEGzDlhoUvzpMlWwJOSDFr5MxfzMEQYOFSOHup9IGqV0uiXeLRdm5DMYWt\nuBnbVrnu+JTf0eh667dSFbaW4et6u07aVrGiw00CgYEA55mgbXVb/OQawdLkxz7j\nfLnFq7s3amerMKUWk/+tpQFe7aWLJINIKC8SaiVmJlREYr5/3LBo3vbV6lxgwwTW\nwTjYQg2ahCdP1PuVLsFBvaxljMAe1yFNatWcExAvKhUKl+REG7KpTiMfAj6X4XnP\nPVzy+r+lXoMblaaf3Zqk4nUCgYEA1aYGGbjrC8TdOOlbb3xwwqMAcu9w7W2llpC1\nThyq/LyyVpL9vJzZUBue5McISa8aF8BACUMaRpEGw+wN0dCzQZqXLGoIUUREG+HM\nb4UFYJnfEu+JOTSpVe7BVF4al6Mm8QYk1ohju9TsAf7zXTEU60/ui1HgQDGoL+N9\nEgTZrQcCgYBFOMGedalc2MC2ldYTR1Su/sd6IKbbgsjD7VPmQFEiNFqvJP+FlkeG\n2yrh1vPFGQKnkNCeoYt2uMgPGDVDlLqrXdYlR/Oa9DUEL33TT6fajSB9BR8ypZ2C\nBP51JC00or1b0LoanTfFRvIJtbOnjMTITnPBRm6i5QTlobu+fG4z0QKBgFFBNF7C\nCnrOY4iKj+Dlxgjwb3JHCH70TZ7m6F2N36YBqh3tB52dVbT23EaMP+WuN9FCp9gd\n8jdWXulStKrQoexYfBhDN2iY+wJTrSnYwIPN4Z5VBa6BDcoF5PdOVvTG8z+Fo6sH\n8k50m1HjAfG2ggtAuiu4dv5TJHEaJu4cdCEvAoGADKYGki5LCHn02iQzDdME0qQ7\nswxXQLHQLdJ+b8YwXVvjeSIpY/r5IMQ+xRyMouceXG0byW1rGtD4SKSdvckSc+kN\nNxrA/LzWYNYDtzQPRaMcVywiGKsLngtsKLPJbrgxnIfZxbouEzTR4KIqqrtsR3sq\nU452asCZ+HBZrAeGAuQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "rms-drive-access-trail@smart-host-423409-c4.iam.gserviceaccount.com",
+  "client_id": "105984068629059552645",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/rms-drive-access-trail%40smart-host-423409-c4.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
