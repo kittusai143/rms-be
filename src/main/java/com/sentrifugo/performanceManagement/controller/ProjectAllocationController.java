@@ -27,6 +27,10 @@ public class ProjectAllocationController {
     public List<ProjectAllocation> getAllProjectAllocations(){
         return projectAllocationService.getAllProjectAllocations();
     }
+    @GetMapping("getAllByResID/{id}")
+    public List<ProjectAllocation> getAllProjectAllocationsBYResAllocID(@PathVariable Long id){
+        return projectAllocationService.getAllProjectAllocationsBYResAllocID(id);
+    }
 
     @PostMapping("create")
     public ResponseEntity<?> createProjectAllocation(@RequestBody Map<String, ?> request){

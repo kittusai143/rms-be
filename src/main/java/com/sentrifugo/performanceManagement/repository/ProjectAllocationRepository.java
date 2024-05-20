@@ -14,5 +14,6 @@ public interface ProjectAllocationRepository extends JpaRepository<ProjectAlloca
 
     @Query("Select pa from ProjectAllocation pa where pa.resAllocId = :resAllocId And pa.isActive =:b")
     List<ProjectAllocation> findByResourceAllocId(Long resAllocId, boolean b);
-
+    @Query("Select pa from ProjectAllocation pa where pa.resAllocId = :resAllocId")
+    List<ProjectAllocation> findAllBYResAllocID(Long resAllocId);
 }
