@@ -233,10 +233,10 @@ public class ResourceAllocProcessService {
         List<ResourceAllocProcess> processes = resourceAllocProcessRepository.findActiveProcessesWithFutureEndDate();
         System.out.println(processes);
         for(ResourceAllocProcess process: processes){
-            ResourceAllocProcess prop = process;
-            prop.setActive(false);
-            ResourceAllocProcess r = resourceAllocProcessRepository.save(prop);
-            System.out.println(r);
+            if(process.getProcessStatus().equals("SoftBlocked") || process.getProcessStatus().equals("Allocation Requested")){
+                process.setActive(false);
+                ResourceAllocProcess r = resourceAllocProcessRepository.save(process);
+            }
         }
     }
 

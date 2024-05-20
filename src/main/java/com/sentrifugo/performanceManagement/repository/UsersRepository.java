@@ -25,9 +25,8 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     @Query("SELECT u FROM Users u WHERE u.employeeId = :employeeId")
     Users findByEmployeeId(String employeeId);
 
-
-@Query("SELECT u.userFullName AS fullName, u.email AS email FROM Users u WHERE MONTH(u.dob) = MONTH(:date) AND DAY(u.dob) = DAY(:date) AND u.isActive = true")
-List<Map<String, Object>> findActiveUsersByBirthday(@Param("date") Date date);
+    @Query("SELECT u.userFullName AS fullName, u.email AS email FROM Users u WHERE MONTH(u.dob) = MONTH(:date) AND DAY(u.dob) = DAY(:date) AND u.isActive = true")
+    List<Map<String, Object>> findActiveUsersByBirthday(@Param("date") Date date);
 
     @Query("SELECT u.userFullName AS fullname, u.email AS email, YEAR(:date) - YEAR(e.dateOfJoining) AS anniversaryYear " +
             "FROM Employee e " +

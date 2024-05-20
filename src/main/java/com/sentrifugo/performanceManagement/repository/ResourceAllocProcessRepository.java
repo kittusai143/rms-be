@@ -23,7 +23,7 @@ public interface ResourceAllocProcessRepository extends JpaRepository<ResourceAl
     @Query("SELECT rap FROM ResourceAllocProcess rap WHERE DATE(rap.SBendDate) > curdate() AND rap.isActive =:b")
     List<ResourceAllocProcess> getByIsActiveAndEndDate(boolean b);
 
-    @Query(value = "SELECT rap.* FROM ResourceAllocProcess_test rap WHERE rap.isactive = true AND YEAR(rap.SBenddate) <= YEAR(CURRENT_DATE()) AND MONTH(rap.SBenddate) <= MONTH(CURRENT_DATE()) AND DAY(rap.SBenddate) <= DAY(CURRENT_DATE())", nativeQuery = true)
+    @Query(value = "SELECT rap.* FROM ResourceAllocProcess_test rap WHERE rap.isactive = true AND YEAR(rap.SBenddate) <= YEAR(CURRENT_DATE()) AND MONTH(rap.SBenddate) <= MONTH(CURRENT_DATE()) AND DAY(rap.SBenddate) < DAY(CURRENT_DATE())", nativeQuery = true)
     List<ResourceAllocProcess> findActiveProcessesWithFutureEndDate();
 
     @Query(value = "Select rap.* from ResourceAllocProcess_test rap Where rap.ResAllocID =:resAllocId AND rap.isactive=:b AND rap.ProcessStatus =:status",nativeQuery = true)
