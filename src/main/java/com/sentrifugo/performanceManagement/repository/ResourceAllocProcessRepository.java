@@ -12,23 +12,23 @@ import java.util.Map;
 public interface ResourceAllocProcessRepository extends JpaRepository<ResourceAllocProcess, Long> {
     @Query( value = "SELECT rap.* ,createdUser.name AS createdByName, updatedUser.name AS updatedByName, " +
             "ra.silId AS ResEID, ra.name AS ResourceName, pd.ProjectName, pd.ClientName  " +
-            "        FROM ResourceAllocProcess_test rap " +
-            "        JOIN resource_allocation_test ra  ON rap.resAllocId = ra.allocationId" +
+            "        FROM ResourceAllocProcess rap " +
+            "        JOIN resource_allocation ra  ON rap.resAllocId = ra.allocationId" +
             "        JOIN users  createdUser ON rap.createdBy = createdUser.employeeId " +
             "        LEFT JOIN users  updatedUser ON rap.updatedBy = updatedUser.employeeId " +
-            "        LEFT JOIN project_data_test pd on rap.ProjectCode =pd.ProjectCode " +
+            "        LEFT JOIN project_data pd on rap.ProjectCode =pd.ProjectCode " +
             "        WHERE rap.isActive = :b", nativeQuery = true )
     List<Map<String, Object>> getResourceAllocProcessAndUsers(boolean b);
 
     @Query("SELECT rap FROM ResourceAllocProcess rap WHERE DATE(rap.SBendDate) > curdate() AND rap.isActive =:b")
     List<ResourceAllocProcess> getByIsActiveAndEndDate(boolean b);
 
-    @Query(value = "SELECT rap.* FROM ResourceAllocProcess_test rap WHERE rap.isactive = true AND YEAR(rap.SBenddate) <= YEAR(CURRENT_DATE()) AND MONTH(rap.SBenddate) <= MONTH(CURRENT_DATE()) AND DAY(rap.SBenddate) < DAY(CURRENT_DATE())", nativeQuery = true)
+    @Query(value = "SELECT rap.* FROM ResourceAllocProcess rap WHERE rap.isactive = true AND YEAR(rap.SBenddate) <= YEAR(CURRENT_DATE()) AND MONTH(rap.SBenddate) <= MONTH(CURRENT_DATE()) AND DAY(rap.SBenddate) < DAY(CURRENT_DATE())", nativeQuery = true)
     List<ResourceAllocProcess> findActiveProcessesWithFutureEndDate();
 
-    @Query(value = "Select rap.* from ResourceAllocProcess_test rap Where rap.ResAllocID =:resAllocId AND rap.isactive=:b AND rap.ProcessStatus =:status",nativeQuery = true)
+    @Query(value = "Select rap.* from ResourceAllocProcess rap Where rap.ResAllocID =:resAllocId AND rap.isactive=:b AND rap.ProcessStatus =:status",nativeQuery = true)
     List<ResourceAllocProcess> getByAllocaIDAndISActiveAndStatus(Long resAllocId, boolean b, String status);
 
-    @Query(value = "Select rap.* from ResourceAllocProcess_test rap Where rap.ResAllocID =:resAllocId AND rap.isactive=:b",nativeQuery = true)
+    @Query(value = "Select rap.* from ResourceAllocProcess rap Where rap.ResAllocID =:resAllocId AND rap.isactive=:b",nativeQuery = true)
     List<ResourceAllocProcess> getByResourceAllocationIdAndIsActive(Long resAllocId, boolean b);
 }

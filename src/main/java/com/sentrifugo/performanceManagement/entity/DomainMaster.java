@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "domain_master_test")
+@Table(name = "domain_master")
 public class DomainMaster {
 
     @Id

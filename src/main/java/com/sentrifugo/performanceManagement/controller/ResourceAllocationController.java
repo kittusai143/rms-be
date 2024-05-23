@@ -40,8 +40,8 @@ public class ResourceAllocationController {
 
 
     @GetMapping("/byId/{id}")
-    public Resources getById(@PathVariable long id) {
-        return resourceAllocationService.getById(id);
+    public Resources getById(@PathVariable Integer id) {
+        return resourceAllocationService.getById(id.longValue());
     }
 
     @GetMapping("/getLocations")

@@ -29,14 +29,14 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
   List<String> getDistinctRoles();
 
   @Query(value = "SELECT ra.allocationId, GROUP_CONCAT(rap.Id) AS processes " +
-          "FROM resource_allocation_test ra " +
-          "LEFT JOIN ResourceAllocProcess_test rap ON ra.AllocationId = rap.ResAllocID AND rap.IsActive = :isActive " +
+          "FROM resource_allocation ra " +
+          "LEFT JOIN ResourceAllocProcess rap ON ra.AllocationId = rap.ResAllocID AND rap.IsActive = :isActive " +
           "GROUP BY ra.allocationId", nativeQuery = true)
   List<Object[]> findResourcesWithActiveProcesses(@Param("isActive") boolean isActive);
 
   @Query(value = "SELECT ra.allocationId, GROUP_CONCAT(rap.Id) AS processes " +
-          "FROM resource_allocation_test ra " +
-          "LEFT JOIN ResourceAllocProcess_test rap ON ra.AllocationId = rap.ResAllocID AND rap.IsActive = :isActive " +
+          "FROM resource_allocation ra " +
+          "LEFT JOIN ResourceAllocProcess rap ON ra.AllocationId = rap.ResAllocID AND rap.IsActive = :isActive " +
           "GROUP BY ra.allocationId having ra.AllocationId =:id", nativeQuery = true)
   Map<String,?> findByIdWithProcesses(@Param("isActive") boolean isActive, @Param("id") long id);
 }

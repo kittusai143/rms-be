@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "resource_allocation_test")
+@Table(name = "resource_allocation")
 public class ResourceAllocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -126,7 +126,7 @@ public class ResourceAllocation {
     @Column(name = "ProjectEndDate")
     private Date projectEndDate;
 
-    @Column(name = "ResumeLink")
-    private String resumeLink;
+    @Column(name = "partner")
+    private String partner;
 
 }

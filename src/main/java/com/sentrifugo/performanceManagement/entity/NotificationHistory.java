@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "notificationHistory_test")
+@Table(name = "notificationHistory")
 public class NotificationHistory {
 
     @Id
