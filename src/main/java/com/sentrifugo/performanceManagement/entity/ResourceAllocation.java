@@ -126,5 +126,7 @@ public class ResourceAllocation {
     @Column(name = "ProjectEndDate")
     private Date projectEndDate;
 
+    @Column(name = "ResumeLink")
+    private String resumeLink;
 
 }

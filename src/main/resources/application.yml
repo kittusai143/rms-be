@@ -27,8 +27,6 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-#    username: "tejab342@gmail.com"
-#    password: "rkkt hvxq mgtf gqkc"
     username: "hrd@sagarsoft.in"
     password: "qazt vcwp ttoq gvka"
     properties:
@@ -36,7 +34,6 @@ spring:
         smtp:
           auth: true
           starttls.enable: true
-
 
 custom:
   apiKey: 2566e68e32de951520875cd5106d217e93f753ffa04c0ab12e10d2f1c07e22c0
