@@ -6,15 +6,13 @@ import com.sentrifugo.performanceManagement.repository.UsersRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.ObjectName;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
@@ -72,6 +70,19 @@ public class UserController {
 
 
     }
+
+    @GetMapping("/getManagers")
+    public ResponseEntity<?> getEmail() {
+        Date date=new Date();
+        return ResponseEntity.ok(urepo.findActiveUsersByBirthday(date));
+    }
+
+    @GetMapping("/getBothEmails")
+    public ResponseEntity<?> getAnniversary() {
+        Date date=new Date();
+        return ResponseEntity.ok(urepo.findEmployeesWithAnniversaryByDate(date));
+    }
+
 
 
 }

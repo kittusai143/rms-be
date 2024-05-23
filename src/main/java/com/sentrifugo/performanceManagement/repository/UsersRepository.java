@@ -25,12 +25,25 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     @Query("SELECT u FROM Users u WHERE u.employeeId = :employeeId")
     Users findByEmployeeId(String employeeId);
 
-    @Query("SELECT u.userFullName AS fullName, u.email AS email FROM Users u WHERE MONTH(u.dob) = MONTH(:date) AND DAY(u.dob) = DAY(:date) AND u.isActive = true")
+    @Query("SELECT u.userFullName AS fullName, u.email AS email, rm.email AS rmEmail " +
+            "FROM Employee e " +
+            "JOIN Users u ON e.user_id = u.id " +
+            "JOIN Users rm ON e.reportingManager = rm.id " +
+            "WHERE MONTH(u.dob) = MONTH(:date) " +
+            "AND DAY(u.dob) = DAY(:date) " +
+            "AND u.isActive = true")
     List<Map<String, Object>> findActiveUsersByBirthday(@Param("date") Date date);
 
-    @Query("SELECT u.userFullName AS fullname, u.email AS email, YEAR(:date) - YEAR(e.dateOfJoining) AS anniversaryYear " +
+
+    @Query("SELECT u.userFullName AS fullname, u.email AS email, rm.email AS reportingManagermail, l2m.email AS l2email, YEAR(:date) - YEAR(e.dateOfJoining) AS anniversaryYear " +
             "FROM Employee e " +
             "JOIN Users u ON e.user_id = u.Id " +
+            "JOIN Users rm ON e.reportingManager = rm.Id " +
+            "JOIN Users l2m ON e.l2Manager = l2m.Id " +
             "WHERE MONTH(e.dateOfJoining) = MONTH(:date) AND DAY(e.dateOfJoining) = DAY(:date)")
     List<Map<String, Object>> findEmployeesWithAnniversaryByDate(@Param("date") Date date);
+
+
+
+
 }

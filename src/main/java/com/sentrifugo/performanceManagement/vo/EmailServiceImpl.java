@@ -1,14 +1,9 @@
 package com.sentrifugo.performanceManagement.vo;
 
-import com.sentrifugo.performanceManagement.vo.EmailDetails;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 
 @RestController
 public class EmailServiceImpl  {
@@ -39,11 +28,17 @@ public class EmailServiceImpl  {
     @GetMapping("Sendmail")
     public String sendSimpleMail(@RequestBody EmailDetails details) {
         try {
-
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setCc("chandrasekhar.mora@sagarsoft.in");
+            ArrayList<String> ccRecipients = new ArrayList<String>();
+            ccRecipients.add("chandrasekhar.mora@sagarsoft.in");
+            ccRecipients.add(details.getRmEmail());
+            String[] ccArray = ccRecipients.toArray(new String[0]);
+
+            // Set all CC recipients at once
+            mimeMessageHelper.setCc(ccArray);
+
             // Set multiple recipients
             for (String recipient : details.getRecipient()) {
                 mimeMessageHelper.addTo(recipient);
@@ -75,7 +70,20 @@ public class EmailServiceImpl  {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setCc("chandrasekhar.mora@sagarsoft.in");
+//            mimeMessageHelper.setCc("bramhateja.kodavandlapalli@sagarsoft.in");
+//            System.out.println(details.getRmEmail());
+//            mimeMessageHelper.setCc(details.getRmEmail());
+//            mimeMessageHelper.setCc(details.getL2Email());
+
+            ArrayList<String> ccRecipients = new ArrayList<String>();
+            ccRecipients.add("chandrasekhar.mora@sagarsoft.in");
+            ccRecipients.add(details.getRmEmail());
+            ccRecipients.add(details.getL2Email());
+            String[] ccArray = ccRecipients.toArray(new String[0]);
+
+            // Set all CC recipients at once
+            mimeMessageHelper.setCc(ccArray);
+
             // Set multiple recipients
             for (String recipient : details.getRecipient()) {
                 mimeMessageHelper.addTo(recipient);
@@ -117,7 +125,6 @@ public class EmailServiceImpl  {
 //        FileSystemResource image = new FileSystemResource("C:\\Users\\user\\Downloads\\Testing\\Testing\\src\\main\\resources\\Images\\bir.png");
 //        mimeMessageHelper.addInline("logo", image);
 //    }
-
 
 
 }

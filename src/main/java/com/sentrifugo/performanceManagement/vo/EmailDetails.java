@@ -17,7 +17,9 @@ public class EmailDetails {
     private String subject;
     private String fullName;
     private Integer anniversaryYear;
+    private String rmEmail;
 
+    private  String l2Email;
     public void addRecipient(String email) {
         recipient.add(email);
     }

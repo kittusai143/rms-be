@@ -31,9 +31,9 @@ public class EventController {
     @Autowired
     UsersRepository userRepo;
 
-    @PostMapping("/store-events")
+   // @PostMapping("/store-events")
 //    @Scheduled(cron = "0 0 20 * * *") // Run every day at 8 PM
-    @Scheduled(cron = "0 30 9 * * *") // Run every day at 9:30 AM
+    @Scheduled(cron = "0 0 8 * * *") // Run every day at 9:30 AM
     public ResponseEntity<String> sendmails() {
         try {
             // Convert array to list for easier manipulation
@@ -56,17 +56,20 @@ public class EventController {
 //            anniversaryUsers.add(dummyAnniversaryUser);
 
 
-            EmailDetails details = new EmailDetails( new ArrayList<>(), "Happy Birthday", "Birthday Greetings","",0);
-            EmailDetails detail = new EmailDetails( new ArrayList<>(), "", "Anniversary Greetings","",0);
+            EmailDetails details = new EmailDetails( new ArrayList<>(), "Happy Birthday", "Birthday Greetings","",0,"","");
+            EmailDetails detail = new EmailDetails( new ArrayList<>(), "", "Anniversary Greetings","",0,"","");
 //            details.addRecipient("ewwwaintakid@gmail.com");
             for (Map<String, Object> map : birthdayUsers) {
                 String fullname=(String) map.get("fullName");
+                String rm=(String) map.get("rmEmail") ;
+
                 details.setFullName(fullname);
                 details.getRecipient().add((String) map.get("email"));
-                System.out.println(details.getRecipient().toString());
+                details.setRmEmail(rm);
                 System.out.println(email.sendSimpleMail(details));
-                System.out.println("Name: " + fullname);
+                System.out.println("BIrthday Name: " + fullname);
                 System.out.println("Email: " + map.get("email"));
+                System.out.println(rm);
             }
 //            for (Map<String,Object> map : anniversaryUsers) {
 //                for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -78,12 +81,17 @@ public class EventController {
             for ( Map<String,Object> map : anniversaryUsers) {
                 String fullname=    (String) map.get("fullname");
                 detail.setFullName(fullname);
+                String rm=(String) map.get("reportingManagermail") ;
+                String l2=(String)  map.get("l2email");
                 detail.getRecipient().add((String) map.get("email"));
                 detail.setAnniversaryYear((Integer) map.get("anniversaryYear"));
+                detail.setRmEmail(rm);
+                detail.setL2Email(l2);
                 email.sendAnniversaryMail(detail);
                 System.out.println("Anni Name: " + fullname);
                 System.out.println("Email: " + map.get("email"));
                 System.out.println("year"+map.get("anniversaryYear"));
+                System.out.println(rm+"both"+l2);
             }
             return ResponseEntity.ok("Mails Triggered");
         } catch (Exception e) {
