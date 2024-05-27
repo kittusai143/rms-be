@@ -1,3 +1,4 @@
+
 package com.sentrifugo.performanceManagement.vo;
 
 import jakarta.mail.MessagingException;
@@ -40,9 +41,9 @@ public class EmailServiceImpl  {
             mimeMessageHelper.setCc(ccArray);
 
             // Set multiple recipients
-            for (String recipient : details.getRecipient()) {
-                mimeMessageHelper.addTo(recipient);
-            }
+//            for (String recipient : details.getRecipient()) {
+            mimeMessageHelper.addTo(details.getRecipient());
+            //    }
 
             mimeMessageHelper.setSubject(details.getSubject());
 
@@ -84,10 +85,11 @@ public class EmailServiceImpl  {
             // Set all CC recipients at once
             mimeMessageHelper.setCc(ccArray);
 
+            mimeMessageHelper.addTo(details.getRecipient());
             // Set multiple recipients
-            for (String recipient : details.getRecipient()) {
-                mimeMessageHelper.addTo(recipient);
-            }
+//            for (String recipient : details.getRecipient()) {
+//                mimeMessageHelper.addTo(recipient);
+//            }
 
             mimeMessageHelper.setSubject(details.getSubject());
 

@@ -1,3 +1,4 @@
+
 package com.sentrifugo.performanceManagement.vo;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 public class EmailDetails {
 
 
-    private List<String> recipient;
+    private String recipient;
     private String msgBody;
     private String subject;
     private String fullName;
@@ -20,7 +21,5 @@ public class EmailDetails {
     private String rmEmail;
 
     private  String l2Email;
-    public void addRecipient(String email) {
-        recipient.add(email);
-    }
+
 }

@@ -36,7 +36,7 @@ public class ResourceAllocationService {
     }
 
     public List<Resources> getAllResourceAllocations() {
-        List<Object[]> result = resourceAllocationRepository.findResourcesWithActiveProcesses(true);
+        List<Object[]> result = resourceAllocationRepository.findResourcesWithActiveProcesses(true, "Active");
         List<Resources> resourcesList = new ArrayList<>();
 
         for (Object[] row : result) {
@@ -58,7 +58,7 @@ public class ResourceAllocationService {
     }
 
     public List<Resources> getAllResourceAllocations(List<String> billabilities) {
-        List<Object[]> result = resourceAllocationRepository.findResourcesWithActiveProcesses(true);
+        List<Object[]> result = resourceAllocationRepository.findResourcesWithActiveProcesses(true, "Active");
         List<Resources> resourcesList = new ArrayList<>();
 
         for (Object[] row : result) {
@@ -107,7 +107,7 @@ public class ResourceAllocationService {
     }
 
     public Resources getById(Long id){
-        Map<String, ?> result = resourceAllocationRepository.findByIdWithProcesses(true, id );
+        Map<String, ?> result = resourceAllocationRepository.findByIdWithProcesses(true, id, "Active" );
         Resources resources = new Resources();
         System.out.println(result.get("allocationId"));
         resources.setResource(resourceAllocationRepository.findById(((Number) result.get("allocationId")).longValue()).orElse(null));

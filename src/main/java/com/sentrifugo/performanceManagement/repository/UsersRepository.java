@@ -40,8 +40,10 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
             "JOIN Users u ON e.user_id = u.Id " +
             "JOIN Users rm ON e.reportingManager = rm.Id " +
             "JOIN Users l2m ON e.l2Manager = l2m.Id " +
-            "WHERE MONTH(e.dateOfJoining) = MONTH(:date) AND DAY(e.dateOfJoining) = DAY(:date)")
+            "WHERE MONTH(e.dateOfJoining) = MONTH(:date) AND DAY(e.dateOfJoining) = DAY(:date)" +
+            "AND e.isActive = true" )
     List<Map<String, Object>> findEmployeesWithAnniversaryByDate(@Param("date") Date date);
+
 
 
 
