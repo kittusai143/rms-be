@@ -1,26 +1,20 @@
 package com.sentrifugo.performanceManagement.controller;
 
-import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
-import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
+
 import com.sentrifugo.performanceManagement.repository.ResourceAllocationRepository;
 import com.sentrifugo.performanceManagement.service.ResourceAllocationService;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
 import com.sentrifugo.performanceManagement.vo.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
@@ -37,7 +31,6 @@ public class ResourceAllocationController {
     public List<Resources> getAllResourceAllocation() {
         return resourceAllocationService.getAllResourceAllocations();
     }
-
 
     @GetMapping("/byId/{id}")
     public Resources getById(@PathVariable Integer id) {
@@ -57,18 +50,20 @@ public class ResourceAllocationController {
     @GetMapping("/filter")
     public List<Resources> filterResourceAllocations(@RequestParam(required = false) List<String> locations,
                                                      @RequestParam(required = false) List<String> skills,
-                                                     @RequestParam(required = false) List<String> billabilities,
-                                                     @RequestParam(required = false) List<String> techgroups,
+                                                     @RequestParam(required = false) List<String> availability,
+                                                     @RequestParam(required = false) List<String> techGroups,
                                                      @RequestParam(required = false) List<String> roles,
                                                      @RequestParam(required = false) List<String> domain,
+                                                     @RequestParam(required = false) Integer availForeCastWeeks,
                                                      @RequestParam(required = false) List<Integer> yearsOfExp) {
         ResourceAllocFilters filterRequest = new ResourceAllocFilters();
-        filterRequest.setBillabilities(billabilities);
+        filterRequest.setAvailability(availability);
         filterRequest.setLocations(locations);
         filterRequest.setSkills(skills);
         filterRequest.setRoles(roles);
-        filterRequest.setTechgroups(techgroups);
+        filterRequest.setTechGroups(techGroups);
         filterRequest.setDomain(domain);
+        filterRequest.setAvailForeCastWeeks(availForeCastWeeks);
         filterRequest.setYearsOfExp(yearsOfExp);
         return resourceAllocationService.filterResourceAllocations(filterRequest);
     }
@@ -77,6 +72,7 @@ public class ResourceAllocationController {
     public List<Resources> filterResourceAllocations(@RequestBody ResourceAllocFilters filterRequest) {
         return resourceAllocationService.filterResourceAllocations(filterRequest);
     }
+
     public static Date convertStringToDate(String dateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yy");
         LocalDate startdate = LocalDate.parse(dateString, formatter);

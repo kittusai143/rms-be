@@ -5,6 +5,8 @@ import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,33 +32,36 @@ public class ResourceAllocSpecification {
                 // Add an AND condition to ensure all skills are present
                 predicates.add(criteriaBuilder.and(skillPredicates.toArray(new Predicate[0])));
 
-//                List<Predicate> skillPredicates = new ArrayList<>();
-//                for (String skill : filters.getSkills()) {
-//                    skillPredicates.add(criteriaBuilder.like(root.get("skillset1"), "%" + skill + "%"));
-//                    skillPredicates.add(criteriaBuilder.like(root.get("skillset2"), "%" + skill + "%"));
-//                }
-//                predicates.add(criteriaBuilder.or(skillPredicates.toArray(new Predicate[0])));
             }
-
-            if (filters.getBillabilities() != null && !filters.getBillabilities().isEmpty() ) {
-                if(filters.getBillabilities().contains("Available") && filters.getBillabilities().contains("Allocated")){
-                    System.out.println();
-                }else if (!filters.getBillabilities().contains("Available") && filters.getBillabilities().contains("Allocated")){
-                    predicates.add(root.get("allocationStatus").in(filters.getBillabilities()));
-                }else {
+            if (filters.getAvailability() != null && !filters.getAvailability().isEmpty()) {
+                if (filters.getAvailability().contains("Available") && filters.getAvailability().contains("Allocated")) {
+                    // No additional filter needed if both statuses are considered
+                } else if (!filters.getAvailability().contains("Available") && filters.getAvailability().contains("Allocated")) {
+                    if (filters.getAvailForeCastWeeks() != null) {
+                        int weeks = filters.getAvailForeCastWeeks();
+                        LocalDate currentDate = LocalDate.now();
+                        LocalDate endDate = currentDate.plusWeeks(weeks);
+                        predicates.add(criteriaBuilder.and(
+                                criteriaBuilder.equal(root.get("allocationStatus"), "Allocated"),
+                                criteriaBuilder.between(root.get("projectEndDate"), Date.valueOf(currentDate), Date.valueOf(endDate))
+                        ));
+                    } else {
+                        predicates.add(criteriaBuilder.equal(root.get("allocationStatus"), "Allocated"));
+                    }
+                } else {
                     predicates.add(criteriaBuilder.or(
                             criteriaBuilder.notEqual(root.get("allocationStatus"), "Allocated"),
                             criteriaBuilder.isNull(root.get("allocationStatus"))
                     ));
                 }
-            }else{
+            } else {
                 predicates.add(criteriaBuilder.or(
                         criteriaBuilder.notEqual(root.get("allocationStatus"), "Allocated"),
                         criteriaBuilder.isNull(root.get("allocationStatus"))
                 ));
             }
-            if (filters.getTechgroups() != null && !filters.getTechgroups().isEmpty()) {
-                predicates.add(root.get("technologydivision").in(filters.getTechgroups()));
+            if (filters.getTechGroups() != null && !filters.getTechGroups().isEmpty()) {
+                predicates.add(root.get("technologydivision").in(filters.getTechGroups()));
             }
             if (filters.getRoles() != null && !filters.getRoles().isEmpty()) {
                 predicates.add(root.get("role").in(filters.getRoles()));

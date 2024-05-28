@@ -36,7 +36,7 @@ public class SetData {
             ResourceAllocFilters filters = new ResourceAllocFilters();
             List<String> status = new ArrayList<>();
             status.add("Allocated");
-            filters.setBillabilities(status);
+            filters.setAvailability(status);
             List<Resources> resources = resourceAllocationService.filterResourceAllocations(filters);
             for(Resources resource: resources){
 
