@@ -1,7 +1,9 @@
 package com.sentrifugo.performanceManagement.controller;
 
+import com.sentrifugo.performanceManagement.entity.NotificationHistory;
 import com.sentrifugo.performanceManagement.entity.ProjectAllocation;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
+import com.sentrifugo.performanceManagement.repository.NotificationHistoryRepository;
 import com.sentrifugo.performanceManagement.repository.ProjectAllocationRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocationRepository;
@@ -27,6 +29,8 @@ public class SetData {
     private ResourceAllocProcessRepository resourceAllocProcessRepository;
     @Autowired
     private ResourceAllocationService resourceAllocationService;
+    @Autowired
+    private NotificationHistoryRepository notificationHistoryRepository;
 
     @Autowired
     private ProjectAllocationRepository projectAllocationRepository;
@@ -69,6 +73,14 @@ public class SetData {
                     projectAllocation.setCreatedDate(new Date(System.currentTimeMillis()));
 
                     projectAllocationRepository.save(projectAllocation);
+
+                    NotificationHistory notificationHistory = new NotificationHistory();
+                    notificationHistory.setSilId(resource.getResource().getSilId());
+                    notificationHistory.setResAllocId(resource.getResource().getAllocationId().longValue());
+                    notificationHistory.setCreatedBy("01");
+                    notificationHistory.setCreatedDate(new Date(System.currentTimeMillis()));
+                    notificationHistory.setComment("Allocated");
+                    notificationHistoryRepository.save(notificationHistory);
 
                 }
             }
