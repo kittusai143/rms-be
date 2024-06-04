@@ -9,6 +9,7 @@ import com.sentrifugo.performanceManagement.vo.ResourceAllocSpecification;
 import com.sentrifugo.performanceManagement.vo.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -132,6 +133,16 @@ public class ResourceAllocationService {
 
     public void addResourceAllocation(ResourceAllocation resourceAllocation) {
         resourceAllocationRepository.save(resourceAllocation);
+    }
+
+    public ResponseEntity<?> updateStatus(Long id, Map<String,?> requestBody) {
+        ResourceAllocation resourceAllocation = resourceAllocationRepository.findById(id).orElse(null);
+        if(resourceAllocation != null){
+            resourceAllocation.setStatus((String) requestBody.get("status"));
+            return ResponseEntity.ok().body(resourceAllocationRepository.save(resourceAllocation));
+        }else {
+            return ResponseEntity.badRequest().body("Incorrect Resource ID");
+        }
     }
 
 }

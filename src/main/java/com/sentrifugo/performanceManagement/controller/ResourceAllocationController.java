@@ -6,6 +6,7 @@ import com.sentrifugo.performanceManagement.service.ResourceAllocationService;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
 import com.sentrifugo.performanceManagement.vo.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -71,6 +73,11 @@ public class ResourceAllocationController {
     @PostMapping("/filter")
     public List<Resources> filterResourceAllocations(@RequestBody ResourceAllocFilters filterRequest) {
         return resourceAllocationService.filterResourceAllocations(filterRequest);
+    }
+
+    @PutMapping("/updateStatus/{id}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestBody Map<String, ?> requestBody){
+        return resourceAllocationService.updateStatus(id, requestBody);
     }
 
     public static Date convertStringToDate(String dateString) {
