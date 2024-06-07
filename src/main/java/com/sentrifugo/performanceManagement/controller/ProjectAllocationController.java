@@ -3,6 +3,7 @@ package com.sentrifugo.performanceManagement.controller;
 import com.sentrifugo.performanceManagement.entity.ProjectAllocation;
 import com.sentrifugo.performanceManagement.repository.ProjectAllocationRepository;
 import com.sentrifugo.performanceManagement.service.ProjectAllocationService;
+import com.sentrifugo.performanceManagement.service.ResourceAllocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ public class ProjectAllocationController {
     private ProjectAllocationService projectAllocationService;
     @Autowired
     private ProjectAllocationRepository projectAllocationRepository;
+    @Autowired
+    private ResourceAllocationService resourceAllocationService;
 
     @GetMapping("getAll")
     public List<ProjectAllocation> getAllProjectAllocations(){
@@ -33,23 +36,25 @@ public class ProjectAllocationController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createProjectAllocation(@RequestBody Map<String, ?> request){
+    public ResponseEntity<?> createProjectAllocation(@RequestBody List<Map<String, ?>> requestBody){
+
         try{
-            ProjectAllocation projectAllocation = new ProjectAllocation();
-            projectAllocation.setResAllocId( ((Integer) request.get("resAllocId")).longValue() );
-            projectAllocation.setProjectCode( (String) request.get("projectCode"));
-            if((String) request.get("startDate")!=null && (String) request.get("endDate") !=null){
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T");
-                Date startDate = sdf.parse((String) request.get("startDate"));
-                Date endDate = sdf.parse((String) request.get("endDate"));
-                    projectAllocation.setStartDate(startDate);
-                   projectAllocation.setEndDate(endDate);
+            for (Map<String, ?> request: requestBody ){
+                ProjectAllocation projectAllocation = new ProjectAllocation();
+                projectAllocation.setResAllocId( resourceAllocationService.getBySilId( (String) request.get("SIL-ID") ).getAllocationId() .longValue() );
+                projectAllocation.setProjectCode( (String) request.get("ProjectCode"));
+                if((String) request.get("ProjectStartDate")!=null){
+                    projectAllocation.setStartDate(ResourceAllocationController.convertStringToDate((String) request.get("ProjectStartDate")));
+                }
+                if((String) request.get("ProjectEndDate") !=null){
+                    projectAllocation.setEndDate(ResourceAllocationController.convertStringToDate((String) request.get("ProjectEndDate")));
+                }
+                projectAllocation.setCreatedBy("check");
+                projectAllocation.setCreatedDate(new Date(System.currentTimeMillis()));
+                projectAllocation.setActive(false);
+                ProjectAllocation saved = projectAllocationService.createProjectAllocation(projectAllocation);
             }
-            projectAllocation.setCreatedBy((String) request.get("createdBy"));
-            projectAllocation.setCreatedDate(new Date(System.currentTimeMillis()));
-            projectAllocation.setActive(true);
-            ProjectAllocation saved = projectAllocationService.createProjectAllocation(projectAllocation);
-            return ResponseEntity.ok(saved);
+            return ResponseEntity.ok("saved");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to allocate project: " + e.getMessage());
         }

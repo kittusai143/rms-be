@@ -1,7 +1,9 @@
 package com.sentrifugo.performanceManagement.service;
 
+import com.sentrifugo.performanceManagement.entity.ProjectAllocation;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocProcess;
 import com.sentrifugo.performanceManagement.entity.ResourceAllocation;
+import com.sentrifugo.performanceManagement.repository.ProjectAllocationRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepository;
 import com.sentrifugo.performanceManagement.repository.ResourceAllocationRepository;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
@@ -12,6 +14,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -21,6 +25,9 @@ public class ResourceAllocationService {
     public ResourceAllocationRepository resourceAllocationRepository;
     @Autowired
     public ResourceAllocProcessRepository resourceAllocProcessRepository;
+    @Autowired
+    public ProjectAllocationRepository projectAllocationRepository;
+
     public List<Resources> filterResourceAllocations(ResourceAllocFilters criteria) {
         Specification<ResourceAllocation> spec = ResourceAllocSpecification.filterResourceAllocations(criteria);
         List<ResourceAllocation> resource = resourceAllocationRepository.findAll(spec);
@@ -143,6 +150,53 @@ public class ResourceAllocationService {
         }else {
             return ResponseEntity.badRequest().body("Incorrect Resource ID");
         }
+    }
+
+    public ResourceAllocation getBySilId(String silId){
+        return resourceAllocationRepository.findBySilId(silId);
+    }
+
+    public Map<String, Long> getBenchCountByMonth() {
+        Map<String, Long> benchCountMap = new LinkedHashMap<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -11); // Start from 11 months ago
+
+        for (int i = 0; i < 12; i++) {
+            Date startDate = getFirstDayOfMonth(calendar.getTime());
+            Date endDate = getLastDayOfMonth(calendar.getTime());
+
+            List<ProjectAllocation> projectAllocations = projectAllocationRepository.findAllocationsForMonth( endDate);
+
+            // Calculate bench count for the month
+            long totalResources = resourceAllocationRepository.findAll().stream().count();
+            long allocatedResources = projectAllocations.size();
+            long benchCount = totalResources - allocatedResources;
+//            System.out.println(totalResources+ " "+allocatedResources+ " "+benchCount);
+            String monthYearKey = dateFormat.format(startDate);
+            benchCountMap.put(monthYearKey, benchCount);
+//            System.out.println(benchCountMap);
+            calendar.add(Calendar.MONTH, 1); // Move to next month
+        }
+
+        return benchCountMap;
+    }
+
+    // Method to get the first day of a month
+    private Date getFirstDayOfMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return calendar.getTime();
+    }
+
+    // Method to get the last day of a month
+    private Date getLastDayOfMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return calendar.getTime();
     }
 
 }

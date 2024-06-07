@@ -195,11 +195,15 @@ public class ResourceAllocProcessService {
                 Optional<ResourceAllocProcess> resourceAllocProcess=resourceAllocProcessRepository.findById(updated.getId());
                 if (resourceAllocProcess.isPresent()) {
                     ResourceAllocProcess allocations = optionalAllocation.get();
+                    allocations.setUpdatedBy(updated.getUpdatedBy());
+                    allocations.setUpdatedDate(new Date(System.currentTimeMillis()));
                     allocations.setActive(false);
                 }
+
                 ProjectAllocation projectAllocation = projectAllocationService.findByProcessId(updated.getId());
-                projectAllocation.setCreatedBy(updated.getUpdatedBy());
-                projectAllocation.setCreatedDate(updated.getUpdatedDate());
+                projectAllocation.setEndDate(new Date(System.currentTimeMillis()));
+                projectAllocation.setUpdatedBy(updated.getUpdatedBy());
+                projectAllocation.setUpdatedDate(updated.getUpdatedDate());
                 projectAllocation.setActive(false);
                 projectAllocationService.updateProjectAllocation(projectAllocation);
 

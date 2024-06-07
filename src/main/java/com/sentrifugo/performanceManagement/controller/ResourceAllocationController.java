@@ -49,6 +49,11 @@ public class ResourceAllocationController {
         return resourceAllocationService.getDistinctRoles();
     }
 
+    @GetMapping("/bench-resources-count")
+    public Map<String, Long> getBenchResourcesMonthlyCount() {
+        return resourceAllocationService.getBenchCountByMonth();
+    }
+
     @GetMapping("/filter")
     public List<Resources> filterResourceAllocations(@RequestParam(required = false) List<String> locations,
                                                      @RequestParam(required = false) List<String> skills,

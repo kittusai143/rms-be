@@ -41,4 +41,8 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
           "WHERE ra.Status != :status "+
           "GROUP BY ra.allocationId having ra.AllocationId =:id", nativeQuery = true)
   Map<String,?> findByIdWithProcesses(@Param("isActive") boolean isActive, @Param("id") long id, @Param("status") String status);
+
+  @Query("SELECT r FROM ResourceAllocation r WHERE r.silId =:silId")
+  ResourceAllocation findBySilId(String silId);
+
 }
