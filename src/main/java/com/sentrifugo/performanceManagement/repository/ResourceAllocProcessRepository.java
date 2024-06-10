@@ -13,8 +13,8 @@ public interface ResourceAllocProcessRepository extends JpaRepository<ResourceAl
     @Query( value = "SELECT rap.* ,createdUser.name AS createdByName, updatedUser.name AS updatedByName, " +
             "ra.silId AS ResEID, ra.name AS ResourceName, pd.ProjectName, pd.ClientName  " +
             "        FROM ResourceAllocProcess rap " +
-            "        JOIN resource_allocation ra  ON rap.resAllocId = ra.allocationId" +
-            "        JOIN users  createdUser ON rap.createdBy = createdUser.employeeId " +
+            "        LEFT JOIN resource_allocation ra  ON rap.resAllocId = ra.allocationId" +
+            "        LEFT JOIN users  createdUser ON rap.createdBy = createdUser.employeeId " +
             "        LEFT JOIN users  updatedUser ON rap.updatedBy = updatedUser.employeeId " +
             "        LEFT JOIN project_data pd on rap.ProjectCode =pd.ProjectCode " +
             "        WHERE rap.isActive = :b", nativeQuery = true )
