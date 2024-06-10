@@ -158,7 +158,7 @@ public class ResourceAllocationService {
 
     public Map<String, Long> getBenchCountByMonth() {
         Map<String, Long> benchCountMap = new LinkedHashMap<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMM");
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -11); // Start from 11 months ago

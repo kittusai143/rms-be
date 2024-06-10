@@ -126,7 +126,7 @@ public class ResourceAllocation {
     @Column(name = "ProjectEndDate")
     private Date projectEndDate;
 
-    @Column(name = "partner")
-    private String partner;
+    @Column(name = "Subsidiary")
+    private String subsidiary;
 
 }

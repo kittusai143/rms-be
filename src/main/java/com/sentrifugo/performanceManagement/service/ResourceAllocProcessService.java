@@ -70,6 +70,7 @@ public class ResourceAllocProcessService {
         Optional<ResourceAllocProcess> optionalAllocation = resourceAllocProcessRepository.findById(id);
         java.util.Date startDate;
         java.util.Date endDate;
+        java.util.Date extendedDate;
         if (optionalAllocation.isPresent()) {
             ResourceAllocProcess allocation = optionalAllocation.get();
             if(((String) requestBody.get("processStatus")).equals("SoftBlock Requested") || ((String) requestBody.get("processStatus")).equals("SoftBlocked")){
@@ -111,23 +112,16 @@ public class ResourceAllocProcessService {
                 allocation.setFeedback( (String) requestBody.get("feedback"));
             }
             if((String) requestBody.get("startDate")!=null && (String) requestBody.get("endDate") !=null){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate startdate = LocalDate.parse((String) requestBody.get("startDate"), formatter);
-                LocalDate enddate = LocalDate.parse((String) requestBody.get("endDate"), formatter);
-
-                ZoneId utcZone = ZoneId.of("UTC");
-                ZonedDateTime startDateZoned = startdate.atStartOfDay(utcZone);
-                ZonedDateTime endDateZoned = enddate.atStartOfDay(utcZone);
-
-                startDate = Date.from(startDateZoned.toInstant());
-                endDate = Date.from(endDateZoned.toInstant());
                 if(allocation.getSBstartDate()!=null && allocation.getSBendDate()!=null && allocation.getProcessStatus().equals("Allocation Requested")){
-                    allocation.setAllocStartDate(startDate);
-                    allocation.setAllocEndDate(endDate);
+                    allocation.setAllocStartDate(convertTODate((String) requestBody.get("startDate")));
+                    allocation.setAllocEndDate(convertTODate((String) requestBody.get("endDate")));
                 }else{
-                    allocation.setSBstartDate(startDate);
-                    allocation.setSBendDate(endDate);
+                    allocation.setSBstartDate(convertTODate((String) requestBody.get("startDate")));
+                    allocation.setSBendDate(convertTODate((String) requestBody.get("endDate")));
                 }
+            }
+            if((String) requestBody.get("extendedDate")!=null){
+                allocation.setExtendedDate(convertTODate((String) requestBody.get("extendedDate")));
             }
             ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
             
@@ -149,47 +143,60 @@ public class ResourceAllocProcessService {
             }
 
             if(Objects.equals(updated.getProcessStatus(), "Allocated")){
-                ProjectAllocation projectAllocation = new ProjectAllocation();
-                projectAllocation.setAllocProcessId(updated.getId());
-                projectAllocation.setResAllocId(updated.getResAllocId());
-                projectAllocation.setProjectCode(updated.getProjectCode());
-                projectAllocation.setCreatedBy(updated.getUpdatedBy());
-                projectAllocation.setCreatedDate(updated.getUpdatedDate());
-                projectAllocation.setStartDate(updated.getAllocStartDate());
-                projectAllocation.setEndDate(updated.getAllocEndDate());
-                projectAllocation.setActive(true);
+                if(updated.getExtendedDate()==null ){
+                    ProjectAllocation projectAllocation = new ProjectAllocation();
+                    projectAllocation.setAllocProcessId(updated.getId());
+                    projectAllocation.setResAllocId(updated.getResAllocId());
+                    projectAllocation.setProjectCode(updated.getProjectCode());
+                    projectAllocation.setCreatedBy(updated.getUpdatedBy());
+                    projectAllocation.setCreatedDate(updated.getUpdatedDate());
+                    projectAllocation.setStartDate(updated.getAllocStartDate());
+                    projectAllocation.setEndDate(updated.getAllocEndDate());
+                    projectAllocation.setActive(true);
 
-                //Check if resource is in any other projects in project allocation table
-                List<ProjectAllocation> projectAllocations = projectAllocationService.getByResourceAllocationId(updated.getResAllocId());
-                if(projectAllocations.isEmpty()){
-                    Projects project = projectsService.getProjectById(updated.getProjectId());
-                    ResourceAllocation resourceAllocation = resourceAllocationService.getById(updated.getResAllocId()).getResource();
-                    resourceAllocation.setAllocationStatus("Allocated");
-                    resourceAllocation.setClientCode(project.getClientCode());
-                    resourceAllocation.setProjectCode(project.getProjectCode());
-                    resourceAllocation.setProjectEndDate(updated.getAllocEndDate());
-                    resourceAllocation.setProjectstartDate(updated.getAllocStartDate());
-                    resourceAllocation.setProjectType(project.getTypeOfProject());
-                    resourceAllocation.setProjectName(project.getProjectName());
-                    resourceAllocation.setBillability(updated.getBillability());
+                    //Check if resource is in any other projects in project allocation table
+                    List<ProjectAllocation> projectAllocations = projectAllocationService.getByResourceAllocationId(updated.getResAllocId());
+                    if(projectAllocations.isEmpty()){
+                        Projects project = projectsService.getProjectById(updated.getProjectId());
+                        ResourceAllocation resourceAllocation = resourceAllocationService.getById(updated.getResAllocId()).getResource();
+                        resourceAllocation.setAllocationStatus("Allocated");
+                        resourceAllocation.setClientCode(project.getClientCode());
+                        resourceAllocation.setProjectCode(project.getProjectCode());
+                        resourceAllocation.setProjectEndDate(updated.getAllocEndDate());
+                        resourceAllocation.setProjectstartDate(updated.getAllocStartDate());
+                        resourceAllocation.setProjectType(project.getTypeOfProject());
+                        resourceAllocation.setProjectName(project.getProjectName());
+                        resourceAllocation.setBillability(updated.getBillability());
 //                  resourceAllocation.setClientTimesheetAccess(.....);
 //                  resourceAllocation.setPartnerEmailID(.....);
 //                  resourceAllocation.setClientEmailID(........);
+                        resourceAllocationRepository.save(resourceAllocation);
+                    }
+                    projectAllocationService.createProjectAllocation(projectAllocation);
+
+                    // Inactive the existing processes on allocating the resource
+                    List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByResourceAllocationIdAndIsActive(updated.getResAllocId(), true);
+                    for(ResourceAllocProcess process:processes){
+                        if(process.getId().equals(updated.getId())){
+                            continue;
+                        }
+                        process.setActive(false);
+                        process.setUpdatedBy(updated.getUpdatedBy());
+                        process.setUpdatedDate(new Date(System.currentTimeMillis()));
+                        resourceAllocProcessRepository.save(process);
+                    }
+                }else {
+                    ProjectAllocation projectAllocation = projectAllocationRepository.findByAllocProcessId(updated.getId());
+                    projectAllocation.setEndDate(updated.getExtendedDate());
+                    projectAllocation.setUpdatedBy(updated.getUpdatedBy());
+                    projectAllocation.setUpdatedDate(updated.getUpdatedDate());
+                    projectAllocationRepository.save(projectAllocation);
+
+                    ResourceAllocation resourceAllocation = resourceAllocationService.getById(updated.getResAllocId()).getResource();
+                    resourceAllocation.setProjectEndDate(updated.getExtendedDate());
                     resourceAllocationRepository.save(resourceAllocation);
                 }
-                projectAllocationService.createProjectAllocation(projectAllocation);
 
-                // Inactive the existing processes on allocating the resource
-                List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByResourceAllocationIdAndIsActive(updated.getResAllocId(), true);
-                for(ResourceAllocProcess process:processes){
-                    if(process.getId().equals(updated.getId())){
-                        continue;
-                    }
-                    process.setActive(false);
-                    process.setUpdatedBy(updated.getUpdatedBy());
-                    process.setUpdatedDate(new Date(System.currentTimeMillis()));
-                    resourceAllocProcessRepository.save(process);
-                }
             }
             if(Objects.equals(updated.getProcessStatus(), "Deallocated")){
                 Optional<ResourceAllocProcess> resourceAllocProcess=resourceAllocProcessRepository.findById(updated.getId());
@@ -224,7 +231,21 @@ public class ResourceAllocProcessService {
             notification.setResAllocId( updated.getResAllocId());
             notification.setCreatedBy( updated.getUpdatedBy() );
             notification.setCreatedDate(new java.util.Date(System.currentTimeMillis()));
-            notification.setComment(updated.getProcessStatus());
+            switch (updated.getProcessStatus()) {
+                case "SoftBlock Requested" -> notification.setComment(updated.getProcessStatus() + " for requirement Id " + updated.getRequirementID());
+                case "SoftBlocked" -> notification.setComment("SoftBlock approved");
+                case "Allocation Requested" -> notification.setComment(updated.getProcessStatus() + " for project - " + projectsService.getProjectById(updated.getProjectId()).getProjectName());
+                case "Allocated" -> {
+                    if (updated.getExtendedDate() != null) {
+                        notification.setComment("Allocation extended till " + updated.getExtendedDate());
+                    } else {
+                        notification.setComment("Allocation approved");
+                    }
+                }
+                case "Allocation Extension Requested" -> notification.setComment(updated.getProcessStatus() + " till " + updated.getExtendedDate());
+                case "De-Allocation Requested" -> notification.setComment(updated.getProcessStatus() + " for " + updated.getDeAllocReason());
+                case "Deallocated" -> notification.setComment("De-allocation approved");
+            }
             notificationHistoryRepository.save(notification);
             return ResponseEntity.ok().body(updated);
         } else {
@@ -248,6 +269,15 @@ public class ResourceAllocProcessService {
         resourceAllocProcessRepository.deleteById(id);
     }
 
+    public java.util.Date convertTODate(String givenDate){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(givenDate, formatter);
+
+        ZoneId utcZone = ZoneId.of("UTC");
+        ZonedDateTime extendedDateZoned = date.atStartOfDay(utcZone);
+
+        return Date.from(extendedDateZoned.toInstant());
+    }
 
     public void markProcessAsRead(Long id, String role) {
         ResourceAllocProcess process = resourceAllocProcessRepository.findById(id).get();

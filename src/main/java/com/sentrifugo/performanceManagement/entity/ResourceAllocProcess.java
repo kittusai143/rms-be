@@ -81,5 +81,7 @@ public class ResourceAllocProcess {
     @Column(name = "Billability")
     private String billability;
 
+    @Column(name = "ExtendedDate")
+    private Date extendedDate;
 
 }

@@ -71,7 +71,6 @@ public class SetData {
                     projectAllocation.setAllocProcessId(createdprocess.getId());
                     projectAllocation.setCreatedBy("01");
                     projectAllocation.setCreatedDate(new Date(System.currentTimeMillis()));
-
                     projectAllocationRepository.save(projectAllocation);
 
                     NotificationHistory notificationHistory = new NotificationHistory();
@@ -81,7 +80,6 @@ public class SetData {
                     notificationHistory.setCreatedDate(new Date(System.currentTimeMillis()));
                     notificationHistory.setComment("Allocated");
                     notificationHistoryRepository.save(notificationHistory);
-
                 }
             }
             return ResponseEntity.ok().body("DONE");
