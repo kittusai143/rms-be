@@ -48,7 +48,7 @@ public class ProjectAllocationController {
                 if((String) request.get("ProjectEndDate") !=null){
                     projectAllocation.setEndDate(ResourceAllocationController.convertStringToDate((String) request.get("ProjectEndDate")));
                 }
-                projectAllocation.setCreatedBy("check");
+                projectAllocation.setCreatedBy("SIL-01");
                 projectAllocation.setCreatedDate(new Date(System.currentTimeMillis()));
                 projectAllocation.setActive(false);
                 ProjectAllocation saved = projectAllocationService.createProjectAllocation(projectAllocation);

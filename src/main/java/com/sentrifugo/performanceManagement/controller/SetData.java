@@ -54,7 +54,7 @@ public class SetData {
                     process.setAllocStartDate(resource.getResource().getProjectstartDate());
                     process.setAllocEndDate(resource.getResource().getProjectEndDate());
                     process.setBillability(resource.getResource().getBillability());
-                    process.setCreatedBy("01");
+                    process.setCreatedBy("SIL-01");
                     process.setCreatedDate(new Date(System.currentTimeMillis()));
                     process.setActive(true);
                     process.setRmReadStatus(true);
@@ -69,14 +69,14 @@ public class SetData {
                     projectAllocation.setStartDate(resource.getResource().getProjectstartDate());
                     projectAllocation.setEndDate(resource.getResource().getProjectEndDate());
                     projectAllocation.setAllocProcessId(createdprocess.getId());
-                    projectAllocation.setCreatedBy("01");
+                    projectAllocation.setCreatedBy("SIL-01");
                     projectAllocation.setCreatedDate(new Date(System.currentTimeMillis()));
                     projectAllocationRepository.save(projectAllocation);
 
                     NotificationHistory notificationHistory = new NotificationHistory();
                     notificationHistory.setSilId(resource.getResource().getSilId());
                     notificationHistory.setResAllocId(resource.getResource().getAllocationId().longValue());
-                    notificationHistory.setCreatedBy("01");
+                    notificationHistory.setCreatedBy("SIL-01");
                     notificationHistory.setCreatedDate(new Date(System.currentTimeMillis()));
                     notificationHistory.setComment("Allocated");
                     notificationHistoryRepository.save(notificationHistory);
