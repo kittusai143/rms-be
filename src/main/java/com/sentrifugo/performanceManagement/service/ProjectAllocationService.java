@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -40,7 +41,7 @@ public class ProjectAllocationService {
         return projectAllocationRepository.findByResourceAllocId(resAllocId, true);
     }
 
-    public List<ProjectAllocation> getAllProjectAllocationsBYResAllocID(Long id) {
+    public List<Map<String ,?>> getAllProjectAllocationsBYResAllocID(Long id) {
         return projectAllocationRepository.findAllBYResAllocID(id);
     }
 }

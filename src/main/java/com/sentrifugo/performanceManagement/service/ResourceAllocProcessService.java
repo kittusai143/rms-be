@@ -237,13 +237,13 @@ public class ResourceAllocProcessService {
                 case "Allocation Requested" -> notification.setComment(updated.getProcessStatus() + " for project - " + projectsService.getProjectById(updated.getProjectId()).getProjectName());
                 case "Allocated" -> {
                     if (updated.getExtendedDate() != null) {
-                        notification.setComment("Allocation extended till " + updated.getExtendedDate());
+                        notification.setComment("Allocation extended till " + updated.getExtendedDate().toString().substring(0,10));
                     } else {
                         notification.setComment("Allocation approved");
                     }
                 }
                 case "Allocation Extension Requested" -> notification.setComment(updated.getProcessStatus() + " till " + updated.getExtendedDate());
-                case "De-Allocation Requested" -> notification.setComment(updated.getProcessStatus() + " for " + updated.getDeAllocReason());
+                case "De-Allocation Requested" -> notification.setComment(updated.getProcessStatus() + " (Reason: " + updated.getDeAllocReason()+" )");
                 case "Deallocated" -> notification.setComment("De-allocation approved");
             }
             notificationHistoryRepository.save(notification);

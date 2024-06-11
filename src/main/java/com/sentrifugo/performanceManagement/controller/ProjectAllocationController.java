@@ -30,7 +30,7 @@ public class ProjectAllocationController {
         return projectAllocationService.getAllProjectAllocations();
     }
     @GetMapping("getAllByResID/{id}")
-    public List<ProjectAllocation> getAllProjectAllocationsBYResAllocID(@PathVariable Long id){
+    public List<Map<String ,?>> getAllProjectAllocationsBYResAllocID(@PathVariable Long id){
         return projectAllocationService.getAllProjectAllocationsBYResAllocID(id);
     }
 

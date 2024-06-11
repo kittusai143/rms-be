@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface ProjectAllocationRepository extends JpaRepository<ProjectAllocation,Long> {
@@ -16,8 +17,9 @@ public interface ProjectAllocationRepository extends JpaRepository<ProjectAlloca
 
     @Query("Select pa from ProjectAllocation pa where pa.resAllocId = :resAllocId And pa.isActive =:b")
     List<ProjectAllocation> findByResourceAllocId(Long resAllocId, boolean b);
-    @Query("Select pa from ProjectAllocation pa where pa.resAllocId = :resAllocId")
-    List<ProjectAllocation> findAllBYResAllocID(Long resAllocId);
+
+    @Query(value = "Select pa.*,p.ProjectName from ProjectAllocation pa Left join project_data p ON pa.ProjectCode=p.ProjectCode where pa.resAllocId = :resAllocId", nativeQuery = true)
+    List<Map<String,?>> findAllBYResAllocID(Long resAllocId);
 
     @Query(value ="SELECT pa.* FROM ProjectAllocation pa WHERE :endDate  BETWEEN pa.startdate AND pa.enddate;",nativeQuery = true)
     List<ProjectAllocation> findAllocationsForMonth(@Param("endDate") Date endDate);
