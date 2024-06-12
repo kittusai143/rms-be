@@ -185,7 +185,7 @@ public class ResourceAllocProcessService {
                         process.setUpdatedDate(new Date(System.currentTimeMillis()));
                         resourceAllocProcessRepository.save(process);
                     }
-                }else if(requestBody.get("message")!="Extension Rejected"){
+                }else if(requestBody.get("message")==null || !requestBody.get("message").equals("Extension Rejected")){
                     ProjectAllocation projectAllocation = projectAllocationRepository.findByAllocProcessId(updated.getId());
                     projectAllocation.setEndDate(updated.getExtendedDate());
                     projectAllocation.setUpdatedBy(updated.getUpdatedBy());
