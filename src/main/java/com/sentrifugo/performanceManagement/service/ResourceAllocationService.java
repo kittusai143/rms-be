@@ -8,6 +8,7 @@ import com.sentrifugo.performanceManagement.repository.ResourceAllocProcessRepos
 import com.sentrifugo.performanceManagement.repository.ResourceAllocationRepository;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocFilters;
 import com.sentrifugo.performanceManagement.vo.ResourceAllocSpecification;
+import com.sentrifugo.performanceManagement.vo.ResourceAllocationDTO;
 import com.sentrifugo.performanceManagement.vo.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,6 +17,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -198,5 +200,178 @@ public class ResourceAllocationService {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         return calendar.getTime();
     }
+    public Object add(ResourceAllocation resourceAllocation) {
+        return  resourceAllocationRepository.save(resourceAllocation);
+    }
+
+    public Map<String,Long> getCounts()
+    {
+        Long a= resourceAllocationRepository.getBillable();
+        Long b= resourceAllocationRepository.getNonBillable();
+        Long c=resourceAllocationRepository.getOffSite();
+        Long d= resourceAllocationRepository.getOnSite();
+        Long e= resourceAllocationRepository.getFTE();
+        Long f= resourceAllocationRepository.getConsult();
+        Long g= resourceAllocationRepository.getM();
+        Long i= resourceAllocationRepository.getF();
+        Long j= resourceAllocationRepository.getHybrid();
+        Long k=resourceAllocationRepository.getRemote();
+        Map<String,Long> map=new HashMap<>();
+        map.put("Billable",a);
+        map.put("NonBillable",b);
+        map.put("OffSite",c);
+        map.put("OnSite",d);
+        map.put("FullTime",e);
+        map.put("Consultant",f);
+        map.put("Male",g);
+        map.put("Female",i);
+        map.put("Hybrid",j);
+        map.put("Remote",k);
+        return map;
+    }
+
+
+
+    public Integer getEnding(String startDateStr, String endDateStr) {
+        LocalDate startDate = LocalDate.parse(startDateStr);
+        LocalDate endDate = LocalDate.parse(endDateStr);
+        return resourceAllocationRepository.getEnding(startDate,endDate);
+    }
+
+//    public ResourceAllocation updateResourceAllocation(Long id, Map<String,?> updatedAllocation) {
+//        Optional<ResourceAllocation> optionalAllocation = resourceAllocationRepository.findById(id);
+//        if (optionalAllocation.isPresent()) {
+//            ResourceAllocation allocation = optionalAllocation.get();
+//
+//            allocation.setRole(updatedAllocation.getRole());
+//            allocation.setEmployeeType(updatedAllocation.getEmployeeType());
+//            allocation.setDoj(updatedAllocation.getDoj());
+//            allocation.setStatus(updatedAllocation.isStatus());
+//            allocation.setPartner(updatedAllocation.getPartner());
+//            allocation.setProjectName(updatedAllocation.getProjectName());
+//            allocation.setProjectCode(updatedAllocation.getProjectCode());
+//            allocation.setProjectType(updatedAllocation.getProjectType());
+//            allocation.setProjectStartDate(updatedAllocation.getProjectStartDate());
+//            allocation.setBillingStartDate(updatedAllocation.getBillingStartDate());
+//            allocation.setBillingEndDate(updatedAllocation.getBillingEndDate());
+//            allocation.setProjectEndDate(updatedAllocation.getProjectEndDate());
+//            allocation.setSow(updatedAllocation.getSow());
+//            allocation.setSowStartDate(updatedAllocation.getSowStartDate());
+//            allocation.setSowEndDate(updatedAllocation.getSowEndDate());
+//            allocation.setClientManager(updatedAllocation.getClientManager());
+//            allocation.setBillability(updatedAllocation.getBillability());
+//            allocation.setLocation(updatedAllocation.getLocation());
+//            allocation.setClientTimesheetAccess(updatedAllocation.getClientTimesheetAccess());
+//            allocation.setPartnerEmailID(updatedAllocation.getPartnerEmailID());
+//            allocation.setClientEmailID(updatedAllocation.getClientEmailID());
+//            allocation.setYubikey(updatedAllocation.getYubikey());
+//            allocation.setYubikeySno(updatedAllocation.getYubikeySno());
+//            allocation.setContactNumber(updatedAllocation.getContactNumber());
+//            allocation.setGender(updatedAllocation.getGender());
+//            allocation.setSkillset1(updatedAllocation.getSkillset1());
+//            allocation.setSkillset2(updatedAllocation.getSkillset2());
+//            allocation.setTraining(updatedAllocation.getTraining());
+//            allocation.setCertifications(updatedAllocation.getCertifications());
+//            allocation.setTechnologyDivision(updatedAllocation.getTechnologyDivision());
+//            allocation.setAwards(updatedAllocation.getAwards());
+//            allocation.setAudit(updatedAllocation.getAudit());
+//
+//            return resourceAllocationRepository.save(allocation);
+//        } else {
+//            return null;
+//        }
+//    }
+
+    public List<Long> getEmployeesData() {
+        return resourceAllocationRepository.getDetails();
+    }
+    public List<Long> getEmployeesAllocatedData() {
+        return resourceAllocationRepository.getEmployeesAllocatedData();
+    }
+
+    public List<ResourceAllocation> getResourceDataList(String startDate, String endDate) {
+        return resourceAllocationRepository.getResourceDataList(startDate, endDate);
+    }
+//
+//    public ResourceAllocation updateResourceAllocation(ResourceAllocation updatedAllocation) {
+//        if(resourceAllocationRepository.existsById(Long.valueOf(updatedAllocation.getAllocationId())))
+//            return resourceAllocationRepository.save(updatedAllocation);
+//        else
+//            return null;
+//    }
+
+
+    public List<Map<String,Integer>> get(String year) {
+        return resourceAllocationRepository.getDetailsBasedOnYear(year);
+    }
+
+    public List<ResourceAllocation> getDataBasedOnMonthAndYear(String month, String year) {
+        return resourceAllocationRepository.getDataBasedOnMonthAndYear(month, year);
+    }
+
+    public List<ResourceAllocation> getDataBasedOnYear(String year) {
+        return resourceAllocationRepository.getDataBasedOnYear(year);
+    }
+
+    public List<ResourceAllocation> getAvailableResources() {
+        return resourceAllocationRepository.getAvailableResources();
+    }
+
+    public List<ResourceAllocation> getAllocatedResources() {
+        return resourceAllocationRepository.getAllocatedResources();
+    }
+
+    public List<ResourceAllocationDTO> getDataOfTheYear() {
+        return resourceAllocationRepository.getDataOfTheYear();
+    }
+
+
+    public List<ResourceAllocation> getDataForClientName(String clientName, String projectName) {
+        List<ResourceAllocation> resourceAllocation = null;
+
+        if(projectName.equals("null")) {
+            System.out.println("Hello");
+            resourceAllocation =resourceAllocationRepository.getDataForClientName(clientName);
+            return resourceAllocation;
+        }
+        if(!projectName.equals("null") ){
+            resourceAllocation = resourceAllocationRepository.getDataForClientNameAndProjectName(clientName, projectName);
+            return resourceAllocation;
+        }
+        return  resourceAllocation;
+
+    }
+
+
+
+    public List<String> getDataForProjects(String clientCode) {
+        return resourceAllocationRepository.getDataForProjects(clientCode);
+    }
+
+    public List<Map<String, Object>> getNumberOfClients() {
+        return resourceAllocationRepository.getNumberOfClients();
+    }
+
+    public List<String> getEmployeeId() {
+        return resourceAllocationRepository.getEmployeeId();
+    }
+
+
+    public List<ResourceAllocation> getEmployeeResourceData(String employeeId) {
+        return resourceAllocationRepository.getEmployeeResourceData(employeeId);
+    }
+
+    public List<Map<String, Object>> getEmployeeNamesByProjectCode(String projectName) {
+        return resourceAllocationRepository.getEmployeeNamesByProjectCode(projectName);
+    }
+
+    public List<Map<String, Object>> getClientUtilisation(String year) {
+        return resourceAllocationRepository.getClientUtilisation(year);
+    }
+
+    public List<ResourceAllocation> getNonBillableData() {
+        return resourceAllocationRepository.getNonBillableData();
+    }
+
 
 }

@@ -21,5 +21,23 @@ public interface EmailAuthenticationRepo extends JpaRepository<Users,Integer> {
             "WHERE u.id = :id", nativeQuery = true)
     Map<String,Object> findDetailsById(@Param("id") Integer id);
 
+    @Query(value = "SELECT reporting_users.name " +
+            "FROM users u " +
+            "JOIN employee e ON u.id = e.user_id " +
+            "JOIN users AS reporting_users ON e.reporting_manager= reporting_users.id " +
+            "WHERE u.Id = :Id", nativeQuery = true)
+    List<String> getReportingManagerNames(Integer Id);
+
+
+
+
+    @Query(value = "SELECT l2manager_users.name " +
+            "FROM Users u " +
+            "JOIN employee e ON u.id = e.user_id " +
+            "JOIN Users AS l2manager_users ON e.l2_manager= l2manager_users.id " +
+            "WHERE u.Id = :Id", nativeQuery = true)
+    List<String> getL2ManagerNames(Integer Id);
+
+
 
 }

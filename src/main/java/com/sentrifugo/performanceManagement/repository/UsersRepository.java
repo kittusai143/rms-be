@@ -21,9 +21,15 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
     String findByEmailJWT(String email);
 
    Users findByEmail(String email);
-
+    @Query(value="SELECT T.id, T.name, A.status FROM ( " +
+            "                   SELECT users.id, users.name " +
+            "                   FROM users " +
+            "                    JOIN employee ON users.id = employee.Id " +
+            "            ) AS T " +
+            "            LEFT JOIN appraisal_master AS A ON T.id = A.employee_id",nativeQuery = true)
+    List<Map<String,String>> findDetailsWithStatus();
     @Query("SELECT u FROM Users u WHERE u.employeeId = :employeeId")
-    Users findByEmployeeId(String employeeId);
+    List<Users> findByEmployeeId(String employeeId);
 
     @Query("SELECT u.userFullName AS fullName, u.email AS email, rm.email AS rmEmail " +
             "FROM Employee e " +
@@ -46,6 +52,12 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
 
 
+    @Query(value = "SELECT u.employeeId  FROM pmodashboard.users u", nativeQuery = true)
+    List<Map<String, Object>> getEmployeeId();
+
+    @Query(value = "    SELECT rolename from pmodashboard.role where roleID = :empRole", nativeQuery = true)
+    String findRoleNameByroleId(Integer empRole);
+//    @Query(value = "Select * from pmodashboard.users u where u.employeeId = :empid", nativeQuery = true)
 
 
 }

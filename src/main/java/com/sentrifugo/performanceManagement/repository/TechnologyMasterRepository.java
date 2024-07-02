@@ -10,6 +10,13 @@ import java.util.List;
 @Repository
 public interface TechnologyMasterRepository extends JpaRepository<TechnologyMaster, Integer> {
 
-    @Query("Select distinct techGroup from TechnologyMaster")
+//    @Query("Select distinct techGroup from TechnologyMaster")
+//    List<String> getDistinctGroups();
+@Query("SELECT tm.techId FROM TechnologyMaster tm")
+List<Integer> findAllTechId();
+    @Query("select distinct tm.techGroup from TechnologyMaster tm")
     List<String> getDistinctGroups();
+    @Query("select distinct tm.techSkill from TechnologyMaster tm")
+    List<String> getDistinctSkills();
+
 }
