@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "${custom.frontendUrl}")
 @RequestMapping("sow")
 public class SowMasterController {
     @Autowired
