@@ -38,6 +38,10 @@ public class ResourceAllocationController {
     public List<Resources> getAllResourceAllocation() {
         return resourceAllocationService.getAllResourceAllocations();
     }
+    @GetMapping("/getAlls")
+    public List<ResourceAllocation> getallResourceAllocation(){
+        return resourceAllocationService.pdsgetAllResourceAllocations();
+    }
 
     @GetMapping("/byId/{id}")
     public Resources getById(@PathVariable Integer id) {
@@ -128,15 +132,15 @@ public class ResourceAllocationController {
 
 
 
-//    @PutMapping("/update")
-//    public ResponseEntity<ResourceAllocation> updateResourceAllocation(@RequestBody ResourceAllocation updatedAllocation) {
-//        ResourceAllocation allocation = resourceAllocationService.updateResourceAllocation(updatedAllocation);
-//        if (allocation != null) {
-//            return ResponseEntity.ok(allocation);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    @PutMapping("/update")
+    public ResponseEntity<ResourceAllocation> updateResourceAllocation(@RequestBody ResourceAllocation updatedAllocation) {
+        ResourceAllocation allocation = resourceAllocationService.updateResourceAllocation(updatedAllocation);
+        if (allocation != null) {
+            return ResponseEntity.ok(allocation);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("getEmployees")
     public List <Long> getEmployeesData() {

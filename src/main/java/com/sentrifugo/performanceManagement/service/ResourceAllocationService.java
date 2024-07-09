@@ -66,6 +66,9 @@ public class ResourceAllocationService {
         }
         return resourcesList;
     }
+    public List<ResourceAllocation> pdsgetAllResourceAllocations(){
+        return resourceAllocationRepository.findAll();
+    }
 
 //    public List<Resources> getAllResourceAllocations(List<String> availability) {
 //        List<Object[]> result = resourceAllocationRepository.findResourcesWithActiveProcesses(true, "Active");
