@@ -46,6 +46,9 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
 
   @Query("SELECT r FROM ResourceAllocation r WHERE r.silId =:silId")
   ResourceAllocation findBySilId(String silId);
+  @Query("SELECT r FROM ResourceAllocation r WHERE r.status != :status")
+  List<ResourceAllocation> findActiveResources(String status);
+
 
   @Query("select COUNT(billability) from ResourceAllocation where billability ='billable' ")
   Long getBillable();
@@ -71,15 +74,15 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
   @Query("select COUNT(location) from ResourceAllocation where location='offsite-remote' ")
   Long getRemote();
 
-  @Query(value = "SELECT COUNT(*) FROM pmodashboard.resource_allocation_test ra WHERE ra.AllocationStatus = 'Available'", nativeQuery = true)
+  @Query(value = "SELECT COUNT(*) FROM resource_allocation ra WHERE ra.AllocationStatus = 'Available'", nativeQuery = true)
   List<Long> getDetails();
-  @Query(value = "SELECT COUNT(*) FROM pmodashboard.resource_allocation_test ra WHERE ra.AllocationStatus = 'Allocated'", nativeQuery = true)
+  @Query(value = "SELECT COUNT(*) FROM resource_allocation ra WHERE ra.AllocationStatus = 'Allocated'", nativeQuery = true)
   List<Long> getEmployeesAllocatedData();
 
-  @Query(value = "SELECT * FROM pmodashboard.resource_allocation_test ra WHERE ra.BillingStartDate AND ra.BillingEndDate BETWEEN :startDate AND :endDate", nativeQuery = true)
+  @Query(value = "SELECT * FROM resource_allocation ra WHERE ra.BillingStartDate AND ra.BillingEndDate BETWEEN :startDate AND :endDate", nativeQuery = true)
   List<ResourceAllocation> getResourceDataList(String startDate, String endDate);
 
-  @Query(value = "select count(*) from pmodashboard.resource_allocation_test ra where ra.billingEndDate>=:startDate and ra.billingEndDate<=:endDate",nativeQuery = true)
+  @Query(value = "select count(*) from resource_allocation ra where ra.billingEndDate>=:startDate and ra.billingEndDate<=:endDate",nativeQuery = true)
   Integer getEnding(LocalDate startDate, LocalDate endDate);
 
   //SELECT
@@ -94,52 +97,52 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
   @Query(value = "SELECT SUM(CASE WHEN MONTH(ra.BillingStartDate) IN (4, 5, 6) THEN 1 ELSE 0 END) AS quater1," +
           "SUM(CASE WHEN MONTH(ra.BillingStartDate) IN (7, 8, 9) THEN 1 ELSE 0 END) AS quater2," +
           "SUM(CASE WHEN MONTH(ra.BillingStartDate) IN (10, 11, 12) THEN 1 ELSE 0 END) AS quater3," +
-          "(SELECT COUNT(*) FROM pmodashboard.resource_allocation_test WHERE MONTH(BillingStartDate) IN (1, 2, 3) AND YEAR(BillingStartDate) = YEAR(DATE_ADD(CONCAT(:year, '-01-01'), INTERVAL 1 YEAR))) AS quater4 FROM pmodashboard.resource_allocation_test ra WHERE YEAR(ra.BillingStartDate) = :year",nativeQuery = true)
+          "(SELECT COUNT(*) FROM resource_allocation WHERE MONTH(BillingStartDate) IN (1, 2, 3) AND YEAR(BillingStartDate) = YEAR(DATE_ADD(CONCAT(:year, '-01-01'), INTERVAL 1 YEAR))) AS quater4 FROM resource_allocation ra WHERE YEAR(ra.BillingStartDate) = :year",nativeQuery = true)
   List<Map<String,Integer>> getDetailsBasedOnYear(String year);
 
-  @Query(value = "SELECT * FROM pmodashboard.resource_allocation_test ra WHERE YEAR(ra.BillingStartDate) = :year AND MONTH(ra.BillingStartDate) = :month", nativeQuery = true)
+  @Query(value = "SELECT * FROM resource_allocation ra WHERE YEAR(ra.BillingStartDate) = :year AND MONTH(ra.BillingStartDate) = :month", nativeQuery = true)
   List<ResourceAllocation> getDataBasedOnMonthAndYear(String month, String year);
 
-  @Query(value = "SELECT * FROM pmodashboard.resource_allocation_test ra WHERE YEAR (ra.BillingStartDate) = :year", nativeQuery = true)
+  @Query(value = "SELECT * FROM resource_allocation ra WHERE YEAR (ra.BillingStartDate) = :year", nativeQuery = true)
   List<ResourceAllocation> getDataBasedOnYear(String year);
 
-  @Query(value = "SELECT * FROM pmodashboard.resource_allocation_test ra WHERE ra.AllocationStatus = 'Available'", nativeQuery = true)
+  @Query(value = "SELECT * FROM resource_allocation ra WHERE ra.AllocationStatus = 'Available'", nativeQuery = true)
   List<ResourceAllocation> getAvailableResources();
 
-  @Query(value = "SELECT * FROM pmodashboard.resource_allocation_test ra WHERE ra.AllocationStatus = 'Allocated'", nativeQuery = true)
+  @Query(value = "SELECT * FROM resource_allocation ra WHERE ra.AllocationStatus = 'Allocated'", nativeQuery = true)
   List<ResourceAllocation> getAllocatedResources();
 
-  @Query(value = "SELECT YEAR(ra.BillingStartDate) as year, COUNT(*) as count FROM pmodashboard.resource_allocation_test ra WHERE ra.Billability = 'Billable' GROUP BY YEAR(ra.BillingStartDate)", nativeQuery = true)
+  @Query(value = "SELECT YEAR(ra.BillingStartDate) as year, COUNT(*) as count FROM resource_allocation ra WHERE ra.Billability = 'Billable' GROUP BY YEAR(ra.BillingStartDate)", nativeQuery = true)
   List<ResourceAllocationDTO> getDataOfTheYear();
 
 
-  @Query(value = "select * from pmodashboard.resource_allocation_test ra where ra.ClientCode = :clientName ", nativeQuery = true)
+  @Query(value = "select * from resource_allocation ra where ra.ClientCode = :clientName ", nativeQuery = true)
   List<ResourceAllocation> getDataForClientName(String clientName);
 
-  @Query(value = "select * from pmodashboard.resource_allocation_test ra where ra.ClientCode = :clientName and ra.ProjectName = :projectName ", nativeQuery = true)
+  @Query(value = "select * from resource_allocation ra where ra.ClientCode = :clientName and ra.ProjectName = :projectName ", nativeQuery = true)
   List<ResourceAllocation> getDataForClientNameAndProjectName(String clientName, String projectName);
 
-  @Query(value = "SELECT DISTINCT (ra.ProjectName) from pmodashboard.resource_allocation_test ra WHERE ra.ClientCode = :clientCode", nativeQuery = true)
+  @Query(value = "SELECT DISTINCT (ra.ProjectName) from resource_allocation ra WHERE ra.ClientCode = :clientCode", nativeQuery = true)
   List<String> getDataForProjects(String clientCode);
 
-  @Query(value = "SELECT ClientCode, COUNT(*) AS Count FROM pmodashboard.resource_allocation_test GROUP BY ClientCode", nativeQuery = true)
+  @Query(value = "SELECT ClientCode, COUNT(*) AS Count FROM resource_allocation GROUP BY ClientCode", nativeQuery = true)
   List<Map<String, Object>> getNumberOfClients();
 
 
-  @Query(value = "SELECT (rat.SilId) FROM pmodashboard.resource_allocation_test rat", nativeQuery = true)
+  @Query(value = "SELECT (rat.SilId) FROM resource_allocation rat", nativeQuery = true)
   List<String> getEmployeeId();
 
 
-  @Query(value = "SELECT * FROM pmodashboard.resource_allocation_test rat where rat.SilId = :employeeId", nativeQuery = true)
+  @Query(value = "SELECT * FROM resource_allocation rat where rat.SilId = :employeeId", nativeQuery = true)
   List<ResourceAllocation> getEmployeeResourceData(String employeeId);
 
-  @Query(value = "SELECT rat.Name, rat.SilId as SilId FROM pmodashboard.resource_allocation_test rat WHERE rat.ProjectName = :projectName", nativeQuery = true)
+  @Query(value = "SELECT rat.Name, rat.SilId as SilId FROM resource_allocation rat WHERE rat.ProjectName = :projectName", nativeQuery = true)
   List<Map<String, Object>> getEmployeeNamesByProjectCode(String projectName);
 
-  @Query(value = "SELECT distinct rat.ClientCode , rat.Billability , count(*) FROM pmodashboard.resource_allocation_test  rat where YEAR(rat.StartDate) = :year group by rat.ClientCode , rat.Billability", nativeQuery = true)
+  @Query(value = "SELECT distinct rat.ClientCode , rat.Billability , count(*) FROM resource_allocation rat where YEAR(rat.StartDate) = :year group by rat.ClientCode , rat.Billability", nativeQuery = true)
   List<Map<String, Object>> getClientUtilisation(String year);
 
-  @Query(value = "SELECT * from pmodashboard.resource_allocation_test rat where rat.Billability = 'Non Billable' AND rat.AllocationStatus = 'Allocated'", nativeQuery = true)
+  @Query(value = "SELECT * from resource_allocation rat where rat.Billability = 'Non Billable' AND rat.AllocationStatus = 'Allocated'", nativeQuery = true)
   List<ResourceAllocation> getNonBillableData();
 
 

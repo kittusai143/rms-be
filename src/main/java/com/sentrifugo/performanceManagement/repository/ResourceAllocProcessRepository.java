@@ -31,4 +31,7 @@ public interface ResourceAllocProcessRepository extends JpaRepository<ResourceAl
 
     @Query(value = "Select rap.* from ResourceAllocProcess rap Where rap.ResAllocID =:resAllocId AND rap.isactive=:b",nativeQuery = true)
     List<ResourceAllocProcess> getByResourceAllocationIdAndIsActive(Long resAllocId, boolean b);
+    @Query(value = "SELECT r.* FROM ResourceAllocProcess r WHERE r.isActive = true AND r.processStatus = 'SoftBlocked' AND (r.SBendDate = CURRENT_DATE+2 OR r.SBendDate = CURRENT_DATE+4)",nativeQuery = true)
+    List<ResourceAllocProcess> findAllSoftBlockedData();
+
 }

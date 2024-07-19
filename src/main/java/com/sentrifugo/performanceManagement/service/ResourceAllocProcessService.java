@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
 
 @Service
 public class ResourceAllocProcessService {
@@ -120,11 +121,19 @@ public class ResourceAllocProcessService {
                     allocation.setSBendDate(convertTODate((String) requestBody.get("endDate")));
                 }
             }
+            if((String) requestBody.get("billingStartDate")!=null && (String) requestBody.get("billingEndDate") !=null) {
+                if (allocation.getSBstartDate()!=null && allocation.getSBendDate()!=null && allocation.getProcessStatus().equals("Allocation Requested")) {
+                    allocation.setBillingStartDate(convertTODate((String) requestBody.get("billingStartDate")));
+                    allocation.setBillingEndDate(convertTODate((String) requestBody.get("billingEndDate")));
+                }
+
+            }
+
             if((String) requestBody.get("extendedDate")!=null){
                 allocation.setExtendedDate(convertTODate((String) requestBody.get("extendedDate")));
             }
             ResourceAllocProcess updated = resourceAllocProcessRepository.save(allocation);
-            
+
             if(Objects.equals(updated.getProcessStatus(), "SoftBlocked")){
                 List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByAllocaIDAndISActiveAndStatus(updated.getResAllocId(),true,"SoftBlocked");
                 if(processes.stream().count()>=2){
@@ -153,6 +162,8 @@ public class ResourceAllocProcessService {
                     projectAllocation.setStartDate(updated.getAllocStartDate());
                     projectAllocation.setEndDate(updated.getAllocEndDate());
                     projectAllocation.setActive(true);
+                    projectAllocation.setBillingStartDate(updated.getBillingStartDate());
+                    projectAllocation.setBillingEndDate(updated.getBillingEndDate());
 
                     //Check if resource is in any other projects in project allocation table
                     List<ProjectAllocation> projectAllocations = projectAllocationService.getByResourceAllocationId(updated.getResAllocId());
@@ -260,11 +271,24 @@ public class ResourceAllocProcessService {
     public void getResourceAllocProcessesWithActiveStatusAndFutureEndDate() {
         List<ResourceAllocProcess> processes = resourceAllocProcessRepository.findActiveProcessesWithFutureEndDate();
         System.out.println(processes);
+        SoftBlockAlert();
         for(ResourceAllocProcess process: processes){
             if(process.getProcessStatus().equals("SoftBlocked") || process.getProcessStatus().equals("Allocation Requested")){
                 process.setActive(false);
                 ResourceAllocProcess r = resourceAllocProcessRepository.save(process);
             }
+        }
+
+    }
+    public void SoftBlockAlert(){
+        List<ResourceAllocProcess> softblockedList= resourceAllocProcessRepository.findAllSoftBlockedData();
+        Date currentDate = new Date();
+        for (ResourceAllocProcess process : softblockedList) {
+            process.setUpdatedDate(currentDate);
+            process.setRmReadStatus(false);
+            process.setPmReadStatus(false);
+            process.setPMOReadStatus(false);
+            resourceAllocProcessRepository.save(process);
         }
     }
 

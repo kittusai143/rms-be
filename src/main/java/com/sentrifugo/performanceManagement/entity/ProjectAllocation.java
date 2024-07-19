@@ -47,4 +47,11 @@ public class ProjectAllocation {
 
     @Column(name = "isactive")
     private boolean isActive;
+
+    @Column(name = "billingStartDate")
+    private Date billingStartDate;
+
+    @Column(name = "billingEndDate")
+    private Date billingEndDate;
+
 }

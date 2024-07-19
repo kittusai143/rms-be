@@ -45,6 +45,10 @@ public class ResourceAllocation {
     @Column(name = "Status")
     private String status;
 
+    @Column(name = "ExitDate")
+    private Date exitDate;
+
+
     @Column(name = "ClientCode")
     private String clientCode;
 

@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Repository
 public interface UtilizationRepository extends JpaRepository<ResourceAllocation,Integer> {
-    @Query(value = "SELECT DISTINCT (ra.ProjectName) from pmodashboard.resource_allocation ra WHERE ra.ClientCode in :clientCodes", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT (ra.ProjectName) from resource_allocation ra WHERE ra.ClientCode in :clientCodes", nativeQuery = true)
     List<String> getMultipleDataForProjects(List<String> clientCodes);
     @Query(value = "select * from resource_allocation rat where rat.ProjectName in :projects ",nativeQuery = true)
     List<ResourceAllocation> filterByProjects(List<String> projects);
@@ -27,18 +27,18 @@ public interface UtilizationRepository extends JpaRepository<ResourceAllocation,
     List<ResourceAllocation> filterBySubsidiariesAndClients(List<String> subsidiaries, List<String> clients);
     @Query(value = "select * from resource_allocation rat where rat.ClientCode in :clients and rat.Subsidiary in :subsidiaries and rat.ProjectName in :projects",nativeQuery = true)
     List<ResourceAllocation> filterBySubsidiariesAndClientsAndProjects(List<String> subsidiaries, List<String> clients, List<String> projects);
-    @Query(value = "select * from pmodashboard.resource_allocation ra where ra.ClientCode in :clientName ", nativeQuery = true)
+    @Query(value = "select * from resource_allocation ra where ra.ClientCode in :clientName ", nativeQuery = true)
     List<ResourceAllocation> getDataForClientNames(List<String> clientName);
-    @Query(value = "select * from pmodashboard.resource_allocation ra where ra.ClientCode in :clientName and ra.ProjectName in :projectName ", nativeQuery = true)
+    @Query(value = "select * from resource_allocation ra where ra.ClientCode in :clientName and ra.ProjectName in :projectName ", nativeQuery = true)
     List<ResourceAllocation> getDataForClientNamesAndProjectNames(List<String> clientName, List<String> projectName);
 
-    @Query(value = "SELECT * FROM pmodashboard.resource_allocation rat where rat.SilId = :employeeId", nativeQuery = true)
+    @Query(value = "SELECT * FROM resource_allocation rat where rat.SilId = :employeeId", nativeQuery = true)
     List<ResourceAllocation> getEmployeeResourceData(String employeeId);
 
 
 
     @Query(value="SELECT rat.AllocationId, rat.SilId, rat.VendorID, rat.ConsultantID, rat.SowId, rat.Name, rat.`Role`, rat.EmployeeType, rat.DOJ, rat.Status, rat.ClientCode,rat.ProjectCode,null as BillingStartDate,null as BillingEndDate, rat.Billability, rat.Location, rat.ClientTimesheetAccess, rat.PartnerEmailID, rat.ClientEmailID, rat.Yubikey,rat.YubikeySno, rat.ContactNumber, rat.Gender, rat.Skillset1, rat.Skillset2, rat.Training, rat.Certifications, rat.TechnologyDivision, rat.Awards, rat.Audit, rat.AllocationStatus, rat.TechId, rat.YearsOfExp, rat.ProjectName, rat.ProjectType, rat.Subsidiary, pa.startdate as StartDate , pa.enddate as ProjectEndDate, rat.partner, rat.Exit_date\n" +
-            "FROM pmodashboard.resource_allocation rat  join ProjectAllocation pa on pa.ResAllocID =rat.AllocationId   ORDER by rat.SilId   ",nativeQuery = true)
+            "FROM resource_allocation rat  join ProjectAllocation pa on pa.ResAllocID =rat.AllocationId   ORDER by rat.SilId   ",nativeQuery = true)
     List<Map<String ,Object>> filterMultipleByNone();
 //    @Query(value = "select * from resource_allocation_test rat where rat.ProjectName in :projects ",nativeQuery = true)
 //    List<ResourceAllocation> filterMultipleByProjects(List<String> projects);

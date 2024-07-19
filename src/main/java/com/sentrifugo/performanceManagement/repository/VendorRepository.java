@@ -16,7 +16,7 @@ public interface VendorRepository extends JpaRepository<Vendor,Long> {
 
 //    @Query("SELECT v.vendorId FROM Vendor v")
 //    List<String> findAllVendorId();
-    @Query(value = "SELECT VendorId AS VendorId, VendorName as VendorName  from pmodashboard.vendor_data vdt ", nativeQuery = true)
+    @Query(value = "SELECT VendorId AS VendorId, VendorName as VendorName  from vendor_data vdt ", nativeQuery = true)
     List<Map<String, Object>> findAllVendorId();
     boolean existsByVendorId(String vid);
 }

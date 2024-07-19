@@ -52,10 +52,10 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
 
 
 
-    @Query(value = "SELECT u.employeeId  FROM pmodashboard.users u", nativeQuery = true)
+    @Query(value = "SELECT u.employeeId  FROM users u", nativeQuery = true)
     List<Map<String, Object>> getEmployeeId();
 
-    @Query(value = "    SELECT rolename from pmodashboard.role where roleID = :empRole", nativeQuery = true)
+    @Query(value = "    SELECT rolename from role where roleID = :empRole", nativeQuery = true)
     String findRoleNameByroleId(Integer empRole);
 //    @Query(value = "Select * from pmodashboard.users u where u.employeeId = :empid", nativeQuery = true)
 
