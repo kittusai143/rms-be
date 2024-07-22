@@ -17,6 +17,10 @@ public class ClientsService {
 
     public List<Map<String,?>> getAllClients(){
         return clientsRepository.findAllDistinct("Active");
+
+    }
+    public List<Clients>  pmogetAllClients(){
+        return clientsRepository.findAll();
     }
     public String addclient(Clients client) {
         clientsRepository.save(client);

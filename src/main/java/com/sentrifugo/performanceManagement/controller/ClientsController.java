@@ -19,11 +19,14 @@ public class ClientsController {
     @Autowired
     public ClientsService clientsService;
 
+
     @GetMapping("/getAll")
     public List<Map<String,?>> getAllClients(){
         return clientsService.getAllClients();
     }
 
+    @GetMapping("/pdoGetAllClients")
+    public List<Clients>pdoGetAllClients(){ return clientsService.pmogetAllClients();}
     @PostMapping("/add")
     ResponseEntity<?> addclient(@RequestBody Clients client){
         Map<String,String> map=new HashMap<>();
