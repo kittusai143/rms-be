@@ -20,7 +20,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
 @RequestMapping("ResourceAllocProcess")
-public class ResourceAllocProcessController {
+public class    ResourceAllocProcessController {
 
     @Autowired
     public ResourceAllocProcessService resourceAllocProcessService;

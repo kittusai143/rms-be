@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "${custom.frontendUrl}")
@@ -45,6 +46,17 @@ public class UtilizationController {
         catch(Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
+    }
+    @PostMapping("getCounts")
+    public  ResponseEntity<?> getCounts(@RequestBody Map<String,List<String>> body){
+        try {
+            return ResponseEntity.ok(utilizationService.getCounts(body.get("client"),body.get("project")));
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
+
+
     }
 
 

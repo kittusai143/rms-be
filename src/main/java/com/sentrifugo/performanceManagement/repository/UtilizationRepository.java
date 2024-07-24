@@ -63,4 +63,32 @@ public interface UtilizationRepository extends JpaRepository<ResourceAllocation,
 //    List<ResourceAllocation> getMultipleEmployeeResourceData(String employeeId);
 
 
+    @Query(value = "SELECT count(*) FROM resource_allocation ra WHERE ra.AllocationStatus = 'Available'",nativeQuery = true)
+    Integer getCountOfAllAvailable();
+    @Query(value = "SELECT count(*) from resource_allocation rat where rat.Billability = 'Non Billable' AND rat.AllocationStatus = 'Allocated'",nativeQuery = true)
+    Integer getCountOfAllShadow();
+    @Query(value = "SELECT count(*) FROM resource_allocation ra WHERE ra.AllocationStatus = 'Allocated'",nativeQuery = true)
+    Integer getCountOfAllAllocated();
+    @Query(value = "select count(*) from resource_allocation rat where rat.ProjectName in :projects and rat.AllocationStatus = 'Available'",nativeQuery = true)
+    Integer getCountOfAvailableByProjects(List<String>  projects);
+    @Query(value = "select count(*) from resource_allocation rat where rat.ProjectName in :projects and rat.Billability = 'Non Billable' AND rat.AllocationStatus = 'Allocated'",nativeQuery = true)
+    Integer getCountOfShadowByProjects(List<String>  projects);
+    @Query(value = "select count(*) from resource_allocation rat where rat.ProjectName in :projects and rat.AllocationStatus = 'Allocated'",nativeQuery = true)
+    Integer getCountOfAllocatedByProjects(List<String>  projects);
+    @Query(value = "select count(*) from resource_allocation rat where rat.ClientCode in :clients and rat.AllocationStatus = 'Available'",nativeQuery = true)
+    Integer getCountOfAvailableByClients(List<String> clients);
+    @Query(value = "select count(*) from resource_allocation rat where rat.ClientCode in :clients and rat.Billability = 'Non Billable' AND rat.AllocationStatus = 'Allocated'",nativeQuery = true)
+    Integer getCountOfShadowByClients(List<String> clients);
+    @Query(value = "select count(*) from resource_allocation rat where rat.ClientCode in :clients and rat.AllocationStatus = 'Allocated'",nativeQuery = true)
+    Integer getCountOfAllocatedByClients(List<String> clients);
+    @Query(value = "select count(*) from resource_allocation rat where rat.ProjectName in :projects and rat.ClientCode in :clients and rat.AllocationStatus = 'Available'",nativeQuery = true)
+    Integer getCountOfAvailableByClientsAndProjects(List<String> projects,List<String> clients);
+    @Query(value = "select count(*) from resource_allocation rat where rat.ProjectName in :projects and rat.ClientCode in :clients and rat.Billability = 'Non Billable' AND rat.AllocationStatus = 'Allocated'",nativeQuery = true)
+    Integer getCountOfShadowByClientsAndProjects(List<String> projects,List<String> clients);
+    @Query(value = "select count(*) from resource_allocation rat where rat.ProjectName in :projects and rat.ClientCode in :clients and rat.AllocationStatus = 'Allocated'",nativeQuery = true)
+    Integer getCountOfAllocatedByClientsAndProjects(List<String> projects,List<String> clients);
+
+
+
+
 }

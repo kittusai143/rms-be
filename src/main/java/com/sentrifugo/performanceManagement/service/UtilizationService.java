@@ -70,11 +70,18 @@ public class UtilizationService {
                 LocalDate java8ProjectEndDate = projectEndDate != null ? projectEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
                 LocalDate java8BillingStartDate = billingStartDate != null ? billingStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
                 LocalDate java8BillingEndDate = billingEndDate != null ? billingEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+                System.out.println(allocation.getName());
+                System.out.println("ProjectStart"+java8ProjectStartDate);
+                System.out.println("ProjectENd"+java8ProjectEndDate);
+                System.out.println("BillingStart"+java8BillingStartDate);
+                System.out.println("BillingEnd"+java8BillingEndDate);
+                totalDaysInQuarter += ChronoUnit.DAYS.between(quarterStartDate, quarterEndDate) + 1;
                 if (java8ProjectStartDate != null && java8ProjectEndDate != null) {
                     if (java8ProjectStartDate.isBefore(quarterEndDate) && java8ProjectEndDate.isAfter(quarterStartDate)) {
                         LocalDate effectiveStart = java8ProjectStartDate.isBefore(quarterStartDate) ? quarterStartDate : java8ProjectStartDate;
                         LocalDate effectiveEnd = java8ProjectEndDate.isAfter(quarterEndDate) ? quarterEndDate : java8ProjectEndDate;
                         daysOnProject += ChronoUnit.DAYS.between(effectiveStart, effectiveEnd) + 1;
+                        System.out.println("current days On project"+daysOnProject);
                     }
                 }
 
@@ -83,12 +90,17 @@ public class UtilizationService {
                         LocalDate effectiveStart = java8BillingStartDate.isBefore(quarterStartDate) ? quarterStartDate : java8BillingStartDate;
                         LocalDate effectiveEnd = java8BillingEndDate.isAfter(quarterEndDate) ? quarterEndDate : java8BillingEndDate;
                         daysOnBilling += ChronoUnit.DAYS.between(effectiveStart, effectiveEnd) + 1;
+                        System.out.println("current days of billing"+daysOnBilling);
                     }
                 }
             }
 
             daysOnBench = totalDaysInQuarter - daysOnProject;
 
+            System.out.println("totaldays"+totalDaysInQuarter);
+            System.out.println("BEnch"+daysOnBench);
+            System.out.println("Project"+daysOnProject);
+            System.out.println("Billing"+daysOnBilling);
             double utilizationPercentage = (daysOnProject / totalDaysInQuarter) * 100;
             double billingPercentage = (daysOnBilling / totalDaysInQuarter) * 100;
             double benchPercentage = (daysOnBench / totalDaysInQuarter) * 100;
@@ -343,5 +355,31 @@ public class UtilizationService {
             return null;
         }
     }
+    public Object getCounts(List<String> client, List<String> project) {
+        Map<String,Integer> result=new HashMap<>();
+        if(client.isEmpty()&& project.isEmpty()){
+            result.put("available", utilizationRepository.getCountOfAllAvailable());
+            result.put("shadow", utilizationRepository.getCountOfAllShadow());
+            result.put("allocated", utilizationRepository.getCountOfAllAllocated());
+
+        }
+        else if(client.isEmpty()){
+            result.put("available", utilizationRepository.getCountOfAvailableByProjects(project));
+            result.put("shadow", utilizationRepository.getCountOfShadowByProjects(project));
+            result.put("allocated", utilizationRepository.getCountOfAllocatedByProjects(project));
+        }
+        else if(project.isEmpty()){
+            result.put("available", utilizationRepository.getCountOfAvailableByClients(client));
+            result.put("shadow", utilizationRepository.getCountOfShadowByClients(client));
+            result.put("allocated", utilizationRepository.getCountOfAllocatedByClients(client));
+        }
+        else{
+            result.put("available", utilizationRepository.getCountOfAvailableByClientsAndProjects(project,client));
+            result.put("shadow", utilizationRepository.getCountOfShadowByClientsAndProjects(project,client));
+            result.put("allocated", utilizationRepository.getCountOfAllocatedByClientsAndProjects(project,client));
+        }
+        return result;
+    }
+
 
 }
