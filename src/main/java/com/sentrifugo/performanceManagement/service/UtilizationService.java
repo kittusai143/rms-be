@@ -166,11 +166,13 @@ public class UtilizationService {
                 Date projectEndDate = allocation.getProjectEndDate();
                 Date billingStartDate = allocation.getBillingStartDate();
                 Date billingEndDate = allocation.getBillingEndDate();
-
+                totalDaysInMonth+=ChronoUnit.DAYS.between(currentMonthStart, currentMonthEnd) + 1;
                 LocalDate java8ProjectStartDate = projectStartDate != null ? projectStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
                 LocalDate java8ProjectEndDate = projectEndDate != null ? projectEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
                 LocalDate java8BillingStartDate = billingStartDate != null ? billingStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
                 LocalDate java8BillingEndDate = billingEndDate != null ? billingEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+
+
 
                 if (java8ProjectStartDate != null && java8ProjectEndDate != null) {
                     if (java8ProjectStartDate.isBefore(currentMonthEnd) && java8ProjectEndDate.isAfter(currentMonthStart)) {
@@ -188,7 +190,6 @@ public class UtilizationService {
                     }
                 }
             }
-
             daysOnBench = totalDaysInMonth - daysOnProject;
 
             double utilizationPercentage = (daysOnProject / totalDaysInMonth) * 100;

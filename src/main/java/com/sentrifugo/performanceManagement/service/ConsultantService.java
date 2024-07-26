@@ -30,7 +30,7 @@ public class ConsultantService {
     public ConsultantData updateConsultant(ConsultantData updatedConsultantData) {
         ConsultantData consultantData = consultantDataRepository.findById(updatedConsultantData.getConsultantID()).orElse(null);
         if (consultantData != null){
-            return consultantDataRepository.save(consultantData);
+            return consultantDataRepository.save(updatedConsultantData);
         }
         return null;
     }
