@@ -171,17 +171,18 @@ public class ResourceAllocationService {
         for (int i = 0; i < 12; i++) {
             Date startDate = getFirstDayOfMonth(calendar.getTime());
             Date endDate = getLastDayOfMonth(calendar.getTime());
+            System.out.println(endDate);
 
             List<ProjectAllocation> projectAllocations = projectAllocationRepository.findAllocationsForMonth( endDate);
 
             // Calculate bench count for the month
-            long totalResources = resourceAllocationRepository.findAll().stream().count();
+            long totalResources = resourceAllocationRepository.findActiveResources("Inactive").stream().count();
             long allocatedResources = projectAllocations.size();
             long benchCount = totalResources - allocatedResources;
-//            System.out.println(totalResources+ " "+allocatedResources+ " "+benchCount);
+            System.out.println(totalResources+ " "+allocatedResources+ " "+benchCount);
             String monthYearKey = dateFormat.format(startDate);
             benchCountMap.put(monthYearKey, benchCount);
-//            System.out.println(benchCountMap);
+            System.out.println(benchCountMap);
             calendar.add(Calendar.MONTH, 1); // Move to next month
         }
 
