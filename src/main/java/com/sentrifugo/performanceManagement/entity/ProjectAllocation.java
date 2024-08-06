@@ -54,4 +54,7 @@ public class ProjectAllocation {
     @Column(name = "billingEndDate")
     private Date billingEndDate;
 
+    public Long getResAllocationId() {
+        return this.resAllocId;
+    }
 }

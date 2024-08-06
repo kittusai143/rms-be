@@ -45,7 +45,7 @@ public class SetData {
             for(Resources resource: resources){
 
                 if(resource.getResource().getAllocationStatus().equals("Allocated")){
-                    System.out.println(resource);
+//                    System.out.println(resource);
                     ResourceAllocProcess process = new ResourceAllocProcess();
                     process.setSilId(resource.getResource().getSilId());
                     process.setResAllocId(resource.getResource().getAllocationId().longValue());

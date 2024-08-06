@@ -19,15 +19,15 @@ public class JwtValidator {
 
     public String validateToken(String token) {
         try {
-            System.out.println("Token"+token);
+//            System.out.println("Token"+token);
             Claims claims = Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody();
             String email = claims.get("email", String.class);
-            System.out.println(email);
+//            System.out.println(email);
             String user = userRepository.findByEmailJWT(email);
-            System.out.println(user);
+//            System.out.println(user);
             return user != null ? user : null; // Return username or null
         } catch (Exception e) {
-            System.out.println(e+"hi");
+//            System.out.println(e+"hi");
             return null; // Token invalid
         }
     }

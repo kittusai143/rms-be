@@ -31,6 +31,22 @@ public interface EmployeeTimeSheetRepository extends JpaRepository<EmployeeTimeS
             nativeQuery = true)
     List<Map<String, Object>> getEmployeeWeekData(String year, String month, String employeeName);
 
-    @Query(value = "SELECT Employee_Name,SUM(Hours) AS TotalApprovedHours FROM Employees_Timesheet WHERE Time_Status = 'approved' GROUP BY Employee_Name ORDER BY TotalApprovedHours DESC", nativeQuery = true)
+    @Query(value = "SELECT \n" +
+            "    ut.userfullname AS ResourceName,\n" +
+            "    ut.employeeId,\n" +
+            "    bh.Month,\n" +
+            "    bh.Year,\n" +
+            "    SUM(bh.Week1BillableHours + bh.Week2BillableHours + bh.Week3BillableHours + bh.Week4BillableHours + bh.Week5BillableHours) AS TotalBillableHours\n" +
+            "FROM \n" +
+            "    Billable_Hours bh\n" +
+            "JOIN \n" +
+            "    users_timesheet ut \n" +
+            "ON \n" +
+            "    bh.ResourceName = ut.name_timesheet\n" +
+            "GROUP BY \n" +
+            "    ut.userfullname,\n" +
+            "    ut.employeeId,\n" +
+            "    bh.Month,\n" +
+            "    bh.Year", nativeQuery = true)
     List<Map<String, Object>> getSumOfEmployee();
 }

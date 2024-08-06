@@ -70,18 +70,18 @@ public class UtilizationService {
                 LocalDate java8ProjectEndDate = projectEndDate != null ? projectEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
                 LocalDate java8BillingStartDate = billingStartDate != null ? billingStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
                 LocalDate java8BillingEndDate = billingEndDate != null ? billingEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
-                System.out.println(allocation.getName());
-                System.out.println("ProjectStart"+java8ProjectStartDate);
-                System.out.println("ProjectENd"+java8ProjectEndDate);
-                System.out.println("BillingStart"+java8BillingStartDate);
-                System.out.println("BillingEnd"+java8BillingEndDate);
+//                System.out.println(allocation.getName());
+//                System.out.println("ProjectStart"+java8ProjectStartDate);
+//                System.out.println("ProjectENd"+java8ProjectEndDate);
+//                System.out.println("BillingStart"+java8BillingStartDate);
+//                System.out.println("BillingEnd"+java8BillingEndDate);
                 totalDaysInQuarter += ChronoUnit.DAYS.between(quarterStartDate, quarterEndDate) + 1;
                 if (java8ProjectStartDate != null && java8ProjectEndDate != null) {
                     if (java8ProjectStartDate.isBefore(quarterEndDate) && java8ProjectEndDate.isAfter(quarterStartDate)) {
                         LocalDate effectiveStart = java8ProjectStartDate.isBefore(quarterStartDate) ? quarterStartDate : java8ProjectStartDate;
                         LocalDate effectiveEnd = java8ProjectEndDate.isAfter(quarterEndDate) ? quarterEndDate : java8ProjectEndDate;
                         daysOnProject += ChronoUnit.DAYS.between(effectiveStart, effectiveEnd) + 1;
-                        System.out.println("current days On project"+daysOnProject);
+//                        System.out.println("current days On project"+daysOnProject);
                     }
                 }
 
@@ -90,17 +90,17 @@ public class UtilizationService {
                         LocalDate effectiveStart = java8BillingStartDate.isBefore(quarterStartDate) ? quarterStartDate : java8BillingStartDate;
                         LocalDate effectiveEnd = java8BillingEndDate.isAfter(quarterEndDate) ? quarterEndDate : java8BillingEndDate;
                         daysOnBilling += ChronoUnit.DAYS.between(effectiveStart, effectiveEnd) + 1;
-                        System.out.println("current days of billing"+daysOnBilling);
+//                        System.out.println("current days of billing"+daysOnBilling);
                     }
                 }
             }
 
             daysOnBench = totalDaysInQuarter - daysOnProject;
 
-            System.out.println("totaldays"+totalDaysInQuarter);
-            System.out.println("BEnch"+daysOnBench);
-            System.out.println("Project"+daysOnProject);
-            System.out.println("Billing"+daysOnBilling);
+//            System.out.println("totaldays"+totalDaysInQuarter);
+//            System.out.println("BEnch"+daysOnBench);
+//            System.out.println("Project"+daysOnProject);
+//            System.out.println("Billing"+daysOnBilling);
             double utilizationPercentage = (daysOnProject / totalDaysInQuarter) * 100;
             double billingPercentage = (daysOnBilling / totalDaysInQuarter) * 100;
             double benchPercentage = (daysOnBench / totalDaysInQuarter) * 100;

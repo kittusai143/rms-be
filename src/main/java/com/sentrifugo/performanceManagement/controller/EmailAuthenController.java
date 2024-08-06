@@ -25,7 +25,7 @@ public class EmailAuthenController {
                 map.put("status", "Record not found for email: " + email);
                 return ResponseEntity.ok(map);
             }
-            System.out.println(valueList);
+//            System.out.println(valueList);
             return ResponseEntity.ok(valueList);
         }
         catch (Exception e)

@@ -1,5 +1,6 @@
 package com.sentrifugo.performanceManagement.entity;
 
+import com.sun.jdi.LongValue;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -133,4 +134,7 @@ public class ResourceAllocation {
     @Column(name = "Subsidiary")
     private String subsidiary;
 
+    public Long getAllocationIddd() {
+        return Long.valueOf(this.allocationId);
+    }
 }

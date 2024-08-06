@@ -77,14 +77,14 @@ public class ResourceAllocProcessService {
             if(((String) requestBody.get("processStatus")).equals("SoftBlock Requested") || ((String) requestBody.get("processStatus")).equals("SoftBlocked")){
                 List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByAllocaIDAndISActiveAndStatus(allocation.getResAllocId(),true,"SoftBlocked");
                 if(processes.stream().count()>=2){
-                    System.out.println("No more softBlocks Accepted");
+//                    System.out.println("No more softBlocks Accepted");
                     return ResponseEntity.badRequest().body("No more soft blocks Accepted");
                 }
             }
             if(((String) requestBody.get("processStatus")).equals("Allocation Requested") || ((String) requestBody.get("processStatus")).equals("Allocated")){
                 List<ResourceAllocProcess> processes = resourceAllocProcessRepository.getByAllocaIDAndISActiveAndStatus(allocation.getResAllocId(),true,"Allocated");
                 if(processes.stream().count()>=1){
-                    System.out.println("No more Allocations Accepted");
+//                    System.out.println("No more Allocations Accepted");
                     return ResponseEntity.badRequest().body("No more allocation requests Accepted");
                 }
             }
@@ -270,7 +270,7 @@ public class ResourceAllocProcessService {
     @Scheduled(cron = "@daily")
     public void getResourceAllocProcessesWithActiveStatusAndFutureEndDate() {
         List<ResourceAllocProcess> processes = resourceAllocProcessRepository.findActiveProcessesWithFutureEndDate();
-        System.out.println(processes);
+//        System.out.println(processes);
         SoftBlockAlert();
         for(ResourceAllocProcess process: processes){
             if(process.getProcessStatus().equals("SoftBlocked") || process.getProcessStatus().equals("Allocation Requested")){

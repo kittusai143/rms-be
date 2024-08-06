@@ -33,7 +33,7 @@ public class UserController {
         try{
         Map<String,Object> map=new HashMap<>();
         Users user= urepo.findByEmail(email);
-        System.out.println(user);
+//        System.out.println(user);
         if(user!=null)
         {
             if(user.getPassword().equals(pwd))
@@ -98,19 +98,19 @@ public class UserController {
     @PostMapping("loginByPassword")
     public ResponseEntity<?> checkPassword(@RequestBody Map<String,String> u){
         try{
-            System.out.println("here");
+//            System.out.println("here");
             Map<String,Object> map=new HashMap<>();
             Users user= urepo.findByEmail(u.get("email"));
-            System.out.println(user);
+//            System.out.println(user);
             if(user!=null)
             {
-                System.out.println(user.getPassword()+" "+u.get("password"));
+//                System.out.println(user.getPassword()+" "+u.get("password"));
                 if(user.getPassword().equals(u.get("password")))
                 {
 //                map.put("message","success");
                     Map<String,Object> var=customRepository.findDetailsBYEmail(u.get("email"));
                     // map.put("data",var);
-                    System.out.println(var);
+//                    System.out.println(var);
                     return ResponseEntity.ok(var);
                 }
                 else {

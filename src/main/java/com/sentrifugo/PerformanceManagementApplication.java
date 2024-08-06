@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class  PerformanceManagementApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PerformanceManagementApplication.class,args);
-		System.out.println("Application started");
+//		System.out.println("Application started");
 	}
 
 }

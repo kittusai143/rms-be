@@ -28,7 +28,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
         // Then, check for the exempted path
         String path = request.getRequestURI();
-        System.out.println(path);
+//        System.out.println(path);
         if (path.contains("/loginByPassword") || path.contains("/login/verify")) {
             filterChain.doFilter(request, response);
             return; // Skip JWT validation for this path
@@ -41,13 +41,13 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
         // Continue with JWT validation logic for other paths
         String authHeader = request.getHeader("Authorization");
-        System.out.println("auth header" + authHeader);
+//        System.out.println("auth header" + authHeader);
         String token = null;
         String username = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7); // Remove "Bearer " prefix
-            System.out.println("Tok"+token);
+//            System.out.println("Tok"+token);
             username = jwtValidator.validateToken(token);
         }
 

@@ -17,6 +17,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,8 +47,8 @@ public interface ResourceAllocationRepository extends JpaRepository<ResourceAllo
 
   @Query("SELECT r FROM ResourceAllocation r WHERE r.silId =:silId")
   ResourceAllocation findBySilId(String silId);
-  @Query("SELECT r FROM ResourceAllocation r WHERE r.status != :status")
-  List<ResourceAllocation> findActiveResources(String status);
+  @Query("SELECT r FROM ResourceAllocation r WHERE r.status != :status AND r.doj <= :endDate")
+  List<ResourceAllocation> findActiveResources(String status, Date endDate);
 
 
   @Query("select COUNT(billability) from ResourceAllocation where billability ='billable' ")

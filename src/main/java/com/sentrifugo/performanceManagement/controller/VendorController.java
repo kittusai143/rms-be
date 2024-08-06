@@ -33,7 +33,7 @@ public class VendorController {
             Vendor v=vendorService.addVendor(vendor);
             return ResponseEntity.ok(v);
         } catch (Exception e) {
-            System.out.println(vendor.getId());
+//            System.out.println(vendor.getId());
             map.put("error",e.toString());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
         }

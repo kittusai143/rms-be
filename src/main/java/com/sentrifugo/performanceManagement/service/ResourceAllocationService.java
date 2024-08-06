@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceAllocationService {
@@ -122,7 +123,7 @@ public class ResourceAllocationService {
     public Resources getById(Long id){
         Map<String, ?> result = resourceAllocationRepository.findByIdWithProcesses(true, id, "Inactive" );
         Resources resources = new Resources();
-        System.out.println(result.get("allocationId"));
+//        System.out.println(result.get("allocationId"));
         resources.setResource(resourceAllocationRepository.findById(((Number) result.get("allocationId")).longValue()).orElse(null));
         if (resources.getResource() == null) {return null;}
         String processConcatenated = (String) result.get("processes");
@@ -169,21 +170,40 @@ public class ResourceAllocationService {
         calendar.add(Calendar.MONTH, -11); // Start from 11 months ago
 
         for (int i = 0; i < 12; i++) {
+            // Get the first and last day of the current month
             Date startDate = getFirstDayOfMonth(calendar.getTime());
             Date endDate = getLastDayOfMonth(calendar.getTime());
-            System.out.println(endDate);
 
-            List<ProjectAllocation> projectAllocations = projectAllocationRepository.findAllocationsForMonth( endDate);
+            List<ProjectAllocation> projectAllocations = projectAllocationRepository.findAllocationsForMonth(endDate);
+            List<ResourceAllocation> resources = resourceAllocationRepository.findActiveResources("Inactive", endDate);
+
+            // Extract the allocation IDs from project allocations
+            Set<Long> allocatedResourceIds = projectAllocations.stream()
+                    .map(ProjectAllocation::getResAllocationId)
+                    .collect(Collectors.toSet());
+
+            // Filter out the bench resources (resources not in the allocatedResourceIds)
+            List<ResourceAllocation> benchResources = resources.stream()
+                    .filter(resource -> !allocatedResourceIds.contains(resource.getAllocationIddd()))
+                    .collect(Collectors.toList());
 
             // Calculate bench count for the month
-            long totalResources = resourceAllocationRepository.findActiveResources("Inactive").stream().count();
+            long totalResources = resources.size();
             long allocatedResources = projectAllocations.size();
             long benchCount = totalResources - allocatedResources;
-            System.out.println(totalResources+ " "+allocatedResources+ " "+benchCount);
+            // Debugging information
+            System.out.println("i = " + i);
+            System.out.println("startDate = " + startDate);
+            System.out.println("endDate = " + endDate);
+            System.out.println("totalResources = " + totalResources);
+            System.out.println("allocatedResources = " + allocatedResources);
+            System.out.println("benchCount = " + benchCount);
+            System.out.println(benchResources);
+
             String monthYearKey = dateFormat.format(startDate);
             benchCountMap.put(monthYearKey, benchCount);
-            System.out.println(benchCountMap);
-            calendar.add(Calendar.MONTH, 1); // Move to next month
+
+            calendar.add(Calendar.MONTH, 1); // Move to the next month
         }
 
         return benchCountMap;
@@ -204,6 +224,7 @@ public class ResourceAllocationService {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         return calendar.getTime();
     }
+
     public Object add(ResourceAllocation resourceAllocation) {
         return  resourceAllocationRepository.save(resourceAllocation);
     }
@@ -334,7 +355,7 @@ public class ResourceAllocationService {
         List<ResourceAllocation> resourceAllocation = null;
 
         if(projectName.equals("null")) {
-            System.out.println("Hello");
+//            System.out.println("Hello");
             resourceAllocation =resourceAllocationRepository.getDataForClientName(clientName);
             return resourceAllocation;
         }
